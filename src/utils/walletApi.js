@@ -423,7 +423,7 @@ const fallbackBroadcastTransaction = async ({ rawTx = "", selectedCrypto = "bitc
 				response = response.status === "success" ? response.data.txid : "";
 				break;
 			case "canadaecoin":
-				response = await fetch(`http://10.25.25.114:43001/api/sendrawtransaction`, fetchData("POST", { tx_hex: rawTx }));
+				response = await fetch(`https://explorer.canadaecoin.ca/api/sendrawtransaction`, fetchData("POST", { tx_hex: rawTx }));
 				response = await response.json();
 				response = response.status === "success" ? response.data.txid : "";
 				break;				
