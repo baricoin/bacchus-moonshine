@@ -262,7 +262,7 @@ const getTransactionData = ({ txId = "", selectedCrypto = "bitcoin" } = {}) => {
 	});
 };
 
-const getExchangeRate = ({ selectedCrypto = "bitcoin", selectedCurrency = "usd", selectedService = "coingecko" } = {}) => {
+const getExchangeRate = ({ selectedCrypto = "bitcoin", selectedCurrency = "cad", selectedService = "coingecko" } = {}) => {
 	return new Promise(async (resolve) => {
 		const failure = (errorTitle = "", errorMsg = "") => {
 			resolve({ error: true, errorTitle, errorMsg });
