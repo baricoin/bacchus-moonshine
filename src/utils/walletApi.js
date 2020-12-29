@@ -61,7 +61,43 @@ const decodeOpReturnMessage = (opReturn = "") => {
 	}
 };
 
+// Canada eCoin : We get our prices from the cdn-foundation's DB,. since CoinCap and CoinGecko do not track CDN.
+const MarshaExchangeRateHelper = async (selectedCrypto, selectedCurrency) => {
+
+	// CDN TODO:  Our connection to Marsha is a DDP connection that will notify us any time there is an update
+	// to the exchange rates.   Maybe we want to push these updates to the UI somehow?
+	// https://www.npmjs.com/package/react-ddp/v/1.1.11
+
+	if(selectedCrypto == "bitcoin") selectedCrypto = "btc";
+	if(selectedCrypto == "litecoin") selectedCrypto = "ltc";
+	if(selectedCrypto == "canadaecoin") selectedCrypto = "cdn";
+	if(!selectedCrypto || !selectedCurrency) return ({ error: true, data: 'Unable to get exchange rates!' });
+
+	if(!Marsha || !Marsha.collections) return { error: true, data: "Have not yet aquired exchange rate data..." };
+
+	
+	let coinRate = await Marsha.collections["exchangeRates"].findOne({'call': String(selectedCrypto).toUpperCase()});
+	let fiatRate = await Marsha.collections["exchangeRates"].findOne({'call': String(selectedCurrency).toUpperCase()});
+	let exchangeRate = Number(Number(coinRate.rate) / Number(fiatRate.rate));
+
+	if(exchangeRate > 1000 ){
+		exchangeRate = Number(exchangeRate).toFixed(0);
+	} else if(exchangeRate > 0.1 ){
+		exchangeRate = Number(exchangeRate).toFixed(2);
+	} else if(exchangeRate > 0.01 ){
+		exchangeRate = Number(exchangeRate).toFixed(3);
+	} else {
+		exchangeRate = Number(exchangeRate).toFixed(4);
+	};
+
+	if(!exchangeRate) return ({ error: true, data: "Not able to aquire exchange rate data, are we offline?" });
+	return ({ error: false, data: exchangeRate });
+};
+
 const coinCapExchangeRateHelper = async ({ selectedCrypto = "bitcoin", selectedCurrency = "usd" } = {}) => {
+	// Canada eCoin:  We get exchange data from Marsha, so lets use that instead...
+	return await MarshaExchangeRateHelper(selectedCrypto, selectedCurrency);
+	
 	let exchangeRate = 0;
 	try {
 		let coin = selectedCrypto.toLowerCase();
@@ -86,6 +122,9 @@ const coinCapExchangeRateHelper = async ({ selectedCrypto = "bitcoin", selectedC
 };
 
 const coinGeckoExchangeRateHelper = async ({ selectedCrypto = "bitcoin", selectedCurrency = "usd" } = {}) => {
+	// Canada eCoin:  We already get exchange data from Marsha, so lets use that instead...
+	return await MarshaExchangeRateHelper(selectedCrypto, selectedCurrency);
+
 	let exchangeRate = 0;
 	try {
 		let coin = selectedCrypto.toLowerCase();
