@@ -1,6 +1,7 @@
 import bitcoinUnits from "bitcoin-units";
 import * as electrum from "./electrum";
 import "../../shim";
+import ExchangeRates from "./marsha-the-moose.js";
 
 const moment = require("moment");
 const {
