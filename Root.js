@@ -26,7 +26,7 @@ const Root = () => {
 	return (
 		<Provider store={store}>
 			<PersistGate
-				loading={<LinearGradient style={{ flex: 1 }} colors={["#8e45bf", "#7931ab", "#7931ab", "#68219b", "#5e1993", "#59158e", "#56128b"]} start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 1.0}} />}
+				loading={<LinearGradient style={{ flex: 1 }} colors={["#FF45bf", "#7931ab", "#FF31ab", "#68219b", "#FF1993", "#59158e", "#FFF28b"]} start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 1.0}} />}
 				onBeforeLift={null}
 				persistor={persistor}
 			>

@@ -1,21 +1,21 @@
 export const themes = {
 	light: {
 		mode: "light",
-		gradient:["#8e45bf", "#7931ab", "#5e1993", "#59158e"],
+		gradient:["#bd4246", "#b3292d", "#90191c", "#bd4246"],
 		transparent: "transparent",
 		background: "#FFF",
 		background2: "#FFF",
 		background3: "#efefef",
-		button: "#5d2390", //colors.mediumPurple
+		button: "#bd4246", //colors.mediumPurple
 		card: "#FFF",
 		card2: "#FFF",
 		card3: "#631e9a", //colors.purple
-		text: "#631e9a", //colors.purple
-		text2: "#57158f", //colors.darkPurple
-		text3: "#a25ad7", //colors.lightPurple
-		PRIMARY: "#631e9a", //colors.purple
-		PRIMARY_DARK: "#57158f", //colors.darkPurple
-		lightPurple: "#a25ad7",
+		text: "#bd4246", //colors.purple
+		text2: "#90191c", //colors.darkPurple
+		text3: "#981b1f", //colors.lightPurple
+		PRIMARY: "#bd4246", //colors.purple
+		PRIMARY_DARK: "#90191c", //colors.darkPurple
+		lightPurple: "#981b1f",
 		white: "#FFF",
 		gray: "#efefef", //colors.lightGray
 		gray2: "#6e6e6e", //colors.darkGray
@@ -25,26 +25,26 @@ export const themes = {
 	},
 	dark: {
 		mode: "dark",
-		gradient: ["#413c69", "#373451", "#302e43"],
+		gradient: [ "#2b0809", "#6c1316", "#90191c", "#410b0d"],
 		transparent: "transparent",
-		background: "#373451",
-		background2: "#2f2d3a",
-		background3: "#373451",
+		background: "#82171b",
+		background2: "#90191c",
+		background3: "#ad1f23",
 		button: "transparent",
-		card: "#585664",
+		card: "#410b0d",
 		card2: "transparent",
 		card3: "#373451",
 		text: "#f5f5f5",
 		text2: "#f5f5f5",
-		text3: "#585664",
+		text3: "#410b0d",
 		PRIMARY: "#413c69",
-		PRIMARY_DARK: "#2f2d3a",
-		lightPurple: "#a25ad7",
+		PRIMARY_DARK: "#90191c",
+		lightPurple: "#ec9396",
 		white: "#f5f5f5",
 		gray: "#efefef",
 		gray2: "#efefef",
-		gray3: "#585664",
+		gray3: "#6c1316",
 		warning: "#F15B2A",
-		uneditable: "#585664"
+		uneditable: "#410b0d"
 	},
 };
