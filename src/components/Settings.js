@@ -960,17 +960,10 @@ class Settings extends PureComponent {
 							}
 							<SettingSwitch setting="pin" value={this.props.settings["pin"]} title="Enable Pin" onPress={this.togglePin} />
 							<SettingSwitch setting="theme" value={this.isDarkMode()} title="Dark Mode" onPress={this.toggleTheme} />
-							<SettingSwitch setting="testnet" value={this.props.settings["testnet"]} title="Enable Testnet" onPress={this.toggleTestnet} />
-							<SettingSwitch setting="rbf" value={this.props.settings["rbf"]} title="Enable RBF" onPress={this.toggleRBF} />
-							<SettingSwitch setting="sendTransactionFallback" value={this.props.settings["sendTransactionFallback"]} title="Send Transaction Fallback" onPress={this.toggleSendTransactionFallback} />
 
-							<SettingGeneral
-								value={`Selected Fiat Currency:\n${this.getSelectedCurrency()}`}
-								col1Image={<Fontisto name="money-symbol" style={{ paddingVertical: 2 }} size={50} />}
-								onPress={() => this.toggleFiatModal({ display: true })}
-								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
-							/>
+							{/*
+							<SettingSwitch setting="testnet" value={this.props.settings["testnet"]} title="Enable Testnet" onPress={this.toggleTestnet} />
+
 
 							<MultiOptionRow
 								title="Exchange Rate Source"
@@ -988,6 +981,20 @@ class Settings extends PureComponent {
 									{key: "satoshi", value: coinDataLabel.satoshi, onPress: () => this.updateCryptoUnit("satoshi") }
 								]}
 							/>
+
+							<SettingGeneral
+								value={`Selected Fiat Currency:\n${this.getSelectedCurrency()}`}
+								col1Image={<Fontisto name="money-symbol" style={{ paddingVertical: 2 }} size={50} />}
+								onPress={() => this.toggleFiatModal({ display: true })}
+								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
+								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+							/>
+							<SettingSwitch setting="rbf" value={this.props.settings["rbf"]} title="Enable Replace-by-fee" onPress={this.toggleRBF} />
+							<SettingSwitch setting="sendTransactionFallback" value={this.props.settings["sendTransactionFallback"]} title="Send Transaction Fallback" onPress={this.toggleSendTransactionFallback} />
+
+							*/}
+
+
 
 							<SettingGeneral
 								title=""
