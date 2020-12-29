@@ -22,7 +22,7 @@ Moonshine's intended use is as a hot wallet.
 Meaning, your keys are only as safe as the device you install this wallet on.
 As with any hot wallet, please ensure that you keep only a small, responsible amount of Bitcoin/Litecoin on it at any given time.
 
-If you are looking for secure cold storage solutions please consider purchasing a [Trezor](https://wallet.trezor.io) or a [Ledger](https://www.ledger.com/)
+If you are looking for secure cold storage solutions please become a master in the fine art of using paper wallets.
 
 ### Features
 * Bitcoin/Litecoin Mainnet & Testnet supported
