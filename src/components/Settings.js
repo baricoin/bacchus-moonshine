@@ -1142,7 +1142,7 @@ class Settings extends PureComponent {
 							</View>
 
 							<SettingGeneral
-								value={`Need Some Help?\nsupport@moonshinewallet.com`}
+								value={`Need Some Help?\nsupport@canadaecoin.foundation`}
 								col1Image={<FontAwesome name="support" size={50} />}
 								onPress={this.requestHelp}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
@@ -1150,7 +1150,16 @@ class Settings extends PureComponent {
 							/>
 
 							<SettingGeneral
-								value={'Visit The Website\nmoonshinewallet.com'}
+								value={'The Canada eCoin Project\ncanadaecoin.site'}
+								col1Image={<MaterialCommunityIcons name="web" size={50} />}
+								onPress={this.visitWebsite}
+								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
+								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+							/>
+
+
+							<SettingGeneral
+								value={'This wallet is a fork of the Moonshine Wallet, \nmoonshinewallet.com'}
 								col1Image={<MaterialCommunityIcons name="web" size={50} />}
 								onPress={this.visitWebsite}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
@@ -1168,7 +1177,7 @@ class Settings extends PureComponent {
 
 							<Text style={[styles.title, { color: colors.white, textAlign: "center" }]}>{`Version: ${version}`}</Text>
 
-							<View style={{ paddingVertical: 70 }} />
+							<View style={{ paddingVertical: 40 }} />
 						</TouchableOpacity>
 
 					</ScrollView>
