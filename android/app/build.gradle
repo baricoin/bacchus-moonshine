@@ -166,7 +166,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.kisswallet"
+        applicationId "org.canadaecoin.moonshine"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 66
