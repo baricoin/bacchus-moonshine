@@ -176,7 +176,7 @@ export default class App extends Component {
 		isAnimating: false,
 	};
 
-	setExchangeRate = async ({ selectedCrypto = "bitcoin", selectedCurrency = "usd", selectedService = "coingecko" } = {}) => {
+	setExchangeRate = async ({ selectedCrypto = "canadaecoin", selectedCurrency = "cad", selectedService = "coingecko" } = {}) => {
 		const exchangeRate = await getExchangeRate({ selectedCrypto, selectedCurrency, selectedService });
 		if (exchangeRate.error === false) {
 			this.props.updateWallet({
@@ -189,7 +189,7 @@ export default class App extends Component {
 		return exchangeRate;
 	};
 
-	onCoinPress = async ({ coin = "bitcoin", walletId = "wallet0", initialLoadingMessage = "" } = {}) => {
+	onCoinPress = async ({ coin = "canadaecoin", walletId = "wallet0", initialLoadingMessage = "" } = {}) => {
 		try {
 			const sameCoin = this.props.wallet.selectedCrypto === coin;
 			const sameWallet = this.props.wallet.selectedWallet === walletId;
@@ -899,7 +899,7 @@ export default class App extends Component {
 				{ stateId: "displayLoading", opacityId: "loadingOpacity", display: true },
 			];
 			await this.updateItems(items);
-			await this.props.updateWallet({ selectedCrypto: "bitcoin" });
+			await this.props.updateWallet({ selectedCrypto: "canadaecoin" });
 
 			//Figure out what type of security/authentication is allowed for settings.
 			let biometricsIsSupported = false;
