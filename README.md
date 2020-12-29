@@ -1,9 +1,12 @@
-<img align="left" width="80" height="80" src="src/assets/logo/main_icon.png" alt="Moonshine Icon">
+<img align="left" width="80" height="80" src="src/assets/logo/main_icon.png" alt="Canada eCoin mobile wallet">
 
-# Moonshine
-Moonshine is available on [iOS](https://apps.apple.com/us/app/moonshine-wallet/id1449385577?ls=1) & [Android](https://play.google.com/store/apps/details?id=com.kisswallet)
+# Canada eCoin mobile wallet.
 
-Website: [moonshinewallet.com](https://moonshinewallet.com)
+This repo holds the official Canada eCoin mobile wallet.  This wallet is a thin-client; meaning it does not download the entire chain, instead, it connects to known electrum servers.
+
+Website: [canadaecoin.site](https://canadaecoin.site)
+
+The Canada eCoin mobile wallet is a fork of the [Moonshine wallet by Corey Phillips](https://github.com/coreyphillips/moonshine/)
 
 <p style="align-items: center">
   <img src="./src/assets/screenshots/send_transaction.png" width="33%" alt="Send Transaction" />
