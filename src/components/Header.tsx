@@ -16,7 +16,7 @@ const {
 
 const getCryptoLabel = ({ selectedCrypto = "bitcoin" } = {}) => {
 	try {
-		return capitalize(selectedCrypto);
+		return getCoinData({ selectedCrypto }).label;
 	} catch (e) {
 		console.log(e);
 	}
