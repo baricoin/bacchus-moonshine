@@ -86,7 +86,7 @@ const _Header = ({compress = false, fiatSymbol = "$", selectedCrypto = "bitcoin"
 			<View style={styles.cryptoValueRow}>
 				<Text type="white" style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{formatNumber(cryptoValue)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
 			</View>
-			{isOnline !== false &&
+			{exchangeRate !== NaN &&
 			<View style={styles.cryptoValueRow}>
 				<Text type="white" style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol}${formatNumber(exchangeRate)} CAD`}</Text>
 			</View>}
