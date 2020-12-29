@@ -203,6 +203,7 @@ class TransactionDetail extends PureComponent {
 		try {
 			const cryptoUnit = this.props.settings.cryptoUnit;
 			const selectedCrypto = this.props.wallet.selectedCrypto;
+			const selectedCurrency = this.props.wallet.selectedCurrency;
 			const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
 			const fiatSymbol = this.props.settings.fiatSymbol;
 			amount = Number(amount);
@@ -216,7 +217,7 @@ class TransactionDetail extends PureComponent {
 				const { acronym, oshi } = getCoinData({selectedCrypto, cryptoUnit});
 				return `${fiat}\n${formatNumber(crypto)} ${acronym}\n${initialFee} ${oshi}/byte`;
 			}
-			return `${fiat}\n${formatNumber(crypto)} ${getCoinData({ selectedCrypto, cryptoUnit }).acronym}`;
+			return `${formatNumber(crypto)} ${getCoinData({ selectedCrypto, cryptoUnit }).acronym} // ${fiat} ${selectedCurrency.toUpperCase()}`;
 		} catch (e) {
 			return "$0.00\n0 sats";
 		}
@@ -567,10 +568,10 @@ class TransactionDetail extends PureComponent {
 						{messagesLength > 0 && <View style={styles.separator} />}
 						
 						{type === "sent" && this.Row({ title: "Amount Sent:", value: amountSent })}
-						{type === "received" && this.Row({ title: "Amount \n Received:", value: amountReceived })}
+						{type === "received" && this.Row({ title: "Amount Received:", value: amountReceived })}
 						<View type="text" style={styles.separator} />
 						
-						{this.Row({ title: "Transaction\nFee:", value: transactionFee })}
+						{this.Row({ title: "Transaction Fee:", value: transactionFee })}
 						{this.state.rbfIsSupported && confirmations === 0 && this.RbfRow()}
 						<View type="text" style={styles.separator} />
 						
@@ -605,7 +606,7 @@ class TransactionDetail extends PureComponent {
 						{this.Row({ title: "Status:", value: capitalize(status) })}
 						<View type="text" style={styles.separator} />
 						
-						{this.Row({ title: `Date \n ${capitalize(type)}:`, value: moment.unix(timestamp).format('l @ h:mm a') })}
+						{this.Row({ title: `Date ${capitalize(type)}:`, value: moment.unix(timestamp).format('l @ h:mm a') })}
 						<View type="text" style={styles.separator} />
 						
 						{this.Row({ title: "Block:", value: formatNumber(blockHeight), onPress: () => this.openBlock(blockHeight), valueStyle: { textDecorationLine: "underline" } })}
