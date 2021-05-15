@@ -3,24 +3,22 @@ class Clients {
 		this.coin = "canadaecoin";
 		this.mainClient = {
 			canadaecoin: false,
+			auroracoin: false,
 			bitcoin: false,
-			litecoin: false,
-			bitcoinTestnet: false,
-			litecoinTestnet: false
+			litecoin: false
+
 		};
 		this.peer = {
 			canadaecoin: { port: 0, host: "", protocol: "" },
+			auroracoin: { port: 0, host: "", protocol: "" },
 			bitcoin: { port: 0, host: "", protocol: "" },
-			litecoin: { port: 0, host: "", protocol: "" },
-			bitcoinTestnet: { port: 0, host: "", protocol: "" },
-			litecoinTestnet: { port: 0, host: "", protocol: "" }
+			litecoin: { port: 0, host: "", protocol: "" }
 		};
 		this.peers = {
 			canadaecoin: [],
+			auroracoin: [],
 			bitcoin: [],
-			litecoin: [],
-			bitcoinTestnet: [],
-			litecoinTestnet: []
+			litecoin: []
 		};
 	}
 	
