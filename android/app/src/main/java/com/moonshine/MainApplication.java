@@ -48,6 +48,12 @@ public class MainApplication extends Application implements ReactApplication {
   }
 
   /**
+    * https://github.com/facebook/flipper
+    
+        Flipper (formerly Sonar) is a platform for debugging mobile apps on iOS and Android. Visualize, 
+        inspect, and control your apps from a simple desktop interface. Use Flipper as is or extend it 
+        using the plugin API.
+
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like
    * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
    *
