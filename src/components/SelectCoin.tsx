@@ -25,16 +25,16 @@ interface SelectCoinComponent {
 	deleteWallet: Function,
 	displayTestnet: boolean
 }
-const _SelectCoin = ({ wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, createNewWallet = () => null, onCoinPress = () => null, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true }: SelectCoinComponent) => {
+const _SelectCoin = ({ theme = {}, wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, createNewWallet = () => null, onCoinPress = () => null, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true }: SelectCoinComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	
 	const walletsLen = Object.keys(wallet.wallets).length;
 	return (
-		<View style={styles.container}>
+		<View style={[styles.container, {backgroundColor: theme.background}]}>
 			{walletsLen < 6 &&
 			<TouchableOpacity onPress={() => createNewWallet()} style={styles.plusIcon}>
-				<EvilIcon name={"plus"} size={40} color={colors.white} />
+				<EvilIcon name={"plus"} size={32} color={theme.text} />
 			</TouchableOpacity>}
 			<WalletCarousel
 				wallet={wallet}

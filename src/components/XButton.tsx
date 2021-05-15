@@ -12,12 +12,12 @@ interface XButtonComponent {
 	size?: number,
 	style?: object
 }
-const _XButton = ({ onPress = () => null, size = 42, style = {} }: XButtonComponent) => {
+const _XButton = ({ onPress = () => null, size = 28, style = {} }: XButtonComponent) => {
 	const _onPress = () => onPress();
 	return (
-		<TouchableOpacity onPress={_onPress} style={[styles.container, { height: size, width: size, ...style }]}>
-			<View style={[styles.circle, { height: size, width: size }]}>
-				<Text type="text" style={styles.text}>X</Text>
+		<TouchableOpacity onPress={_onPress} style={[styles.container, { height: size, width: size * 3, ...style }]}>
+			<View style={[styles.circle, { height: size, width: size * 3 }]}>
+				<Text type="text" style={styles.text}>back</Text>
 			</View>
 		</TouchableOpacity>
 	);
@@ -34,16 +34,16 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 100
 	},
 	circle: {
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 100
+		borderWidth: 1,
+		borderRadius: 6
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 18,
+		fontSize: 12,
 		textAlign: "center"
 	}
 });

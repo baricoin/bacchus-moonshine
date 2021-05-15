@@ -18,7 +18,7 @@ const {
 	}
 } = require("../../ProjectData.json");
 
-const ROW_HEIGHT = 32;
+const ROW_HEIGHT = 36;
 
 interface CameraComponent {
 	onSendPress: Function,
@@ -26,24 +26,43 @@ interface CameraComponent {
 	onCameraPress: Function,
 	style?: object
 }
-const _CameraRow = ({ onSendPress = () => null, onReceivePress = () => null, onCameraPress = () => null, style = {} }: CameraComponent) => {
+
+const {
+	getCoinImage,
+	getCoinData
+} = require("../utils/networks");
+
+const _CameraRow = ({ onSendPress = () => null, onReceivePress = () => null, onCameraPress = () => null, style = {}, coin }: CameraComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	
 	const _onSendPress = () => onSendPress();
 	const _onCameraPress = () => onCameraPress();
 	const _onReceivePress = () => onReceivePress();
+
+	let brandStyle = {
+		backgroundColor: `${getCoinData({ selectedCrypto:coin }).color}aa`,
+		borderColor: `${getCoinData({ selectedCrypto:coin }).color}`,
+	}
+
 	return (
 		<View style={[styles.container, style]}>
-			<TouchableOpacity type="button" onPress={_onSendPress} style={styles.leftItem}>
+			<TouchableOpacity type="background" onPress={_onSendPress} style={{...styles.leftItem, ...brandStyle}}>
 				<Text type="text" style={styles.text}>Send</Text>
 			</TouchableOpacity>
 			<View style={styles.centerItem}>
-				<TouchableHighlight type="background" onPress={_onCameraPress} underlayColor={colors.gray} style={styles.cameraIcon}>
-					<EvilIcon style={{ bottom: -1.5, left: 0.3 }} name={"camera"} size={40} />
+				<TouchableHighlight 
+					onPress={_onCameraPress} 
+					underlayColor={colors.background} 
+					style={{...styles.cameraIcon, 
+						backgroundColor: `${getCoinData({ selectedCrypto:coin }).color}`,
+						borderColor: `${getCoinData({ selectedCrypto:coin }).color}99`
+					}}
+				>
+					<EvilIcon style={{ color: "#FFF", bottom: 0, left: 0.3 }} name={"camera"} size={48} />
 				</TouchableHighlight>
 			</View>
-			<TouchableOpacity type="button" onPress={_onReceivePress} style={styles.rightItem}>
+			<TouchableOpacity type="background" onPress={_onReceivePress} style={{...styles.rightItem, ...brandStyle}}>
 				<Text type="text" style={styles.text}>Receive</Text>
 			</TouchableOpacity>
 		</View>
@@ -60,7 +79,7 @@ const styles = StyleSheet.create({
 		alignItems:"center",
 		justifyContent:"center",
 		paddingVertical: 5,
-		borderWidth: 1,
+		borderWidth: 2,
 		borderRadius: 50,
 		borderTopRightRadius: 0,
 		borderBottomRightRadius: 0,
@@ -73,12 +92,13 @@ const styles = StyleSheet.create({
 		justifyContent:"center"
 	},
 	cameraIcon: {
+		color: "#fff",
 		alignItems:"center",
 		justifyContent:"center",
 		width:ROW_HEIGHT * 2,
 		height:ROW_HEIGHT * 2,
 		borderRadius:100,
-		borderWidth: 1
+		borderWidth: 2
 	},
 	rightItem: {
 		flex: 1,
@@ -86,7 +106,7 @@ const styles = StyleSheet.create({
 		alignItems:"center",
 		justifyContent:"center",
 		paddingVertical: 5,
-		borderWidth: 1,
+		borderWidth: 2,
 		borderRadius: 50,
 		borderTopLeftRadius: 0,
 		borderBottomLeftRadius: 0,
@@ -95,9 +115,9 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.bold,
-		color: colors.white,
-		fontSize: 14,
-		textAlign: "center"
+		fontSize: 18,
+		textAlign: "center",
+		color: "#fff"
 	}
 });
 

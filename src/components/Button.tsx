@@ -64,7 +64,6 @@ const _Button = ({ title = "", onPress = () => null, text = "", activeOpacity = 
 		return (
 			<TouchableOpacity
 				type="transparent"
-				borderColor={disabled ? "gray" : "white"}
 				style={[styles.container, {
 					opacity,
 					...style
@@ -74,16 +73,16 @@ const _Button = ({ title = "", onPress = () => null, text = "", activeOpacity = 
 				disabled={disabled || loading}
 			>
 				{loading &&
-				<ActivityIndicator type="white" size="small" />
+				<ActivityIndicator size="small" />
 				}
 				{title !== "" && !loading &&
-				<Text type={disabled ? "gray" : "white"} style={[styles.title, titleStyle]}>{title}</Text>
+				<Text type={disabled ? "gray" : ""} style={[styles.title, titleStyle]}>{title}</Text>
 				}
 				{text !== "" && !loading &&
-				<Text type={disabled ? "gray" : "white"} style={[styles.text, textStyle]}>{text}</Text>
+				<Text type={disabled ? "gray" : ""} style={[styles.text, textStyle]}>{text}</Text>
 				}
 				{text2 !== "" && !loading &&
-				<Text type={disabled ? "gray" : "white"} style={[styles.text, textStyle]}>{text2}</Text>
+				<Text type={disabled ? "gray" : ""} style={[styles.text, textStyle]}>{text2}</Text>
 				}
 			</TouchableOpacity>
 		);
@@ -107,7 +106,7 @@ _Button.propTypes = {
 const styles = StyleSheet.create({
 	container: {
 		borderWidth: 1.2,
-		borderRadius: 10,
+		borderRadius: 6,
 		paddingHorizontal: 15,
 		paddingVertical: 12,
 		alignItems: "center",

@@ -1,7 +1,6 @@
 import React, { useEffect, memo } from "react";
 import {
 	View,
-	Text,
 	TouchableOpacity,
 	StyleSheet,
 	Dimensions,
@@ -10,9 +9,11 @@ import {
 	LayoutAnimation,
 	Platform
 } from "react-native";
+import { Text } from "../styles/components"
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
 import CoinButton from "./CoinButton";
+import WalletOptions from "./WalletOptions";
 
 const {
 	Constants: {
@@ -21,7 +22,8 @@ const {
 } = require("../../ProjectData.json");
 const { height, width } = Dimensions.get("window");
 const {
-	capitalize
+	capitalize,
+	getExchangeRate
 } = require("../utils/helpers");
 
 const {
@@ -38,12 +40,15 @@ interface WalletSliderEntryComponent {
 	onCoinPress: Function,
 	updateActiveSlide: Function
 }
+
+
 const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	
 	const getWalletName = () => {
 		try {
+			try { if (wallet.wallets[walletId].label !== "") return wallet.wallets[walletId].label; } catch (e) {}
 			try { if (wallet.wallets[walletId].name.trim() !== "") return wallet.wallets[walletId].name; } catch (e) {}
 			try { return `Wallet ${wallet.walletOrder.indexOf(walletId)}`; } catch (e) {}
 		} catch (e) {
@@ -52,6 +57,7 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 	};
 	
 	const _delWallet = async ({ walletIndex = 0 } = {}) => {
+
 		try {
 			if (Object.keys(wallet.wallets).length > 1) {
 				const indexOfSelectedWallet = wallet.walletOrder.indexOf(wallet.selectedWallet);
@@ -94,12 +100,8 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 				"Delete Wallet",
 				`Are you sure you wish to delete ${walletName}?`,
 				[
-					{
-						text: "No",
-						onPress: () => {},
-						style: "cancel",
-					},
-					{text: "Yes", onPress: () => _delWallet({ walletIndex: index })},
+					{ text: "No", onPress: () => {}, style: "cancel" },
+					{ text: "Yes", onPress: () => _delWallet({ walletIndex: index })},
 				]
 			);
 		} catch (e) {
@@ -112,7 +114,7 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 			<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={styles.innerContainer}>
 				
 				<View style={styles.header}>
-					<Text style={styles.headerText}>
+					<Text style={[styles.headerText ]}>
 						{getWalletName()}
 					</Text>
 				</View>
@@ -120,6 +122,9 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 				<View style={styles.scrollViewContent}>
 					{availableCoins.map((coin, i) => {
 						if (!displayTestnet && coin.toLowerCase().includes("testnet")) return;
+
+						let balance = wallet.wallets[walletId].confirmedBalance[coin];
+
 						return (
 							<CoinButton
 								key={`${coin}${i}`}
@@ -127,15 +132,18 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 								label={capitalize(coin)}
 								onCoinPress={() => onCoinPress({coin, walletId})}
 								walletId={walletId}
-								balance={wallet.wallets[walletId].confirmedBalance[coin]}
+								balance={balance}
 								cryptoUnit={cryptoUnit}
+								fiatValue={getExchangeRate({selectedCrypto: "canadaecoin", selectedCurrency: "cad", selectedService: "coingecko"}) * balance}
 							/>
 						);
 					})}
 					{Object.keys(wallet.wallets).length > 1 &&
 					<TouchableOpacity onPress={delWallet} style={styles.deleteButton}>
-						<Text style={[styles.text, { color: colors.white }]}>Delete Wallet</Text>
+						<Text style={[styles.text, { color: colors.danger }]}>Delete Wallet</Text>
 					</TouchableOpacity>}
+
+
 				</View>
 				
 				<View style={{ paddingVertical: 70 }} />
@@ -165,12 +173,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent"
 	},
 	header: {
-		marginBottom: 20
+		marginBottom: 6
 	},
 	headerText: {
 		...systemWeights.thin,
-		fontSize: 40,
-		color: colors.white,
+		fontSize: 28,
 		textAlign: "center"
 	},
 	innerContainer: {
@@ -184,18 +191,18 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start"
 	},
 	deleteButton: {
-		width: "82%",
-		minHeight: 80,
+		width: "100%",
+		minHeight: 40,
 		marginBottom: 15,
-		borderRadius: 22,
-		backgroundColor: colors.red,
-		borderColor: colors.red,
+		borderRadius: 6,
+		borderWidth: 1,
+		backgroundColor: `${colors.danger}22`,
+		borderColor: `${colors.danger}88`,
 		alignItems: "center",
 		justifyContent: "center"
 	},
 	text: {
 		...systemWeights.semibold,
-		color: colors.purple,
 		fontSize: 18,
 		textAlign: "center"
 	}

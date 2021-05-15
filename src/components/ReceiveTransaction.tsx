@@ -220,17 +220,17 @@ const styles = StyleSheet.create({
 		justifyContent: "center"
 	},
 	qrCodeContainer: {
-		padding: 10,
-		backgroundColor: colors.white,
-		borderRadius: 5
+		padding: 5,
+		backgroundColor: "#fff",
+		borderRadius: 3
 	},
 	specifyAmountButton: {
 		backgroundColor: "transparent",
 		borderWidth: 1,
-		borderColor: colors.white,
+		borderColor: "#fff",
 		paddingHorizontal: 18,
 		paddingVertical: 10,
-		borderRadius: 10,
+		borderRadius: 6,
 		marginTop: 40
 	},
 	textInput: {
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontSize: Platform.OS === "ios" ? 30 : 26,
 		fontWeight: "bold",
-		backgroundColor: "transparent"
+		// backgroundColor: "transparent"
 	},
 	swapButton: {
 		alignItems: "center",
@@ -256,7 +256,6 @@ const styles = StyleSheet.create({
 	requestButtonText: {
 		textAlign: "center",
 		...systemWeights.semibold,
-		color: colors.white,
 		fontSize: 18
 	},
 	swapIcon: {

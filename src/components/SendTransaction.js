@@ -961,6 +961,7 @@ class SendTransaction extends Component {
 						selectedCryptoStyle={{ fontSize: 30, marginTop: 10 }}
 						selectedWallet={`Wallet ${this.props.wallet.walletOrder.indexOf(selectedWallet)}`}
 						exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
+						bitcoinRate={this.props.wallet.exchangeRate['bitcoin']}
 						isOnline={this.props.user.isOnline}
 						walletName={this.getWalletName()}
 					/>
@@ -977,15 +978,15 @@ class SendTransaction extends Component {
 							autoCapitalize="none"
 							autoCompleteType="off"
 							autoCorrect={false}
-							selectionColor={colors.lightPurple}
+							selectionColor={this.getTheme().selection}
 							onChangeText={(address) => this.props.updateTransaction({ address })}
 							value={this.props.transaction.address}
 						>
 						</TextInput>
-						<TouchableOpacity style={[styles.leftIconContainer, { backgroundColor: this.getTheme().background2 }]} onPress={this.getClipboardContent}>
+						<TouchableOpacity style={[styles.leftIconContainer, { backgroundColor: this.getTheme().input }]} onPress={this.getClipboardContent}>
 							<FontAwesome style={styles.clipboardIcon} name={"clipboard"} size={25} />
 						</TouchableOpacity>
-						<TouchableOpacity style={[styles.rightIconContainer, { backgroundColor: this.getTheme().background2 }]} onPress={this.state.onCameraPress}>
+						<TouchableOpacity style={[styles.rightIconContainer, { backgroundColor: this.getTheme().input }]} onPress={this.state.onCameraPress}>
 							<EvilIcon style={styles.cameraIcon} name={"camera"} size={40} />
 						</TouchableOpacity>
 					</View>
@@ -999,9 +1000,9 @@ class SendTransaction extends Component {
 					<View style={styles.textInputRow}>
 						<TextInput
 							style={[styles.textInput, {
-								backgroundColor: this.state.spendMaxAmount ? this.getTheme().gray3 : this.getTheme().background2
+								backgroundColor: this.state.spendMaxAmount ? this.getTheme().uneditable : this.getTheme().input
 							}]}
-							selectionColor={colors.lightPurple}
+							selectionColor={this.getTheme().selection}
 							autoCompleteType="off"
 							autoCorrect={false}
 							onChangeText={(amount) => this.updateAmount(amount)}
@@ -1010,6 +1011,7 @@ class SendTransaction extends Component {
 							keyboardType="decimal-pad"
 							placeholder="0"
 						/>
+
 						<TouchableOpacity
 							style={[styles.leftIconContainer, {
 								backgroundColor: this.state.spendMaxAmount ? this.getTheme().gray3 : this.getTheme().background2
@@ -1033,7 +1035,7 @@ class SendTransaction extends Component {
 						>
 							<Text
 								style={[styles.amountText, {
-									color: this.state.spendMaxAmount ? this.getTheme().white : this.getTheme().text
+									color: this.state.spendMaxAmount ? this.getTheme().text : this.getTheme().text
 								}]}
 							>
 								Max
@@ -1055,7 +1057,7 @@ class SendTransaction extends Component {
 							autoCorrect={false}
 							placeholder="Anything entered here will be public"
 							style={[styles.textInput, { borderRadius: 5 }]}
-							selectionColor={colors.lightPurple}
+							selectionColor={this.getTheme().selection}
 							onChangeText={async (message) => {
 								if (message.length <= MAX_MESSAGE_LENGTH) {
 									await this.props.updateTransaction({message}); //Set message
@@ -1069,7 +1071,7 @@ class SendTransaction extends Component {
 						</TextInput>
 					</View>
 
-					<View style={[styles.row, { marginTop: 20, marginBottom: 1, justifyContent: "space-between" }]}>
+					<View style={[styles.row, { marginTop: 6, marginBottom: 1, justifyContent: "space-between" }]}>
 						<View type="transparent" style={{ flexDirection: "row" }}>
 							<MaterialCommunityIcons onPress={this.toggleFeeEstimateModal} type="white" name="help-circle-outline" size={20} />
 							<Text style={styles.text}>Fee: {!this.state.cryptoBalance ? 0 :this.props.transaction.fee || this.props.transaction.recommendedFee} {this.coinData().oshi}/B </Text>
@@ -1085,8 +1087,8 @@ class SendTransaction extends Component {
 						<Slider
 							style={styles.slider}
 							onValueChange={(fee) => this.updateFee(parseInt(fee))}
-							thumbTintColor={colors.white}
-							minimumTrackTintColor={colors.lightPurple}
+							thumbTintColor={this.getTheme().text}
+							minimumTrackTintColor={this.getTheme().highlight}
 							maximumValue={this.props.transaction.maximumFee}
 							minimumValue={1}
 							value={!this.state.cryptoBalance ? 0 : Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee)}
@@ -1096,7 +1098,7 @@ class SendTransaction extends Component {
 					{this.state.displayCoinControlButton &&
 					<TouchableOpacity
 						onPress={this.toggleCoinControlModal}
-						style={[styles.row, {justifyContent: "center", paddingVertical: 5 }]}
+						style={[styles.row, {justifyContent: "center", paddingVertical: 4 }]}
 					>
 						<FontAwesome5 type="white" name="coins" size={20} />
 						<Text style={styles.text}>Coin Control</Text>
@@ -1113,9 +1115,8 @@ class SendTransaction extends Component {
 					<View style={styles.sendButton}>
 						<Button
 							disabled={!this.state.cryptoBalance}
-							title="Send"
-							text={`~${this.props.settings.fiatSymbol}${this.getSendButtonFiatLabel() || "0"}`}
-							text2={this.getSendButtonCryptoLabel()}
+							title={`Send ~${this.props.settings.fiatSymbol}${this.getSendButtonFiatLabel() || "0"} ${this.props.wallet.selectedCurrency.toUpperCase()}`}
+							text={this.getSendButtonCryptoLabel()}
 							textStyle={{ paddingTop: 5, ...systemWeights.light, }}
 							onPress={this.validateTransaction}
 						/>
@@ -1158,19 +1159,21 @@ class SendTransaction extends Component {
 				</DefaultModal>
 
 				<Modal
-					backdropColor={this.getTheme().PRIMARY}
+					backdropColor={this.getTheme().background}
 					deviceHeight={height*-1}
 					deviceWidth={width*-1}
 					style={{ flex: 1 }}
 					isVisible={this.state.displayConfirmationModal}
 				>
-					<View type="PRIMARY" style={styles.modalContainer}>
+					<View style={styles.modalContainer}>
 
 						<View style={styles.modalContent}>
 							<View style={{ flex: 1 }}>
-								<Text style={[styles.boldModalText, { fontSize: 24, textAlign: "center", marginBottom: 20 }]}>
-									Is This Correct?
+
+								<Text style={[styles.boldModalText, { fontSize: 24, textAlign: "center", marginBottom: 12 }]}>
+									Is this correct?
 								</Text>
+
 								<View style={styles.modalUpperContent}>
 									<View style={{ flex: 1, backgroundColor: "transparent", alignItems: "center", justifyContent: "center" }}>
 										<Text style={[styles.boldModalText, { alignSelf: "center", textAlign: "center" }]}>Send To:</Text>
@@ -1191,11 +1194,9 @@ class SendTransaction extends Component {
 								</View>
 
 								<View style={styles.modalMiddleContent}>
-
 									<Text style={[styles.boldModalText, { fontSize: 24 }]}>Total:</Text>
 									<Text style={[styles.modalText, { fontSize: 20 }]}>{this.satsToUnit(Number(this.props.transaction.amount) + Number(cryptoFeeLabel))} {this.coinData().acronym}</Text>
 									<Text style={[styles.modalText, { fontSize: 20 }]}>{this.props.settings.fiatSymbol}{(Number(this.props.transaction.fiatAmount) + Number(fiatFeeLabel)).toFixed(2)}</Text>
-
 									<Animated.View style={[styles.copiedContainer, { opacity: this.state.rawTxCopiedOpacity }]}>
 										<View style={styles.copied}>
 											<Text style={styles.copiedText}>RawTx Copied!</Text>
@@ -1204,7 +1205,6 @@ class SendTransaction extends Component {
 											</Text>
 										</View>
 									</Animated.View>
-
 								</View>
 
 								<View style={styles.modalBottomContainer}>
@@ -1212,7 +1212,7 @@ class SendTransaction extends Component {
 										<Button
 											title="Copy TxHex"
 											loading={this.state.generatingTxHex}
-											style={{ backgroundColor: "#813fb1" }}
+											style={{ backgroundColor: this.getTheme().input }}
 											onPress={async () => {
 												this.setState({ generatingTxHex: true });
 												let rawTx = await this.createTransaction();
@@ -1226,11 +1226,13 @@ class SendTransaction extends Component {
 												if (this.state.rawTx !== rawTx) this.setState({ rawTx });
 											}}
 										/>
-										<Button style={{ backgroundColor: "#813fb1" }} title="Send" onPress={this.sendTransaction} activeOpacity={0.6} />
+										<Button style={{ backgroundColor: this.getTheme().input }} title="Send" onPress={this.sendTransaction} activeOpacity={0.6} />
 									</View>
 								</View>
+
 							</View>
 						</View>
+						
 						{this.state.displayLoading &&
 						<LinearGradient style={styles.loadingContainer}>
 							<Loading
@@ -1245,10 +1247,12 @@ class SendTransaction extends Component {
 								animationName="loader"
 							/>
 						</LinearGradient>}
+
 						{this.state.displayXButton &&
 						<Animated.View style={styles.xButton}>
 							<XButton onPress={this.onBack} />
 						</Animated.View>}
+
 					</View>
 				</Modal>
 
@@ -1304,7 +1308,6 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.regular,
-		color: colors.white,
 		fontSize: 18,
 		textAlign: "left",
 		marginLeft: 5
@@ -1350,13 +1353,13 @@ const styles = StyleSheet.create({
 		height: 30,
 		alignItems: "center",
 		justifyContent: "center",
-		paddingHorizontal: 5
+		paddingHorizontal: 4
 	},
 	rightIconContainer: {
 		backgroundColor: "transparent",
 		alignItems: "center",
 		justifyContent: "center",
-		paddingHorizontal: 5,
+		paddingHorizontal: 4,
 		borderTopRightRadius: 5,
 		borderBottomRightRadius: 5,
 		borderLeftColor: colors.purple,
@@ -1377,7 +1380,7 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: "row",
-		marginTop: 10,
+		marginTop: 6,
 		backgroundColor: "transparent"
 	},
 	sendButtonContainer: {
@@ -1458,10 +1461,10 @@ const connect = require("react-redux").connect;
 const bindActionCreators = require("redux").bindActionCreators;
 const userActions = require("../actions/user");
 const walletActions = require("../actions/wallet");
-const transactionActions = require("../actions/transaction");
 const settingsActions = require("../actions/settings");
+const transactionActions = require("../actions/transaction");
 
-const mapStateToProps = ({...state}) => ({
+const mapStateToProps = ({ ...state }) => ({
 	...state
 });
 
@@ -1469,8 +1472,8 @@ const mapDispatchToProps = (dispatch) => {
 	const actions = {
 		...userActions,
 		...walletActions,
-		...transactionActions,
-		...settingsActions
+		...settingsActions,
+		...transactionActions
 	};
 	return bindActionCreators({
 		...actions

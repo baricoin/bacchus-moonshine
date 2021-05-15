@@ -11,12 +11,6 @@ import Button from "./Button";
 import {Text, View, CopiedLinearGradient} from "../styles/components";
 import Clipboard from "@react-native-community/clipboard";
 
-const {
-    Constants: {
-        colors
-    }
-} = require("../../ProjectData.json");
-
 interface ShareButtonsComponent {
     text: string,
     shareMessage?: string,
@@ -88,7 +82,7 @@ const _ShareButtons = (
 
     return (
         <View type="transparent">
-            <View type="card2" borderColor="text" style={[styles.textContainer, textContainerStyle]}>
+            <View borderColor="text" style={[styles.textContainer, textContainerStyle]}>
                 <Text type="text" style={styles.text}>{text}</Text>
                 <Animated.View style={[styles.copiedContainer, textContainerStyle, {opacity: textOpacity}]}>
                     <CopiedLinearGradient
@@ -132,7 +126,7 @@ const styles = StyleSheet.create({
     },
     text: {
         ...systemWeights.light,
-        fontSize: 15,
+        fontSize: 12,
         textAlign: "center"
     },
     copiedContainer: {
@@ -150,7 +144,6 @@ const styles = StyleSheet.create({
     },
     copiedText: {
         ...systemWeights.bold,
-        color: colors.white,
         fontSize: 16,
         textAlign: "center"
     },

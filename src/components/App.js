@@ -17,6 +17,7 @@ import {
 	TouchableWithoutFeedback,
 	Easing,
 	Linking,
+	ImageBackground
 } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { LinearGradient, Text, TextInput } from "../styles/components";
@@ -43,6 +44,7 @@ import Settings from "./Settings";
 import Biometrics from "./Biometrics";
 import PinPad from "./PinPad";
 import Loading from "./Loading";
+
 import * as electrum from "../utils/electrum";
 import bitcoinUnits from "bitcoin-units";
 import DefaultModal from "./DefaultModal";
@@ -50,7 +52,7 @@ import Welcome from "./Welcome";
 import BackupPhrase from "./BackupPhrase";
 import TransactionListHeader from "./TransactionListHeader";
 import { v4 as uuidv4 } from "uuid";
-import { networks } from "../utils/networks";
+import { networks, getCoinImage } from "../utils/networks";
 import * as bip38 from "bip38";
 import * as wif from "wif";
 //import ElectrumTesting from "./ElectrumTesting";
@@ -78,12 +80,21 @@ const {
 	getDifferenceBetweenDates,
 	getScriptHash
 } = require("../utils/helpers");
+
 const moment = require("moment");
 const {
 	version,
 } = require("../../package");
-const { width } = Dimensions.get("window");
+
+const { width, height } = Dimensions.get("window");
+const aspectRatio =  height / width;
+let verticalOffset = 0;
+if(aspectRatio < 2 && aspectRatio >= 1.5) verticalOffset = (2 - aspectRatio) * 400;
+
+
+console.log('aspect ratio:', aspectRatio);
 const bip39 = require("bip39");
+
 try {
 	this.subscribedAddress = ""; //Holds currently subscribed address
 	this.subscribedChangeAddress = ""; //Holds currently subscribed change address
@@ -93,6 +104,7 @@ try {
 	this.deepLinkUrl = ""; // Holds url for a deep link event.
 	this.settingsWasPreviouslyOpen = false;
 } catch {}
+
 export default class App extends Component {
 
 	state = {
@@ -197,6 +209,7 @@ export default class App extends Component {
 				this.resetView();
 				return;
 			}
+
 
 			const network = getNetworkType(coin);
 			await this.props.updateWallet({ selectedCrypto: coin, network, selectedWallet: walletId });
@@ -496,7 +509,7 @@ export default class App extends Component {
 				//Set an interval to update the exchange rate approximately every 2 minutes.
 				this._refreshWallet = setInterval(async () => {
 					this.setExchangeRate({ selectedCrypto, selectedService, selectedCurrency }); //Set the exchange rate for the selected currency
-				}, 60 * 2000);
+				}, 60 * 1000);
 			}
 
 			//Update peer list if needed.
@@ -1088,7 +1101,7 @@ export default class App extends Component {
 	}
 
 	//Handles The "upper" & "lower" Flex Animation
-	updateFlex = ({ upperContentFlex = 1, lowerContentFlex = 1, duration = 250 } = {}) => {
+	updateFlex = ({ upperContentFlex = 1, lowerContentFlex = 1, duration = 150 } = {}) => {
 		return new Promise(async (resolve) => {
 			try {
 				Animated.parallel([
@@ -1343,6 +1356,7 @@ export default class App extends Component {
 			const { selectedWallet, selectedCrypto } = this.props.wallet;
 			transaction = await this.props.wallet.wallets[selectedWallet].transactions[selectedCrypto].filter((tx) => tx.hash === transaction);
 			await this.props.updateWallet({ selectedTransaction: transaction[0] });
+			this.setState({ transactionsAreExpanded: true, upperMinHeight: 0 });
 
 			const items = [
 				{ stateId: "displayXButton", opacityId: "xButtonOpacity", display: true },
@@ -1537,6 +1551,7 @@ export default class App extends Component {
 			}),
 			this.updateItems(items),
 			this.updateFlex({ duration: 400 }),
+			this.setState({ upperMinHeight: verticalOffset }),
 		]);
 		await this.props.updateWallet({ selectedTransaction: "" });
 		this.setState({
@@ -1549,9 +1564,8 @@ export default class App extends Component {
 
 	//Handles the series of animations necessary for the user to expand the transaction list.
 	expandTransactions = () => {
-		this.setState({ transactionsAreExpanded: true });
+		this.setState({ transactionsAreExpanded: true, upperMinHeight: 0 });
 		const items = [
-			{ stateId: "displayXButton", opacityId: "xButtonOpacity", display: true },
 			{ stateId: "displayCameraRow", opacityId: "cameraRowOpacity", display: false, duration: 200 },
 			{ stateId: "displayPriceHeader", opacityId: "priceHeaderOpacity", display: false, duration: 350 },
 			{ stateId: "displayTextInput", opacityId: "textInputOpacity", display: false },
@@ -1920,6 +1934,7 @@ export default class App extends Component {
 		try {
 			const selectedWallet = this.props.wallet.selectedWallet;
 			try {
+				if (this.props.wallet.wallets[selectedWallet].label.trim() !== "") return this.props.wallet.wallets[selectedWallet].label;
 				if (this.props.wallet.wallets[selectedWallet].name.trim() !== "") return this.props.wallet.wallets[selectedWallet].name;
 			} catch (e) {
 			}
@@ -1996,16 +2011,21 @@ export default class App extends Component {
 	render() {
 		//return <ElectrumTesting />;
 		//TODO: Remove nested SafeAreaView. Note: Removing it affects XButton position along with a few other items.
+
+
 		return (
 			<ThemeProvider theme={this.getTheme()}>
-				<SafeAreaView style={[styles.container, { backgroundColor: this.getTheme().PRIMARY_DARK }]}>
+				<SafeAreaView style={[styles.container, { backgroundColor: this.getTheme().background }]}>
 					<SafeAreaView style={styles.container}>
 						<StatusBar
-							backgroundColor={this.getTheme().PRIMARY_DARK}
+							backgroundColor={this.getTheme().primary}
 							barStyle="light-content"
 							animated={true}
 						/>
-						<Animated.View style={[styles.upperContent, { flex: this.state.upperContentFlex }]}>
+						<Animated.View style={[styles.upperContent, { flex: this.state.upperContentFlex, minHeight: this.state.upperMinHeight }]}>
+
+ 						<ImageBackground source={getCoinImage(this.props.wallet.selectedCrypto)} style={styles.image}>
+
 							<LinearGradient style={styles.linearGradient} start={{ x: 0.0, y: 0.0 }}
 											end={{ x: 1.0, y: 1.0 }}>
 
@@ -2030,7 +2050,7 @@ export default class App extends Component {
 												}}
 												onPress={this.onSettingsPress}
 											>
-												<Ionicons name={"ios-cog"} size={30} color={colors.white} />
+												<Ionicons name={"ios-cog"} size={32} color={this.getTheme().text} />
 											</TouchableOpacity>
 										</Animated.View>}
 
@@ -2059,7 +2079,8 @@ export default class App extends Component {
 											loadingOpacity={this.state.loadingOpacity}
 											loadingMessage={this.state.loadingMessage}
 											loadingProgress={this.state.loadingProgress}
-											width={width / 2}
+											width={width / 1.2}
+											theme={this.getTheme()}
 											animationName={this.state.loadingAnimationName}
 										/>}
 
@@ -2095,13 +2116,13 @@ export default class App extends Component {
 													paddingVertical: 5,
 													paddingHorizontal: 15,
 													backgroundColor: "transparent",
-													borderRadius: 10,
-													borderColor: this.hasBackedUpWallet() ? "transparent" : colors.white,
-													borderWidth: 1.5,
+													borderRadius: 6,
+													borderColor: this.hasBackedUpWallet() ? "transparent" : this.getTheme().text,
+													borderWidth: 1,
 												}}
 											>
 												<Text
-													style={styles.cryptoValue}>{this.hasBackedUpWallet() ? this.getWalletName() : `${this.getWalletName()} is not backed up.\nTap to backup now.`}</Text>
+													style={styles.cryptoValue}>{this.hasBackedUpWallet() ? this.getWalletName() : `This wallet is not backed up.\nTap here to backup now.`}</Text>
 											</TouchableOpacity>
 											<Header
 												fiatValue={this.getFiatBalance()}
@@ -2111,6 +2132,7 @@ export default class App extends Component {
 												selectedCrypto={this.props.wallet.selectedCrypto}
 												selectedWallet={this.props.wallet.selectedWallet}
 												exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
+												bitcoinRate={this.props.wallet.exchangeRate['bitcoin']}
 												isOnline={this.props.user.isOnline}
 												onSelectCoinPress={this.onSelectCoinPress}
 											/>
@@ -2164,6 +2186,8 @@ export default class App extends Component {
 												onSendPress={this.onSendPress}
 												onReceivePress={this.onReceivePress}
 												onCameraPress={this.onCameraPress}
+												coin={this.props.wallet.selectedCrypto}
+
 											/>
 										</Animated.View>}
 									</View>
@@ -2179,10 +2203,13 @@ export default class App extends Component {
 										deleteWallet={this.props.deleteWallet}
 										createNewWallet={this.createNewWallet}
 										displayTestnet={this.props.settings.testnet}
+										theme={this.getTheme()}
 									/>
 								</Animated.View>}
 
 							</LinearGradient>
+
+					</ImageBackground>
 						</Animated.View>
 
 						<Animated.View style={[styles.lowerContent, {
@@ -2201,9 +2228,10 @@ export default class App extends Component {
 											transactionsAreExpanded={this.state.transactionsAreExpanded}
 											resetView={this.resetView}
 											expandTransactions={this.expandTransactions}
+											theme={this.getTheme()}
 										/>
 										<TransactionList
-											exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
+											exchangeRate={String(this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto])}
 											blockHeight={this.props.wallet.blockHeight[this.props.wallet.selectedCrypto]}
 											blacklistedUtxos={this.getBlacklistedUtxos()}
 											selectedCrypto={this.props.wallet.selectedCrypto}
@@ -2233,7 +2261,7 @@ export default class App extends Component {
 						{this.state.displayXButton &&
 						<Animated.View style={[styles.xButton, { opacity: this.state.xButtonOpacity }]}>
 							<XButton
-								style={{ borderColor: this.state.displayTransactionList ? "transparent" : colors.white }}
+								style={{ borderColor: this.state.displayTransactionList ? "transparent" : this.getTheme().text }}
 								onPress={this.resetView}
 							/>
 						</Animated.View>}
@@ -2273,7 +2301,7 @@ export default class App extends Component {
 								<Text
 									style={[styles.text, {
 										marginTop: 10,
-										color: colors.purple
+										color: this.getTheme().text
 									}]}
 								>
 									{this.state.bitidData["host"]}
@@ -2297,7 +2325,7 @@ export default class App extends Component {
 								<TextInput
 									placeholder="Please enter your BIP38 passphrase here."
 									style={styles.textInput}
-									selectionColor={colors.lightPurple}
+									selectionColor={this.getTheme().text}
 									autoCapitalize="none"
 									autoCompleteType="off"
 									autoCorrect={false}
@@ -2326,6 +2354,13 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+	image: {
+	    position: 'absolute',
+	    left: 0,
+	    top: 0,
+	    width: '100%',
+	    height: '100%'
+	},
 	container: {
 		flex: 1,
 	},
@@ -2395,8 +2430,6 @@ const styles = StyleSheet.create({
 		justifyContent: "flex-start",
 		paddingHorizontal: 20,
 		marginVertical: 10,
-		//borderWidth: 1,
-		//borderColor: colors.white
 	},
 	xButton: {
 		position: "absolute",
@@ -2412,7 +2445,6 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.light,
-		color: colors.white,
 		fontSize: 20,
 		textAlign: "center",
 	},
@@ -2432,22 +2464,20 @@ const styles = StyleSheet.create({
 	},
 	cryptoValue: {
 		...systemWeights.regular,
-		color: colors.white,
-		fontSize: 20,
+		// color: colors.white,
+		fontSize: 14,
 		textAlign: "center",
 		backgroundColor: "transparent",
 	},
 	button: {
-		backgroundColor: colors.lightPurple,
 		minWidth: "20%",
 		paddingHorizontal: 15,
 		paddingVertical: 9,
 	},
 	textInput: {
 		width: "80%",
-		borderRadius: 10,
+		borderRadius: 6,
 		borderWidth: 1,
-		borderColor: colors.purple,
 		padding: 10,
 		textAlign: "center",
 		alignItems: "center",
@@ -2465,7 +2495,7 @@ const settingsActions = require("../actions/settings");
 const transactionActions = require("../actions/transaction");
 
 const mapStateToProps = ({ ...state }) => ({
-	...state,
+	...state
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -2473,11 +2503,12 @@ const mapDispatchToProps = (dispatch) => {
 		...userActions,
 		...walletActions,
 		...settingsActions,
-		...transactionActions,
+		...transactionActions
 	};
 	return bindActionCreators({
-		...actions,
+		...actions
 	}, dispatch);
 };
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(App);
+

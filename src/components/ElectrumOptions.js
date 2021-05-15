@@ -350,8 +350,7 @@ ElectrumOptions.defaultProps = {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		borderRadius: 20
+		flex: 1
 	},
 	header: {
 		...systemWeights.semibold,
@@ -396,9 +395,8 @@ const styles = StyleSheet.create({
 	},
 	textInputRow: {
 		flexDirection: "row",
-		width: "80%",
-		minHeight: 40,
-		borderRadius: 10,
+		width: "100%",
+		borderRadius: 6,
 		textAlign: "left",
 		alignItems: "center",
 		justifyContent: "center",
@@ -408,13 +406,11 @@ const styles = StyleSheet.create({
 		minWidth: "20%",
 		paddingVertical: 8,
 		marginRight: 2,
-		backgroundColor: colors.purple
 	},
 	rightButton: {
 		minWidth: "26%",
 		paddingVertical: 8,
-		marginLeft: 2,
-		backgroundColor: colors.purple
+		marginLeft: 4,
 	},
 	xButton: {
 		position: "absolute",

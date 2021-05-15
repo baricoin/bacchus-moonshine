@@ -64,12 +64,12 @@ const _HeaderRow = ({ header = "", value = "", onPress = () => null, title = "",
 						</View>}
 						{col2Loading &&
 						<View style={[styles.col2, col2Style]}>
-							<ActivityIndicator size="large" color={colors.lightPurple} />
+							<ActivityIndicator size="large" color={colors.text} />
 						</View>}
 						
 						{!col2Loading && col2Image !== "" &&
 						<View style={[styles.col2, col2Style]}>
-							<MaterialCommunityIcons name={col2Image} size={50} color={colors.purple} />
+							<MaterialCommunityIcons name={col2Image} size={50} color={colors.text} />
 						</View>
 						}
 					</View>
@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		alignItems: "center",
-		marginBottom: 20
+		marginBottom: 10
 	},
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 11.5,
-		width: "80%",
+		borderRadius: 6,
+		width: "95%",
 		minHeight: 80,
 		paddingVertical: 10
 	},

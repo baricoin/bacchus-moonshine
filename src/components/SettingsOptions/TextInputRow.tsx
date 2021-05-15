@@ -42,7 +42,7 @@ const _TextInputRow = ({ title = "", onChangeText = () => null, currentValue = "
 						/>
 					</View>
 					<View style={styles.displayOptionContainer}>
-						<TouchableOpacity key={submitText} onPress={onPress} style={[styles.cryptoUnitButton, { backgroundColor: colors.lightPurple }]}>
+						<TouchableOpacity key={submitText} onPress={onPress} style={[styles.cryptoUnitButton]}>
 							<Text style={[styles.text, { color: colors.white}]}>{submitText}</Text>
 						</TouchableOpacity>
 					</View>
@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		alignItems: "center",
-		marginBottom: 20
+		marginBottom: 10
 	},
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 11.5,
-		width: "80%",
+		borderRadius: 6,
+		width: "95%",
 		minHeight: 80,
 		paddingVertical: 10
 	},
@@ -87,10 +87,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		height: 30,
 		width: "90%",
-		borderRadius: 5,
+		borderRadius: 2,
 		padding: 5,
 		borderWidth: 1,
-		fontWeight: "bold"
+		fontWeight: "bold",
+		borderColor: colors.white,
 	},
 	displayOptionContainer: {
 		flexDirection: "row",
@@ -105,7 +106,8 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		width: "90%",
 		borderWidth: 1,
-		borderColor: colors.lightPurple,
+		borderColor: colors.white,
+		backgroundColor: "transparent",
 		marginHorizontal: 5,
 		paddingVertical: 4
 	},

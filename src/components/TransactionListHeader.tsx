@@ -29,14 +29,15 @@ const _TransactionListHeader = (
 		displayTransactionList = false,
 		transactionsAreExpanded = false,
 		resetView = () => null,
-		expandTransactions = () => null
+		expandTransactions = () => null,
+		theme = {}
 	}: TransactionsComponent) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.transactionListHeader}>
 				{!loadingTransactions &&
 				<TouchableOpacity onPress={refreshWallet} style={styles.refresh}>
-					<Ionicons type="text2" name={"ios-refresh"} size={18} />
+					<Ionicons type="text" name={"ios-refresh"} size={18} color={theme.white} />
 				</TouchableOpacity>}
 				{loadingTransactions && displayTransactionList &&
 				<View style={styles.refresh}>
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingVertical: 5,
 		borderBottomWidth: 1,
-		borderBottomColor: colors.gray
+		borderBottomColor: "#777777"
 	},
 	refresh: {
 		flex: 0.5,

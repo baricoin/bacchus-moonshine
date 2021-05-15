@@ -64,7 +64,7 @@ const _TransactionRow = (
 			if (amount < 50000 && cryptoUnit === "BTC") {
 				return `${formatNumber(Number((amount * 0.00000001).toFixed(8)))} BTC`;
 			} else {
-				return `${formatNumber(bitcoinUnits(amount, "satoshi").to(cryptoUnit).value())} ${getCoinData({selectedCrypto: coin, cryptoUnit}).acronym}`;
+				return `${Number(amount/100000000).toFixed(8)} ${getCoinData({selectedCrypto: coin, cryptoUnit}).acronym}`;
 			}
 		} catch (e) {
 			console.log(e);
@@ -115,18 +115,21 @@ const _TransactionRow = (
 	if (!address || !amount) return <View />;
 
 	if (!label) label = address;
-	if (label.length > 18) label = `${label.substr(0, 18)}...`;
+	if (label.length > 32) label = `${label.substr(0, 32)}...`;
 	const fontWeight = type === "sent" ? "normal" : "bold";
 	const textColor = "text2";
 	return (
-		<TouchableOpacity onPress={() => onTransactionPress(id)} style={styles.container}>
+		<TouchableOpacity onPress={() => onTransactionPress(id)} style={[styles.container, {borderColor: `${getCoinData({selectedCrypto:coin}).color}99`}]}>
 			<View type="gray3" style={styles.header}>
-				{isBlacklisted &&<Text style={[styles.text, { fontWeight: "bold", fontSize: 16, color: colors.red  }]}>UTXO Blacklisted</Text>}
-				<Text type="text2" style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>
+				<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 11  }]}>{type} -- {label}</Text>
+
+				{/*{isBlacklisted &&<Text style={[styles.text, { fontWeight: "bold", fontSize: 16, color: colors.red  }]}>UTXO Blacklisted</Text>}*/}
+				{/*<Text type="text2" style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>*/}
 			</View>
 			<View style={styles.row}>
 				<View style={styles.col1}>
-					<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 14  }]}>{label}</Text>
+					{/*<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 14  }]}>{label}</Text>*/}
+					<Text type="text2" style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>
 					<Text type={textColor} style={[styles.smallText, { fontWeight, fontSize: 14  }]}>Confirmations: {getConfirmations()}</Text>
 				</View>
 				<View style={styles.col2}>
@@ -163,10 +166,17 @@ _TransactionRow.propTypes = {
 	messages: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
+
 const styles = StyleSheet.create({
 	container: {
+		paddingTop: 2,
 		flex: 1,
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		borderColor: `#999`,
+		borderWidth: 1,
+		borderRadius: 3,
+		marginTop: 3,
+
 	},
 	header: {
 		flex: 1,
@@ -197,7 +207,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.light,
-		fontSize: 16,
+		fontSize: 14,
 		textAlign: "center"
 	},
 	smallText: {

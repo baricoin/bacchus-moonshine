@@ -833,6 +833,7 @@ class Settings extends PureComponent {
 	getWalletName = () => {
 		try {
 			try { if (this.props.wallet.wallets[this.props.wallet.selectedWallet].name.trim() !== "") return this.props.wallet.wallets[this.props.wallet.selectedWallet].name; } catch (e) {}
+			try { if (this.props.wallet.wallets[this.props.wallet.selectedWallet].label.trim() !== "") return this.props.wallet.wallets[this.props.wallet.selectedWallet].label; } catch (e) {}
 			try { return `Wallet ${this.props.wallet.walletOrder.indexOf(this.props.wallet.selectedWallet)}`; } catch (e) {}
 		} catch {
 			return "?";
@@ -867,7 +868,7 @@ class Settings extends PureComponent {
 
 	requestHelp = () => {
 		try {
-			Linking.openURL("mailto:support@moonshinewallet.com?subject=Requesting Some Help").catch((e) => console.log(e));
+			Linking.openURL("mailto:support@ecoincore.com?subject=Requesting Some Help").catch((e) => console.log(e));
 		} catch {}
 	};
 
@@ -910,7 +911,7 @@ class Settings extends PureComponent {
 	getExchangeRateOptions = () => {
 		return [
 			{value: "Coingecko", onPress: () => this.updateExchangeRateService({ selectedService: "coingecko" })},
-			{value: "CoinCap", onPress: () => this.updateExchangeRateService({selectedService: "coincap"})}
+			{value: "CoinCap", onPress: () => this.updateExchangeRateService({ selectedService: "coincap" })}
 		];
 	};
 
@@ -928,13 +929,17 @@ class Settings extends PureComponent {
 	render() {
 		const { selectedWallet, selectedCrypto } = this.props.wallet;
 		const coinTypePath = defaultWalletShape.coinTypePath[selectedCrypto];
+		const cryptoLabel = capitalize(selectedCrypto);
+
 		let keyDerivationPath = "84";
 		try {keyDerivationPath = this.props.wallet.wallets[selectedWallet].keyDerivationPath[selectedCrypto];} catch (e) {}
+
 		let coinDataLabel = "?";
 		try {coinDataLabel = getCoinData({ selectedCrypto, cryptoUnit: "BTC" });} catch (e) {}
+
 		let addressType = "bech32";
 		try {addressType = this.props.wallet.wallets[selectedWallet].addressType[selectedCrypto];} catch (e) {}
-		const cryptoLabel = capitalize(selectedCrypto);
+
 		return (
 			<View style={styles.container}>
 
@@ -942,17 +947,20 @@ class Settings extends PureComponent {
 					<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={{flexGrow:1}} style={{ flex: 1, paddingTop: 20 }}>
 						<TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss} style={styles.container}>
 
-							<View style={{ alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
-								<View style={[styles.header, { marginBottom: 5 }]}>
 
-									<Text style={[styles.title, { color: colors.white, fontWeight: "bold" }]}>General Settings</Text>
+							<Text style={[styles.version]}>{`eCoinCore Mobile Version: ${version}\nby the Canada eCoin developers\nfind us on keybase.io/team/CanadaeCoin`}</Text>
+
+							<View style={{ alignItems: "center", justifyContent: "center" }}>
+								<View style={[styles.header]}>
+
+									<Text style={[styles.title, { fontWeight: "bold" }]}>General Settings</Text>
 
 									<TouchableOpacity onPress={() => this.setState({ displayGeneralHelp: true })} style={{ marginLeft: 10, alignItems: "center", justifyContent: "center" }}>
-										<MaterialCommunityIcons type="white" name={"help-circle-outline"} size={26} color={colors.white} />
+										<MaterialCommunityIcons name={"help-circle-outline"} size={26} />
 									</TouchableOpacity>
 
 								</View>
-								<View style={{ height: 1.5, backgroundColor: colors.white, width: "80%" }} />
+								<View style={{ height: 1.5, width: "80%" }} />
 							</View>
 
 							{this.props.settings.biometricsIsSupported &&
@@ -981,18 +989,18 @@ class Settings extends PureComponent {
 									{key: "satoshi", value: coinDataLabel.satoshi, onPress: () => this.updateCryptoUnit("satoshi") }
 								]}
 							/>
+							*/}
 
-							<SettingGeneral
+{/*							<SettingGeneral
 								value={`Selected Fiat Currency:\n${this.getSelectedCurrency()}`}
-								col1Image={<Fontisto name="money-symbol" style={{ paddingVertical: 2 }} size={50} />}
+								col1Image={<Fontisto name="money-symbol" style={{ paddingVertical: 2 }} size={32} />}
 								onPress={() => this.toggleFiatModal({ display: true })}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
-							/>
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+							/>*/}
 							<SettingSwitch setting="rbf" value={this.props.settings["rbf"]} title="Enable Replace-by-fee" onPress={this.toggleRBF} />
 							<SettingSwitch setting="sendTransactionFallback" value={this.props.settings["sendTransactionFallback"]} title="Send Transaction Fallback" onPress={this.toggleSendTransactionFallback} />
 
-							*/}
 
 
 
@@ -1000,8 +1008,8 @@ class Settings extends PureComponent {
 								title=""
 								value="Import Mnemonic Phrase"
 								onPress={() => this.toggleImportPhrase({ display: true })}
-								col1Image={<MaterialCommunityIcons name="import" size={50} color={colors.purple} />}
-								col2Style={{flex: 1.2, alignItems: "center", justifyContent: "center", paddingRight: 10}}
+								col1Image={<MaterialCommunityIcons name="import" size={32} color={colors.purple} />}
+								col2Style={{flex: 2, alignItems: "center", justifyContent: "center", paddingRight: 10}}
 								valueStyle={{fontSize: 16, textAlign: "center", fontWeight: "bold"}}
 							/>
 
@@ -1009,27 +1017,25 @@ class Settings extends PureComponent {
 								title=""
 								value="Electrum Options"
 								onPress={() => this.toggleElectrumOptions({ display: true })}
-								col1Image={<Fontisto name="atom" size={45} style={{ paddingVertical: 2 }} />}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", paddingRight: 10 }}
+								col1Image={<Fontisto name="atom" size={25} style={{ paddingVertical: 2 }} />}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", paddingRight: 10 }}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
 							/>
 
-							<View style={{ alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+							<View style={{ alignItems: "center", justifyContent: "center" }}>
 								<View style={styles.header}>
 
-									<Text style={[styles.title, { color: colors.white, fontWeight: "bold", textAlign: "center" }]}>{this.getWalletName()}</Text>
+									<Text style={[styles.title, { fontWeight: "bold", textAlign: "center" }]}>Wallet Settings</Text>
 
 									<TouchableOpacity onPress={() => this.setState({ displayWalletHelp: true })} style={{ marginLeft: 10, alignItems: "center", justifyContent: "center" }}>
-										<MaterialCommunityIcons type="white" name={"help-circle-outline"} size={26} color={colors.white} />
+										<MaterialCommunityIcons name={"help-circle-outline"} size={26} color={colors.white} />
 									</TouchableOpacity>
 
 								</View>
 								<View style={[styles.header, { marginBottom: 5 }]}>
-
-									<Text style={[styles.title, { color: colors.white, fontWeight: "bold", textAlign: "center" }]}>{`${cryptoLabel} Settings`}</Text>
+									<Text style={[styles.title, { fontWeight: "bold", textAlign: "center" }]}>seed: {this.getWalletName()}{`\ncoin: ${cryptoLabel}`}</Text>
 
 								</View>
-								<View style={{ height: 1.5, backgroundColor: colors.white, width: "80%" }} />
 							</View>
 							<TextInputRow
 								title={`Wallet Name (${this.state.walletName.length}/16)`}
@@ -1097,73 +1103,72 @@ class Settings extends PureComponent {
 								]}
 							/>}
 
-							<MultiOptionRow
+{/*							<MultiOptionRow
 								title="Sign & Verify Messages"
 								currentValue={addressType}
 								options={[
 									{value: "Sign", onPress: () => this.toggleSignMessage({ display: true }) },
 									{value: "Verify", onPress: () => this.toggleVerifyMessage({ display: true }) }
 								]}
-							/>
+							/>*/}
 
-							<SettingGeneral
+{/*							<SettingGeneral
 								title=""
 								value="Broadcast Transaction"
 								onPress={() => this.toggleBroadcastTransaction({ display: true })}
-								col1Image={<Foundation name="mobile-signal" size={50} color={colors.purple} />}
-								col2Style={{flex: 1.2, alignItems: "center", justifyContent: "center", paddingRight: 10}}
+								col1Image={<Foundation name="mobile-signal" size={32} color={colors.purple} />}
+								col2Style={{flex: 2, alignItems: "center", justifyContent: "center", paddingRight: 10}}
 								valueStyle={{fontSize: 16, textAlign: "center", fontWeight: "bold"}}
-							/>
+							/>*/}
 
 							<SettingGeneral
 								title="Backup Wallet"
 								value={this.getBackupWalletValue()}
 								onPress={() => this.toggleBackupPhrase({ selectedWallet, display: true })}
-								col1Image={<MaterialCommunityIcons type={this.hasBackedUpWallet() ? "text" : "white"} name="wallet" size={50} />}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", paddingRight: 10 }}
+								col1Image={<MaterialCommunityIcons type={this.hasBackedUpWallet() ? "text" : "white"} name="wallet" size={32} />}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", paddingRight: 10 }}
 								warning={!this.hasBackedUpWallet()}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: this.hasBackedUpWallet() ? "normal" : "bold" }}
 							/>
 
 							<SettingGeneral
-								value={`Rescan ${this.getWalletName()}\n${cryptoLabel} Wallet`}
+								value={`Rescan for ${cryptoLabel} transactions within\nthe selected wallet: "${this.getWalletName()}"`}
 								col1Loading={this.state.rescanningWallet}
-								col1Image={<MaterialCommunityIcons name="radar" size={50} />}
+								col1Image={<MaterialCommunityIcons name="radar" size={32} />}
 								onPress={this.rescanWallet}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
 							/>
 
-							<View style={{ alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
-								<View style={[styles.header, { marginBottom: 5 }]}>
-									<Text style={[styles.title, { color: colors.white, fontWeight: "bold" }]}>Support</Text>
+							<View style={{ alignItems: "center", justifyContent: "center" }}>
+								<View style={[styles.header, { marginTop: 20 }]}>
+									<Text style={[styles.title, { fontWeight: "bold" }]}>Support</Text>
 								</View>
-								<View style={{ height: 1.5, backgroundColor: colors.white, width: "80%" }} />
 							</View>
 
 							<SettingGeneral
 								value={`Need Some Help?\nsupport@canadaecoin.foundation`}
-								col1Image={<FontAwesome name="support" size={50} />}
+								col1Image={<FontAwesome name="support" size={32} />}
 								onPress={this.requestHelp}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
 							/>
 
 							<SettingGeneral
 								value={'The Canada eCoin Project\ncanadaecoin.site'}
-								col1Image={<MaterialCommunityIcons name="web" size={50} />}
+								col1Image={<MaterialCommunityIcons name="web" size={32} />}
 								onPress={this.visitWebsite}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
 							/>
 
 
 							<SettingGeneral
 								value={'This wallet is a fork of the Moonshine Wallet, \nmoonshinewallet.com'}
-								col1Image={<MaterialCommunityIcons name="web" size={50} />}
+								col1Image={<MaterialCommunityIcons name="web" size={32} />}
 								onPress={this.visitWebsite}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
 							/>
 
 							{Platform.OS === "ios" &&
@@ -1172,12 +1177,11 @@ class Settings extends PureComponent {
 								col1Image={<FontAwesome5 name="coins" size={40} />}
 								onPress={this.donate}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
-								col2Style={{ flex: 1.2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
+								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
 							/>}
 
-							<Text style={[styles.title, { color: colors.white, textAlign: "center" }]}>{`Version: ${version}`}</Text>
 
-							<View style={{ paddingVertical: 40 }} />
+							<View style={{ paddingVertical: 20 }} />
 						</TouchableOpacity>
 
 					</ScrollView>
@@ -1314,7 +1318,6 @@ class Settings extends PureComponent {
 						}}
 						ItemSeparatorComponent={() => <View style={styles.separator} />}
 					/>
-					<View style={{ paddingVertical: "40%" }} />
 				</DefaultModal>
 
 			</View>
@@ -1347,7 +1350,6 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		width: "40%",
 		borderWidth: 1,
-		borderColor: colors.lightPurple,
 		marginHorizontal: 5,
 		paddingVertical: 4
 	},
@@ -1380,17 +1382,18 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.regular,
-		color: colors.purple,
 		fontSize: 16,
 		textAlign: "left"
 	},
 	header: {
 		flexDirection: "row",
-		alignItems: "center"
+		alignItems: "center",
+		marginBottom: 0, 
+		marginTop: 10
+
 	},
 	headerText: {
 		...systemWeights.regular,
-		color: colors.white,
 		fontSize: 24,
 		textAlign: "center"
 	},
@@ -1404,9 +1407,12 @@ const styles = StyleSheet.create({
 	separator: {
 		width: "100%",
 		height: 2,
-		backgroundColor: colors.gray,
 		marginVertical: 10
 	},
+	version: {
+		textAlign: "center",
+		fontSize: 12,
+	}
 });
 
 const connect = require("react-redux").connect;

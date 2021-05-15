@@ -28,7 +28,7 @@ const _SettingSwitch = ({ title = "", value = false, onPress = () => null, col1S
 					<TouchableOpacity onPress={() => onPress(value)} style={[styles.col2 , col2Style]}>
 						<Switch
 							ios_backgroundColor={colors.gray}
-							thumbColor={value ? colors.purple : colors.darkGray}
+							thumbColor={value ? colors.indicator : colors.darkGray}
 							trackColor={{false: colors.lightGray, true: colors.gray}}
 							value={value}
 							onValueChange={() => onPress(value)}
@@ -57,15 +57,15 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		alignItems: "center",
-		marginBottom: 20
+		marginBottom: 10
 	},
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 11.5,
-		width: "80%",
-		minHeight: 80,
+		borderRadius: 6,
+		width: "95%",
+		minHeight: 50,
 		padding: 10
 	},
 	col1: {

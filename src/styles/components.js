@@ -29,27 +29,27 @@ export const ScrollView = styled.ScrollView`
 `;
 
 export const Text = styled.Text`
-  color: ${props => props.type ? props.theme[props.type] : props.theme.text};
+  color: ${props => props.theme.text};
   ${props => props.backgroundColor ? `background-color: ${props.theme[props.backgroundColor]}` : null};
 `;
 
 export const TouchableOpacity = styled.TouchableOpacity`
   background-color: ${props => props.type ? props.theme[props.type] : props.theme.text};
-  border-color: ${props => props.borderColor ? props.theme[props.borderColor] : props.theme.white}
+  border-color: ${props => props.borderColor ? props.theme[props.borderColor] : props.theme.text}
 `;
 
 export const TouchableHighlight = styled.TouchableHighlight`
   background-color: ${props => props.type ? props.theme[props.type] : props.theme.text};
-  border-color: ${props => props.theme.white};
+  border-color: ${props => props.theme.text};
 `;
 
 export const TextInput = styled.TextInput.attrs((props) => ({
 	placeholderTextColor: props.theme.mode === "light" ? props.theme.gray2 : props.theme.card,
 	keyboardAppearance: props.theme.mode === "light" ? "light" : "dark"
 }))`
-  background-color: ${props => props.editable === false ? props.theme.uneditable : props.theme.background2};
+  background-color: ${props => props.editable === false ? props.theme.uneditable : props.theme.editable};
   color: ${props => props.theme.text};
-  border-color: ${props => props.theme.mode === "light" ? props.theme.text2 : "transparent"}
+  border-color: ${props => props.theme.text};
 `;
 
 export const EvilIcon = styled(_EvilIcon).attrs((props) => ({
@@ -103,17 +103,16 @@ Component-specific styles
 export const XButton = styled.View`
   background-color: ${props => props.theme.background};
   border-color: ${props => props.theme.text};
-  border-width: ${props => props.theme.mode === "light" ? "3px" : "1.5px"};
+  border-width: ${props => props.theme.mode === "light" ? "1.5px" : "1.5px"};
 `;
 
 export const QRCode = styled(_QRCode).attrs((props) => ({
-	color: props.theme.PRIMARY,
-	backgroundColor: props.theme.white
+	color: "#000"
 }))`
 `;
 
 export const CopiedLinearGradient = styled(_LinearGradient).attrs((props) => ({
-	colors: props.theme.mode === "light" ? ["#992600", "#cc3300", "#b32d00", "#cc3300", "#992600"] : ["#992600", "#cc3300", "#b32d00", "#cc3300", "#992600"]
+	colors: props.theme.gradient
 }))`
   flex: 1;
   border-color: ${props => props.theme.white};

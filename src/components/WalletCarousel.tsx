@@ -17,7 +17,7 @@ const wp = (percentage: number): number => {
 	return Math.round(value);
 };
 
-const slideWidth = wp(75);
+const slideWidth = wp(85);
 const itemHorizontalMargin = wp(2);
 
 const sliderWidth = width;
@@ -79,7 +79,7 @@ const _WalletCarousel = ({ wallet = { wallets: {}, selectedWallet: "wallet0", wa
 					itemWidth={itemWidth}
 					firstItem={activeSlide}
 					inactiveSlideScale={0.94}
-					inactiveSlideOpacity={0.7}
+					inactiveSlideOpacity={0.33}
 					containerCustomStyle={styles.slider}
 					contentContainerCustomStyle={styles.sliderContentContainer}
 					onSnapToItem={index => updateActiveSlide(index)}

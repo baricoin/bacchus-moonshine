@@ -49,7 +49,7 @@ const _MultiOptionRow = ({ title = "", subTitle = "", currentValue = "", options
 								</TouchableOpacity>
 							);
 						})}
-						{loading && <ActivityIndicator size="large" color={colors.lightPurple} />}
+						{loading && <ActivityIndicator size="large" color={colors.indicator} />}
 					</View>
 				</View>
 			</View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		alignItems: "center",
-		marginBottom: 20
+		marginBottom: 10
 	},
 	optionContainer: {
 		flexDirection: "row",
@@ -92,13 +92,14 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 11.5,
-		width: "80%",
-		minHeight: 80,
+		borderRadius: 6,
+		width: "95%",
+		minHeight: 50,
 		paddingVertical: 10
 	},
 	subTitle: {
 		...systemWeights.light,
+		backgroundColor: "transparent",
 		fontSize: 16,
 		textAlign: "left"
 	},
@@ -120,9 +121,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: 5,
-		borderWidth: 2,
+		borderWidth: 1,
 		flex: 1,
-		borderColor: colors.lightPurple,
 		marginHorizontal: 5,
 		paddingVertical: 4
 	},

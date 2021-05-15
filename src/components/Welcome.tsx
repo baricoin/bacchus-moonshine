@@ -15,7 +15,7 @@ const _Welcome = ({ onClose = () => null, children = <View /> } = {}) => {
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	return (
 		<View style={styles.container}>
-			<Text style={styles.header}>Welcome!</Text>
+			<Text style={styles.header}>Canada eCoin - Mobile Multiwallet</Text>
 			<View style={{ width: "100%" }}>
 				{children}
 				<Text style={[styles.subHeader, { textAlign: "center" }]}>Updates in this build include:</Text>
@@ -72,21 +72,21 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 18,
+		fontSize: 15,
 		alignSelf: "flex-start",
 		textAlign: "left",
 		marginTop: 10
 	},
 	semiBoldText: {
 		...systemWeights.semibold,
-		fontSize: 18,
+		fontSize: 13,
 		alignSelf: "flex-start",
 		textAlign: "left",
 		marginTop: 10
 	},
 	subHeader: {
 		...systemWeights.light,
-		fontSize: 18,
+		fontSize: 15,
 		alignSelf: "flex-start",
 		textAlign: "left",
 		marginTop: 20,

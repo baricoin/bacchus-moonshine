@@ -61,15 +61,13 @@ const styles = StyleSheet.create({
 	modalContainer: {
 		alignSelf: "center",
 		width: "100%",
-		height: Platform.OS === "ios" ? "80%" : "84%",
-		borderWidth: 5,
-		borderRadius: 20
+		height: Platform.OS === "ios" ? "80%" : "94%",
+		borderWidth: 1,
+		borderRadius: 6
 	},
 	modalScrollView: {
 		flex: 1,
 		borderRadius: 16,
-		paddingHorizontal: 10,
-		paddingVertical: 5
 	},
 });
 

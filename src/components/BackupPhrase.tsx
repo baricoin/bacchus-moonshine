@@ -48,12 +48,11 @@ _BackupPhrase.propTypes = {
 
 const styles = StyleSheet.create({
 	container: {
-		width: "90%",
-		height: "75%",
+		width: "100%",
 		flexDirection: "row",
-		borderRadius: 15,
+		borderRadius: 0,
 		alignSelf: "center",
-		marginVertical: 20
+		marginVertical: 0
 	},
 	listItem: {
 		flexDirection: "row"
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
 		...systemWeights.semibold,
 		fontSize: 18,
 		textAlign: "center",
-		marginVertical: 10
+		marginVertical: 4
 	},
 	column: {
 		flex: 1,

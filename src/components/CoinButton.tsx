@@ -9,8 +9,13 @@ import { systemWeights } from "react-native-typography";
 import bitcoinUnits from "bitcoin-units";
 import { Text, View } from "../styles/components";
 
+const { eCoinCore } = require("../utils/ecoincore");
+
+
 const {
-	formatNumber
+	formatNumber,
+	getFiatBalance,
+	getExchangeRate
 } = require("../utils/helpers");
 
 const {
@@ -24,6 +29,7 @@ interface FormatBalance {
 	cryptoUnit: string,
 	balance?: number
 }
+
 const formatBalance = ({ coin = "", cryptoUnit = "satoshi", balance = 0 }: FormatBalance): string => {
 	try {
 		let formattedBalance = "0";
@@ -52,18 +58,60 @@ interface CoinButtonComponent {
 	walletId: string,
 	balance?: number
 }
-const _CoinButton = ({ onCoinPress, cryptoUnit = "satoshi", coin = "bitcoin", label = "Bitcoin", walletId = "wallet0", balance = 0 }: CoinButtonComponent) => {
+
+const getCryptoLabel = ({ selectedCrypto = "bitcoin" } = {}) => {
+	try {
+		return getCoinData({ selectedCrypto }).label;
+	} catch (e) {
+		console.log(e);
+	}
+};
+
+const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, fiatValue, fiatSymbol = "$"}: CoinButtonComponent) => {
+	let acronym = getCoinData({ selectedCrypto: coin, cryptoUnit }).acronym
+	let exchangeRate = 0;
+	let fiatRate = 0;
+
+	if(eCoinCore.collections && eCoinCore.collections.ExchangeRates){
+		exchangeRate = eCoinCore.collections.ExchangeRates.findOne({call: acronym});
+		if(!exchangeRate) return '?';
+		exchangeRate = exchangeRate.rate
+
+		fiatRate = eCoinCore.collections.ExchangeRates.findOne({call: String("CAD").toUpperCase()})
+		if(!fiatRate) return '?';
+		fiatRate = fiatRate.rate
+	}
+
+	let fiatPrice = Number(exchangeRate / fiatRate)
+	let fiatBalance = Number(fiatPrice * (balance/100000000)).toFixed(2);
+
+	if(fiatPrice < .01) { 
+		fiatPrice = Number(fiatPrice).toFixed(4);
+	} else if(fiatPrice < 0.1) {
+		fiatPrice = Number(fiatPrice).toFixed(3);
+	} else fiatPrice = Number(fiatPrice).toFixed(2);
+
+
+	let brandStyle = {
+		width: "100%",
+		flexDirection: "row",
+		backgroundColor: `${getCoinData({selectedCrypto:coin}).color}22`,
+		borderColor: `${getCoinData({selectedCrypto:coin}).color}`,
+		borderWidth: 1,
+		borderRadius: 6,
+		marginBottom: 6,
+	}
+
 	return (
-		<TouchableOpacity key={`${coin}${walletId}`} onPress={() => onCoinPress({coin, walletId})} style={styles.button}>
+		<TouchableOpacity key={`${coin}${walletId}`} onPress={() => onCoinPress({coin, walletId})} style={brandStyle}>
 			<View type="card" style={styles.buttonContent}>
-				
 				<Image
 					style={styles.buttonImage}
 					source={getCoinImage(coin)}
 				/>
-				
-				<Text type="text" style={styles.text}>{label}</Text>
-				<Text type="text" style={styles.subText}>{formatBalance({ balance, coin, cryptoUnit })}</Text>
+				<Text type="text" style={styles.subText}>{getCoinData({selectedCrypto:coin}).label}</Text>
+				<Text type="text" style={styles.text}>{fiatSymbol} {formatNumber(fiatBalance)}</Text>
+				<Text type="text" style={styles.balanceText}>{formatBalance({ balance, coin, cryptoUnit })} @ {fiatPrice} CAD</Text>
 			
 			</View>
 		</TouchableOpacity>
@@ -82,34 +130,39 @@ _CoinButton.propTypes = {
 const styles = StyleSheet.create({
 	button: {
 		width: "82%",
-		minHeight: 80,
+		minHeight: 60,
 		flexDirection: "row",
 		backgroundColor: "transparent",
 		marginBottom: 15
 	},
 	buttonContent: {
 		flex: 1,
-		alignItems: "center",
-		borderRadius: 40,
+		backgroundColor: "transparent",
 		justifyContent: "center",
+		padding: 10
 	},
 	buttonImage: {
-		width: 48,
-		height: 48,
+		width: 64,
+		height: 64,
 		position: "absolute",
 		alignItems: "center",
 		justifyContent: "center",
-		left: 10
+		left: 4
 	},
 	text: {
 		...systemWeights.semibold,
-		fontSize: 18,
-		textAlign: "center"
+		fontSize: 24,
+		textAlign: "right"
 	},
 	subText: {
 		...systemWeights.regular,
-		fontSize: 18,
-		textAlign: "center"
+		fontSize: 12,
+		textAlign: "right"
+	},
+	balanceText: {
+		...systemWeights.regular,
+		fontSize: 12,
+		textAlign: "right"
 	}
 });
 

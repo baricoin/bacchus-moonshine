@@ -154,7 +154,7 @@ const _TransactionList = (
 			}
 			{hasTransactions() &&
 			<FlatList
-				contentContainerStyle={{ paddingBottom: 60 }}
+				contentContainerStyle={{ paddingBottom: 10 }}
 				data={transactions}
 				extraData={getTransactions()}
 				keyExtractor={(transaction) => `${transaction.hash}`}

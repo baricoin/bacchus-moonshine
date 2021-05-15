@@ -14,7 +14,8 @@ const {
 
 const {
 	availableCoins,
-	getCoinImage
+	getCoinImage,
+	getCoinData
 } = require("../utils/networks");
 
 const getAnimation = (name = "astronaut") => {
@@ -55,12 +56,13 @@ interface LoadingComponent {
 	style: object,
 	textStyle: object
 }
-const _Loading = ({loadingOpacity = 0, loadingMessage = "Loading State", loadingProgress = 0, animationName = "", enableProgressBar = true, enableSpinner = true, enableErrorIcon = false, enableSuccessIcon = false, width = 200, style = {}, textStyle = {}}: LoadingComponent) => {
+const _Loading = ({ theme = {}, loadingOpacity = 0, loadingMessage = "Loading State", loadingProgress = 0, animationName = "", enableProgressBar = true, enableSpinner = true, enableErrorIcon = false, enableSuccessIcon = false, width = 200, style = {}, textStyle = {}}: LoadingComponent) => {
 
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
-
+	let pbarColor = theme.text || "#888888";
 	const Icon = () => {
 		if (availableCoins.includes(animationName)) {
+			pbarColor = getCoinData({selectedCrypto: animationName}).color
 			return (
 				<Image
 					style={{width: 100, height: 100, marginBottom: 40}}
@@ -85,17 +87,17 @@ const _Loading = ({loadingOpacity = 0, loadingMessage = "Loading State", loading
 				{enableSpinner && !enableErrorIcon && !enableSuccessIcon &&
 				Icon()}
 				{enableSuccessIcon &&
-				<EvilIcon name={"check"} size={110} color={colors.white} style={{ marginBottom: 10 }} />
+				<EvilIcon name={"check"} size={110} color={theme.text} style={{ marginBottom: 10 }} />
 				}
 				{enableErrorIcon &&
-				<EvilIcon name={"exclamation"} size={110} color={colors.white} style={{ marginBottom: 10 }} />
+				<EvilIcon name={"exclamation"} size={110} color={theme.text} style={{ marginBottom: 10 }} />
 				}
 				{enableProgressBar &&
-				<ProgressBar progress={loadingProgress} height={7} width={width} />}
+				<ProgressBar progress={loadingProgress} height={7} width={width} color={pbarColor} />}
 			</View>
 
 			<View style={styles.messageContainer}>
-				<Text style={[styles.boldText, { ...textStyle }]}>{loadingMessage}</Text>
+				<Text style={[styles.boldText, { ...textStyle, color: theme.text }]}>{loadingMessage}</Text>
 			</View>
 
 		</Animated.View>
@@ -143,7 +145,6 @@ const styles = StyleSheet.create({
 	},
 	boldText: {
 		...systemWeights.semibold,
-		color: colors.white,
 		fontSize: 20,
 		textAlign: "center",
 		marginVertical: 20,

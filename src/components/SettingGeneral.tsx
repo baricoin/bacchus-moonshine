@@ -88,25 +88,25 @@ const styles = StyleSheet.create({
 		width: "100%",
 		backgroundColor: "transparent",
 		alignItems: "center",
-		marginBottom: 20
+		marginBottom: 10
 	},
 	row: {
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		borderRadius: 11.5,
-		width: "80%",
-		minHeight: 80,
+		borderRadius: 6,
+		width: "95%",
+		minHeight: 30,
 		paddingVertical: 10
 	},
 	col1: {
-		flex: 0.4,
+		flex: 0.3,
 		alignItems: "center",
 		justifyContent: "flex-start",
 		backgroundColor: "transparent"
 	},
 	col2: {
-		flex: 0.6,
+		flex: 0.7,
 		alignItems: "flex-start",
 		justifyContent: "center",
 		backgroundColor: "transparent"
