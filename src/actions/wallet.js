@@ -81,12 +81,16 @@ const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressA
 		};
 		try {
 			//Generate Mnemonic
+			let bip39Label = `invalid mnemonic`;
 			if (mnemonic === "") {
 				mnemonic = bip39.generateMnemonic(256);
 			}
 			
 			if (bip39.validateMnemonic(mnemonic)) {
 				await setKeychainValue({ key: wallet, value: mnemonic });
+
+				bip39Label = mnemonic.split(" ");
+				bip39Label = `${bip39Label[0]} ${bip39Label[1]}`;
 			} else {
 				//Invalid Mnemonic
 				failure("Invalid Mnemonic");
@@ -139,7 +143,8 @@ const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressA
 				[wallet]: {
 					...defaultWalletShape,
 					addresses,
-					changeAddresses
+					changeAddresses,
+					label: bip39Label
 				}
 			};
 			
