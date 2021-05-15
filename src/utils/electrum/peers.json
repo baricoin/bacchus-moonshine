@@ -1,34 +1,52 @@
 {
   "bitcoin": [
-    {"host": "elec.luggs.co", "ssl": 443, "tcp": 50001},
+    {"host": "btc.litepay.ch", "ssl": 50002, "tcp": 50001},
+    {"host": "electrumx.papabyte.com", "ssl": 50002, "tcp": 50001},
     {"host": "bitcoin.lukechilds.co", "ssl": 50002, "tcp": 50001},
-    {"host": "elex01.blackpole.online", "ssl": 50002, "tcp": 50001},
-    {"host": "kirsche.emzy.de", "ssl": 50002, "tcp": 50001},
-    {"host": "btc.usebsv.com", "ssl": 50002, "tcp": 50001}
-  ],
-  "bitcoinTestnet": [
-    {"host": "testnet.hsmiths.com", "ssl": 53012, "tcp": 53011},
-    {"host": "testnet1.bauerj.eu", "ssl": 50002, "tcp": 50001},
-    {"host": "tn.not.fyi", "ssl": 55002, "tcp": 55001},
-    {"host": "bitcoin.cluelessperson.com", "ssl": 51002, "tcp": 51001},
-    {"host": "electrum.blockstream.info", "ssl": 60002, "tcp": 60001},
-    {"host": "testnet.aranguren.org", "ssl": 51002, "tcp": 51001},
-    {"host": "blockstream.info", "ssl": 993, "tcp": 143}
+    {"host": "electrum.blockstream.info", "ssl": 50002, "tcp": 50001},
+    {"host": "currentlane.8bit.ca", "ssl": 50002, "tcp": 50001},
+    {"host": "hodlers.beer", "ssl": 50002, "tcp": 50001},
+    {"host": "btc.litepay.ch", "ssl": 50002, "tcp": 50001},
+    {"host": "electrumx.papabyte.com", "ssl": 50002, "tcp": 50001},
+    {"host": "bitcoin.lukechilds.co", "ssl": 50002, "tcp": 50001},
+    {"host": "electrum.blockstream.info", "ssl": 50002, "tcp": 50001},
+    {"host": "currentlane.8bit.ca", "ssl": 50002, "tcp": 50001},
+    {"host": "hodlers.beer", "ssl": 50002, "tcp": 50001},
+    {"host": "btc.litepay.ch", "ssl": 50002, "tcp": 50001},
+    {"host": "electrumx.papabyte.com", "ssl": 50002, "tcp": 50001},
+    {"host": "bitcoin.lukechilds.co", "ssl": 50002, "tcp": 50001},
+    {"host": "electrum.blockstream.info", "ssl": 50002, "tcp": 50001},
+    {"host": "currentlane.8bit.ca", "ssl": 50002, "tcp": 50001},
+    {"host": "hodlers.beer", "ssl": 50002, "tcp": 50001},
+    {"host": "btc.litepay.ch", "ssl": 50002, "tcp": 50001},
+    {"host": "electrumx.papabyte.com", "ssl": 50002, "tcp": 50001},
+    {"host": "bitcoin.lukechilds.co", "ssl": 50002, "tcp": 50001},
+    {"host": "electrum.blockstream.info", "ssl": 50002, "tcp": 50001},
+    {"host": "currentlane.8bit.ca", "ssl": 50002, "tcp": 50001},
+    {"host": "hodlers.beer", "ssl": 50002, "tcp": 50001},
   ],
   "litecoin": [
     {"host": "electrum-ltc.bysh.me", "ssl": 50002, "tcp": 50001},
-    {"host": "electrum.ltc.xurious.com", "ssl": 50002, "tcp": 50001}
-  ],
-  "litecoinTestnet": [
-    {"host": "electrum-ltc.bysh.me", "ssl": 51002, "tcp": 51001},
-    {"host": "electrum.ltc.xurious.com", "ssl": 51002, "tcp": 51001}
+    {"host": "electrum.ltc.xurious.com", "ssl": 50002, "tcp": 50001},
+    {"host": "ltc.rentonisk.com", "ssl": 50002, "tcp": 50001},
+    // {"host": "ltc.litepay.ch", "ssl": 50002, "tcp": 50001}
   ],
   "canadaecoin": [
-    {"host": "electrum.ourcoin.ca", "ssl": 50002, "tcp": 50001},
-    {"host": "172.105.219.217", "ssl": 50002, "tcp": 50001}
+    {"host": "explorer.canadaecoin.ca", "ssl": 50002, "tcp": 50001 },
+    {"host": "woolloomooloo.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "miami.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "holland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "oakland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "tokyo.ecoincore.com", "ssl": 50002, "tcp": 34332 },
+    {"host": "seattle.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "chicago.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "172.105.219.217", "ssl": 50002, "tcp": 50001 },
+    {"host": "mumbai.ecoincore.com", "ssl": 34333, "tcp": 34332 },
+    {"host": "lenoir.ecoincore.com", "ssl": 34333, "tcp": 34332 },
   ],
-  "canadaecoinTestnet": [
-    {"host": "electrum.ourcoin.ca", "ssl": 50002, "tcp": 50001},
-    {"host": "172.105.219.217", "ssl": 50002, "tcp": 50001}
+  "auroracoin": [
+    {"host": "lenoir.ecoincore.com", "ssl": 12343, "tcp": 12342 },
+    {"host": "electrumx.aur.ewmcx.info", "ssl": 50002, "tcp": 12342 },
+    {"host": "failover.aur.ewmcx.biz", "ssl": 50002, "tcp": 12342 },
   ]
 }

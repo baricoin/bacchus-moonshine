@@ -11,6 +11,17 @@ const networks = {
 		scriptHash: 0x05,
 		wif: 0x9C
 	},
+	auroracoin: {
+		messagePrefix: "\x1bAuroracoin Signed Message:\n",
+		bech32: 'aur',
+		bip32: {
+			public: 0x0488b21e,
+			private: 0x0488ade4
+		},
+		pubKeyHash: 0x17,
+		scriptHash: 0x5,
+		wif: 0xb0
+	},
 	bitcoin: {
 		messagePrefix: '\x18Bitcoin Signed Message:\n',
 		bech32: 'bc',
@@ -22,17 +33,6 @@ const networks = {
 		scriptHash: 0x05,
 		wif: 0x80
 	},
-	bitcoinTestnet: {
-		messagePrefix: '\x18Bitcoin Signed Message:\n',
-		bech32: 'tb',
-		bip32: {
-			public: 0x043587cf,
-			private: 0x04358394
-		},
-		pubKeyHash: 0x6f,
-		scriptHash: 0xc4,
-		wif: 0xef
-	},
 	litecoin: {
 		messagePrefix: '\x19Litecoin Signed Message:\n',
 		bech32: 'ltc',
@@ -43,17 +43,6 @@ const networks = {
 		pubKeyHash: 0x30,
 		scriptHash: 0x32,
 		wif: 0xb0
-	},
-	litecoinTestnet: {
-		messagePrefix: '\x18Litecoin Signed Message:\n',
-		bech32: 'tltc',
-		bip32: {
-			public: 0x0436f6e1,
-			private: 0x0436ef7d
-		},
-		pubKeyHash: 0x6f,
-		scriptHash: 0x3a,
-		wif: 0xef
 	}
 };
 
@@ -61,9 +50,8 @@ const networks = {
 const maxCoins = {
 	canadaecoin: 11250000000000000,
 	bitcoin: 2100000000000000,
-	bitcoinTestnet: 2100000000000000,
 	litecoin: 8400000000000000,
-	litecoinTestnet: 8400000000000000
+	auroracoin: 2331805500000000,
 };
 
 //Returns an array of all available coins from the networks object.
@@ -71,36 +59,32 @@ const availableCoins = Object.keys(networks).map(coin => coin);
 
 const supportsRbf = {
 	bitcoin: true,
-	bitcoinTestnet: true,
 	litecoin: false,
-	litecoinTestnet: false,
-	canadaecoin: false
+	canadaecoin: false,
+	auroracoin: true
 };
 
 const zeroValueItems = {
 	bitcoin: 0,
-	bitcoinTestnet: 0,
 	litecoin: 0,
-	litecoinTestnet: 0,
 	canadaecoin: 0,
+	auroracoin: 0,
 	timestamp: null
 };
 
 const arrayTypeItems = {
 	bitcoin: [],
-	bitcoinTestnet: [],
 	litecoin: [],
-	litecoinTestnet: [],
 	canadaecoin: [],
+	auroracoin: [],
 	timestamp: null
 };
 
 const objectTypeItems = {
 	bitcoin: {},
-	bitcoinTestnet: {},
 	litecoin: {},
-	litecoinTestnet: {},
 	canadaecoin: {},
+	auroracoin: {},
 	timestamp: null
 };
 
@@ -123,23 +107,26 @@ const defaultWalletShape = {
 	keyDerivationPath: {
 		bitcoin: "84",
 		bitcoinTestnet: "84",
-		litecoin: "84",
-		litecoinTestnet: "84",
-		canadaecoin: "84"
+		litecoin: "44",
+		litecoinTestnet: "44",
+		canadaecoin: "44",
+		auroracoin: "44"
 	},
 	coinTypePath: {
 		bitcoin: "0",
 		bitcoinTestnet: "1",
 		litecoin: "2",
 		litecoinTestnet: "1",
-		canadaecoin: "34"
+		canadaecoin: "34",
+		auroracoin: "85"
 	},
 	addressType: { //Accepts bech32, segwit, legacy
 		bitcoin: "bech32",
 		bitcoinTestnet: "bech32",
-		litecoin: "bech32",
-		litecoinTestnet: "bech32",
-		canadaecoin: "bech32"
+		litecoin: "legacy",
+		litecoinTestnet: "legacy",
+		canadaecoin: "legacy",
+		auroracoin: "legacy"
 	},
 	rbfData: objectTypeItems
 };
@@ -151,13 +138,15 @@ const getCoinImage = (coin = "bitcoin") => {
 
 		switch (coin) {
 			case "bitcoin":
-				return require(`../assets/bitcoin.png`);
+				return require(`../assets/ecoins/bitcoin.png`);
 			case "litecoin":
-				return require(`../assets/litecoin.png`);
+				return require(`../assets/ecoins/litecoin.png`);
 			case "canadaecoin":
-				return require(`../assets/canadaecoin.png`);				
+				return require(`../assets/canadaecoin.png`);	
+			case "auroracoin":
+				return require(`../assets/ecoins/auroracoin.png`);		
 			default:
-				return require(`../assets/bitcoin.png`);
+				return require(`../assets/ecoins/canadaecoin.png`);
 		}
 	} catch (e) {
 		return require(`../assets/canadaecoin.png`);
@@ -176,23 +165,15 @@ const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => 
 				acronym = cryptoUnit === "satoshi" ? "sats" : "BTC";
 				oshi = "sats";
 				blockTime = 10;
-				return { acronym, label: "Bitcoin", crypto: "BTC", satoshi, oshi, blockTime };
-			case "bitcoinTestnet":
-				acronym = cryptoUnit === "satoshi" ? "sats" : "BTC";
-				oshi = "sats";
-				return { acronym, label: "Bitcoin Testnet", crypto: "BTC", satoshi, oshi, blockTime };
+				color = "#f7931a";
+				return { acronym, label: "Bitcoin", crypto: "BTC", satoshi, oshi, blockTime, color };
 			case "litecoin":
 				satoshi = "litoshi";
 				oshi = "lits";
 				acronym = cryptoUnit === "satoshi" ? "lits" : "LTC";
 				blockTime = 2.5;
-				return { acronym, label: "Litecoin", crypto: "LTC", satoshi, oshi, blockTime };
-			case "litecoinTestnet":
-				satoshi = "litoshi";
-				oshi = "lits";
-				acronym = cryptoUnit === "satoshi" ? "lits" : "LTC";
-				blockTime = 2.5;
-				return { acronym, label: "Litecoin Testnet", crypto: "LTC", satoshi, oshi, blockTime };
+				color = "#444444";
+				return { acronym, label: "Litecoin", crypto: "LTC", satoshi, oshi, blockTime, color };
 			case "canadaecoin":
 				return { 
 					acronym: cryptoUnit === "satoshi" ? "bits" : "CDN", 
@@ -200,8 +181,16 @@ const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => 
 					crypto: "CDN", 
 					satoshi: "bit", 
 					oshi: "bits", 
-					blockTime: 5
+					blockTime: 5,
+					color: "#90191c"
 				};				
+			case "auroracoin":
+				satoshi = "satoshi";
+				oshi = "sats";
+				acronym = cryptoUnit === "satoshi" ? "sats" : "AUR";
+				blockTime = 300;
+				color = "#0A6C5E";
+				return { acronym, label: "Auroracoin", crypto: "AUR", satoshi, oshi, blockTime, color };
 			default:
 				acronym = cryptoUnit === "satoshi" ? "bits" : "BTC";
 				return { acronym, label: "Canada eCoin", crypto: "CDN", satoshi, oshi, blockTime };
