@@ -25,17 +25,20 @@
       "UPDATE_RBF_DATA": "UPDATE_RBF_DATA"
     },
     "colors": {
+      "danger": "#EE1010",
       "red": "#F15B2A",
       "black": "#1B1A1B",
       "gray": "#f0f0f0",
       "lightGray": "#efefef",
       "darkGray": "#6e6e6e",
-      "white": "#FFF",
-      "purple": "#ed181f",
-      "darkPurple": "#90191c",
-      "mediumPurple": "#cf2a2f",
-      "lightPurple": "#f65a5f",
-      "green": "#4f8e7b",
+      "white": "#FFFFFF",
+      "purple": "#6f42c1",
+      "darkPurple": "#392165",
+      "mediumPurple": "#533192",
+      "lightPurple": "#854eed",
+      "green": "#28a745",
+      "icons": "#126712",
+      "indicator": "#126712",
       "cdndarkred": "#90191c"
 
     },
