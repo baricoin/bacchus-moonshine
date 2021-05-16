@@ -192,8 +192,15 @@ const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => 
 				color = "#0A6C5E";
 				return { acronym, label: "Auroracoin", crypto: "AUR", satoshi, oshi, blockTime, color };
 			default:
-				acronym = cryptoUnit === "satoshi" ? "bits" : "BTC";
-				return { acronym, label: "Canada eCoin", crypto: "CDN", satoshi, oshi, blockTime };
+				return { 
+					acronym: cryptoUnit === "satoshi" ? "bits" : "CDN", 
+					label: "Canada eCoin", 
+					crypto: "CDN", 
+					satoshi: "bit", 
+					oshi: "bits", 
+					blockTime: 5,
+					color: "#90191c"
+				};
 		}
 	} catch (e) {
 		console.log(e);
