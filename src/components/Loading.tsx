@@ -26,7 +26,7 @@ const getAnimation = (name = "astronaut") => {
 			case "book":
 				return require(`../assets/lottie/loading_book.json`);
 			case "loader":
-				return require(`../assets/lottie/snap_loader_white.json`);
+				return require(`../assets/lottie/snap_loader_mixed.json`);
 			case "cloudBook":
 				return require(`../assets/lottie/downloading_book.json`);
 			case "coins":
@@ -39,7 +39,7 @@ const getAnimation = (name = "astronaut") => {
 				return getCoinImage(name); //Assume the requested image is a coin
 		}
 	} catch (e) {
-		return require(`../assets/lottie/snap_loader_white.json`);
+		return require(`../assets/lottie/snap_loader_mixed.json`);
 	}
 };
 

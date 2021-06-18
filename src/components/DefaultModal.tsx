@@ -21,7 +21,7 @@ const _DefaultModal = ({ isVisible = false, onClose = () => null, style = {}, co
 		<Modal
 			isVisible={isVisible}
 			onBackdropPress={onClose}
-			backdropOpacity={0.1}
+			backdropOpacity={0.6}
 			propagateSwipe={true}
 			onBackButtonPress={onClose}
 		>
