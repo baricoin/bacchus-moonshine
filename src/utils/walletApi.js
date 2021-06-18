@@ -217,6 +217,12 @@ const electrumHistoryHelper = async ({ allAddresses = [], addresses = [], change
 						txHash,
 						coin: selectedCrypto
 					});
+
+					//TODO:  Is this right?  .. seems to fix our issues, but doesnt seem right...  Maybe this should be a part of the electrum modules (return a standard object for all electrums)
+					// Some of the electrum servers respond withoput the hash key, they use the txid isntead.  lets make it all standard here.
+					if(decodedTransaction.data.hash === undefined) decodedTransaction.data.hash = decodedTransaction.data.txid;
+
+
 					if (decodedTransaction.error === false && decodedTransaction.data.hash !== undefined) {
 						decodedTransaction = decodedTransaction.data;
 					}
