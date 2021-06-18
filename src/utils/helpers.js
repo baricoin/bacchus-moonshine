@@ -4,7 +4,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import NetInfo from "@react-native-community/netinfo";
-import * as Keychain from "react-native-keychain";
+import * as Keychain from "react-native-keychain"; // https://github.com/oblador/react-native-keychain
 import "../../shim";
 import { randomBytes } from "react-native-randombytes";
 import bitcoinUnits from "bitcoin-units";

@@ -1014,6 +1014,8 @@ class Settings extends PureComponent {
 								valueStyle={{fontSize: 16, textAlign: "center", fontWeight: "bold"}}
 							/>
 
+							{/* TODO: We need a separate config page for each wallet,. its confusing to have a single wallet's config within the genral settings menu.*/}
+
 							<SettingGeneral
 								title=""
 								value="Electrum Options"
