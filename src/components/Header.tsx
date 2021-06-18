@@ -5,6 +5,10 @@ import bitcoinUnits from "bitcoin-units";
 import {systemWeights} from "react-native-typography";
 import { Text } from "../styles/components";
 
+const { 
+	eCoinCore
+} = require("../utils/ecoincore");
+
 const {
 	formatNumber,
 	capitalize
@@ -47,6 +51,7 @@ interface HeaderComponent {
 	fiatSymbol: string,
 	selectedCrypto: string,
 	selectedWallet: string,
+	selectedCurrency: string,
 	onSelectCoinPress: Function,
 	isOnline: boolean,
 	exchangeRate: number | string,
@@ -58,7 +63,7 @@ interface HeaderComponent {
 	cryptoValue: number | string,
 	cryptoUnit: string
 }
-const _Header = ({compress = false, fiatSymbol = "$", selectedCrypto = "bitcoin", bitcoinRate = 0, onSelectCoinPress = () => null, isOnline = true, exchangeRate = 0, walletName = "", selectedCryptoStyle = {}, activeOpacity = 0.6, fontSize = 60, fiatValue = 0, cryptoValue = 0, cryptoUnit = "satoshi"}: HeaderComponent) => {
+const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", selectedCrypto = "bitcoin", bitcoinRate = 0, onSelectCoinPress = () => null, isOnline = true, exchangeRate = 0, walletName = "", selectedCryptoStyle = {}, activeOpacity = 0.6, fontSize = 60, fiatValue = 0, cryptoValue = 0, cryptoUnit = "satoshi"}: HeaderComponent) => {
 	try {
 		if (isNaN(fiatValue)) fiatValue = 0;
 		if (cryptoValue === 0 && cryptoUnit === "BTC") {
@@ -82,25 +87,29 @@ const _Header = ({compress = false, fiatSymbol = "$", selectedCrypto = "bitcoin"
 			{walletName !== "" &&
 			<Text style={[styles.cryptoValue, { fontSize: fontSize/2 }]}>{walletName}{compress && `: ${getCryptoLabel({selectedCrypto})}`}</Text>}
 			{!compress && <Text style={[styles.cryptoValue, { fontSize: fontSize/1.8, ...selectedCryptoStyle }]}>{getCryptoLabel({selectedCrypto})}</Text>}
+		{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && eCoinCore.status() == 'connected' && 
 			<View style={styles.row}>
 				<View style={{ flexDirection: "row", alignItems: "center", left: -4 }}>
-					<Text style={[styles.fiatSymbol, { fontSize: fontSize/1.5 }]}>{fiatSymbol} </Text>
+					<Text style={[styles.fiatSymbol, { fontSize: fontSize/2 }]}>{fiatSymbol} </Text>
 					<Text style={[styles.fiatValue, { fontSize: fontSize/1.2 }]}>{formatNumber(fiatValue)}</Text>
 				</View>
 			</View>
+		}
 			<View style={styles.cryptoValueRow}>
 				<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{Number(cryptoValue).toFixed(8)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
 			</View>
-			{exchangeRate !== NaN &&
-			<View style={styles.cryptoValueRow}>
-				<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol}${formatNumber(exchangeRate)} CAD`}</Text>
-			</View>}
-			{bitcoinRate !== NaN && !isInfinite(exchangeRate) && 
+		{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && eCoinCore.status() == 'connected' && 
 			<View style={styles.cryptoValueRow}>
 				<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
-			</View>}
+				<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${formatNumber(exchangeRate)} ${selectedCurrency}`}</Text>
+			</View> 
+		}
+
+
+
+
 			{isOnline !== true &&
-			<Text style={[styles.cryptoValue, { marginTop: 10, fontSize: fontSize/2.5 }]}>Currently Offline</Text>
+				<Text style={[styles.errorRow, { marginTop: 10, fontSize: fontSize/2.5 }]}>Currently Offline</Text>
 			}
 		</TouchableOpacity>
 	);
