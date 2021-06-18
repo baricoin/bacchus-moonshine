@@ -991,18 +991,19 @@ class Settings extends PureComponent {
 							/>
 							*/}
 
-{/*							<SettingGeneral
+							<SettingGeneral
 								value={`Selected Fiat Currency:\n${this.getSelectedCurrency()}`}
 								col1Image={<Fontisto name="money-symbol" style={{ paddingVertical: 2 }} size={32} />}
 								onPress={() => this.toggleFiatModal({ display: true })}
 								valueStyle={{ fontSize: 16, textAlign: "center", fontWeight: "bold" }}
 								col2Style={{ flex: 2, alignItems: "center", justifyContent: "center", textAlign: "center" }}
-							/>*/}
+							/>
+
+							{/*  TODO:  This RBF isnt available on all chains,. only show this if it configured within the coin's network
 							<SettingSwitch setting="rbf" value={this.props.settings["rbf"]} title="Enable Replace-by-fee" onPress={this.toggleRBF} />
+							 */}
+
 							<SettingSwitch setting="sendTransactionFallback" value={this.props.settings["sendTransactionFallback"]} title="Send Transaction Fallback" onPress={this.toggleSendTransactionFallback} />
-
-
-
 
 							<SettingGeneral
 								title=""
