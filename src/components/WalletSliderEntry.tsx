@@ -146,7 +146,7 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 
 				</View>
 				
-				<View style={{ paddingVertical: 70 }} />
+				<View style={{ paddingVertical: 10 }} />
 				
 			</ScrollView>
 		

@@ -105,13 +105,12 @@ _Button.propTypes = {
 
 const styles = StyleSheet.create({
 	container: {
-		borderWidth: 1.2,
-		borderRadius: 6,
-		paddingHorizontal: 15,
-		paddingVertical: 12,
+		borderWidth: 1,
+		borderRadius: 4,
+		paddingHorizontal: 18,
+		paddingVertical: 6,
 		alignItems: "center",
-		justifyContent: "center",
-		minWidth: "40%"
+		justifyContent: "center"
 	},
 	title: {
 		...systemWeights.bold,
@@ -119,8 +118,8 @@ const styles = StyleSheet.create({
 		textAlign: "center"
 	},
 	text: {
-		...systemWeights.light,
-		fontSize: 18,
+		...systemWeights.regular,
+		fontSize: 12,
 		textAlign: "center"
 	}
 });

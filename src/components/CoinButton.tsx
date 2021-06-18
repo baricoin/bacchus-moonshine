@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "transparent",
 		justifyContent: "center",
-		padding: 10
+		padding: 10,
+		minHeight: 76
 	},
 	buttonImage: {
 		width: 64,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.semibold,
-		fontSize: 24,
+		fontSize: 19,
 		textAlign: "right"
 	},
 	subText: {
@@ -159,9 +160,14 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		textAlign: "right"
 	},
+	errorText: {
+		...systemWeights.regular,
+		fontSize: 10,
+		textAlign: "right"
+	},
 	balanceText: {
 		...systemWeights.regular,
-		fontSize: 12,
+		fontSize: 16,
 		textAlign: "right"
 	}
 });

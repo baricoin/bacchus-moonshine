@@ -940,8 +940,9 @@ class Settings extends PureComponent {
 		let addressType = "bech32";
 		try {addressType = this.props.wallet.wallets[selectedWallet].addressType[selectedCrypto];} catch (e) {}
 
+		let backgroundColor = this.isDarkMode() ? "black" : "white";
 		return (
-			<View style={styles.container}>
+			<View style={[styles.container, { backgroundColor } ]}>
 
 				<Animated.View style={{ flex: 1, opacity: this.state.settingsOpacity }}>
 					<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={{flexGrow:1}} style={{ flex: 1, paddingTop: 20 }}>
@@ -1345,7 +1346,6 @@ Settings.propTypes = {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "transparent"
 	},
 	cryptoUnitButton: {
 		alignItems: "center",

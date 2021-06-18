@@ -136,7 +136,13 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent"
 	},
 	cryptoValueRow: {
-		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "transparent",
+		marginTop: 5
+	},
+	errorRow: {
+		...systemWeights.light,
 		alignItems: "center",
 		justifyContent: "center",
 		backgroundColor: "transparent",
