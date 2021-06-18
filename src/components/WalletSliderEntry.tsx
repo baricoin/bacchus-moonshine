@@ -42,9 +42,10 @@ interface WalletSliderEntryComponent {
 }
 
 
-const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
+const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedCurrency: "", selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
+	const { selectedCurrency } = wallet;
 	
 	const getWalletName = () => {
 		try {
@@ -134,7 +135,8 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 								walletId={walletId}
 								balance={balance}
 								cryptoUnit={cryptoUnit}
-								fiatValue={getExchangeRate({selectedCrypto: "canadaecoin", selectedCurrency: "cad", selectedService: "coingecko"}) * balance}
+								selectedCrypto="canadaecoin"
+								selectedCurrency={selectedCurrency}
 							/>
 						);
 					})}

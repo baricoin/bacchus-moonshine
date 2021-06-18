@@ -67,19 +67,26 @@ const getCryptoLabel = ({ selectedCrypto = "bitcoin" } = {}) => {
 	}
 };
 
-const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, fiatValue, fiatSymbol = "$"}: CoinButtonComponent) => {
+const isInfinite = (n) => {
+  return n === n/0;
+}
+
+const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, fiatValue, selectedCurrency}: CoinButtonComponent) => {
 	let acronym = getCoinData({ selectedCrypto: coin, cryptoUnit }).acronym
 	let exchangeRate = 0;
 	let fiatRate = 0;
+	let fiatSymbol = "";
 
 	if(eCoinCore.collections && eCoinCore.collections.ExchangeRates){
 		exchangeRate = eCoinCore.collections.ExchangeRates.findOne({call: acronym});
-		if(!exchangeRate) return '?';
-		exchangeRate = exchangeRate.rate
+		if(exchangeRate) exchangeRate = exchangeRate.rate
 
-		fiatRate = eCoinCore.collections.ExchangeRates.findOne({call: String("CAD").toUpperCase()})
-		if(!fiatRate) return '?';
-		fiatRate = fiatRate.rate
+		fiatRate = eCoinCore.collections.ExchangeRates.findOne({call: String(selectedCurrency).toUpperCase()})
+		if(fiatRate) {
+			fiatSymbol = fiatRate.symbol
+			fiatRate = fiatRate.rate
+		}
+
 	}
 
 	let fiatPrice = Number(exchangeRate / fiatRate)
@@ -95,8 +102,8 @@ const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, 
 	let brandStyle = {
 		width: "100%",
 		flexDirection: "row",
-		backgroundColor: `${getCoinData({selectedCrypto:coin}).color}22`,
-		borderColor: `${getCoinData({selectedCrypto:coin}).color}`,
+		backgroundColor: `${getCoinData({selectedCrypto:coin}).color}16`,
+		borderColor: `${getCoinData({selectedCrypto:coin}).color}88`,
 		borderWidth: 1,
 		borderRadius: 6,
 		marginBottom: 6,
@@ -109,10 +116,19 @@ const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, 
 					style={styles.buttonImage}
 					source={getCoinImage(coin)}
 				/>
-				<Text type="text" style={styles.subText}>{getCoinData({selectedCrypto:coin}).label}</Text>
-				<Text type="text" style={styles.text}>{fiatSymbol} {formatNumber(fiatBalance)}</Text>
-				<Text type="text" style={styles.balanceText}>{formatBalance({ balance, coin, cryptoUnit })} @ {fiatPrice} CAD</Text>
-			
+				{fiatRate && !isInfinite(fiatRate) && 
+					<View type='transparent'>
+						<Text type="text" style={styles.subText}>{getCoinData({selectedCrypto:coin}).label}</Text>
+						<Text type="text" style={styles.text}>{fiatSymbol} {formatNumber(fiatBalance)}</Text>
+						<Text type="text" style={styles.subText}>{formatBalance({ balance, coin, cryptoUnit })} @ {fiatSymbol} {fiatPrice}</Text>
+					</View>
+				||
+					<View type='transparent'>
+						<Text type="text" style={styles.balanceText}>{getCoinData({selectedCrypto:coin}).label}</Text> 
+						<Text type="text" style={styles.text}>{formatBalance({ balance, coin, cryptoUnit })}</Text>
+					</View>
+				}
+
 			</View>
 		</TouchableOpacity>
 	);

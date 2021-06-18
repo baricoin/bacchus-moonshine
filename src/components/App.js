@@ -2131,6 +2131,7 @@ export default class App extends Component {
 												cryptoUnit={this.props.settings.cryptoUnit}
 												selectedCrypto={this.props.wallet.selectedCrypto}
 												selectedWallet={this.props.wallet.selectedWallet}
+												selectedCurrency={this.props.wallet.selectedCurrency.toUpperCase()}
 												exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
 												bitcoinRate={this.props.wallet.exchangeRate['bitcoin']}
 												isOnline={this.props.user.isOnline}
