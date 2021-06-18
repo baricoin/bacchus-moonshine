@@ -2,25 +2,31 @@
 // future release. It can now be installed and imported from '@react-native-community/async-storage' 
 // instead of 'react-native'. 
 // See https://github.com/react-native-community/async-storage
-let ECC_HOST = 'jersey.ecoincore.com'
 
+// We grab a websocket to listen for new exchange rates and available electrum servers
+// https://www.npmjs.com/package/react-ddp
 import DDP from "react-ddp";
+
+// Using react-ddp with minimongo-cache is relatively easy because of how DDP messages are structured
 import minimongo from "minimongo-cache";
 
+const ECC_HOST = 'beta-api.ecoincore.com'
 const DEBUG = false;
+
 process.nextTick = setImmediate; //react-native polyfill
 
 // let ECC_HOST = 'ecoincore.com'
 let eCoinCore = new DDP({
 	SocketConstructor: WebSocket,
 	endpoint:`wss://${ECC_HOST}/websocket`,
-	debug:true,
+	debug:false,
+	// debug:true, // Uncomment this if you want the ddp traffic messages barfed into the console log
 	autoConnect: true,
 	autoReconnect: true,
-	reconnectInterval: 10000
+	reconnectInterval: 10000,
+	appId: "cdn-moonshine-beta-1",
 });
 
-console.log('Connected to', ECC_HOST);
 eCoinCore.collections=new minimongo();
 eCoinCore.collections.debug = false;
 
