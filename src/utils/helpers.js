@@ -700,7 +700,8 @@ const openTxId = (txid = "", selectedCrypto = ""): void => {
 	if (selectedCrypto === "bitcoinTestnet") url = `https://blockstream.info/testnet/tx/${txid}`;
 	if (selectedCrypto === "litecoin") url = `https://chain.so/tx/LTC/${txid}`;
 	if (selectedCrypto === "litecoinTestnet") url = `https://chain.so/tx/LTCTEST/${txid}`;
-	if (selectedCrypto === "canadaecoin") url = `https://explorer.canadaecoin.ca/tx/${txid}`;
+	if (selectedCrypto === "canadaecoin") url = `https://chainz.cryptoid.info/cdn/tx.dws?${txid}.htm`;
+	if (selectedCrypto === "auroracoin") url = `https://chainz.cryptoid.info/aur/tx.dws?${txid}.htm`;
 	openUrl(url);
 };
 
