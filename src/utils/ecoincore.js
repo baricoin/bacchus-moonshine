@@ -37,6 +37,14 @@ eCoinCore.collections.addCollection("ExchangeRates");
 eCoinCore.collections.addCollection("Chainpacks");
 
 
+eCoinCore.on('connected', function(){
+	console.log("[DDP] connected to", ECC_HOST);
+});
+
+eCoinCore.on('disconnected', function(){
+	console.log("[DDP] disconnected from", ECC_HOST);
+});
+
 eCoinCore.on('added', function(data){
 	if (!eCoinCore.collections[data.collection]){
 		console.log('creating in-memory collection:', data.collection)
