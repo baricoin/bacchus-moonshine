@@ -81,32 +81,29 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 
 	const _onSelectCoinPress = () => onSelectCoinPress();
 
-
 	return (
 		<TouchableOpacity style={styles.container} activeOpacity={activeOpacity} onPress={_onSelectCoinPress}>
 			{walletName !== "" &&
 			<Text style={[styles.cryptoValue, { fontSize: fontSize/2 }]}>{walletName}{compress && `: ${getCryptoLabel({selectedCrypto})}`}</Text>}
 			{!compress && <Text style={[styles.cryptoValue, { fontSize: fontSize/1.8, ...selectedCryptoStyle }]}>{getCryptoLabel({selectedCrypto})}</Text>}
-		{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && eCoinCore.status() == 'connected' && 
-			<View style={styles.row}>
-				<View style={{ flexDirection: "row", alignItems: "center", left: -4 }}>
-					<Text style={[styles.fiatSymbol, { fontSize: fontSize/2 }]}>{fiatSymbol} </Text>
-					<Text style={[styles.fiatValue, { fontSize: fontSize/1.2 }]}>{formatNumber(fiatValue)}</Text>
+			
+			{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && 
+				<View style={styles.row}>
+					<View style={{ flexDirection: "row", alignItems: "center", left: -4 }}>
+						<Text style={[styles.fiatSymbol, { fontSize: fontSize/2 }]}>{fiatSymbol} </Text>
+						<Text style={[styles.fiatValue, { fontSize: fontSize/1.2 }]}>{formatNumber(fiatValue)}</Text>
+					</View>
 				</View>
-			</View>
-		}
-			<View style={styles.cryptoValueRow}>
-				<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{Number(cryptoValue).toFixed(8)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
-			</View>
-		{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && eCoinCore.status() == 'connected' && 
-			<View style={styles.cryptoValueRow}>
-				<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
-				<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${formatNumber(exchangeRate)} ${selectedCurrency}`}</Text>
-			</View> 
-		}
-
-
-
+			}
+				<View style={styles.cryptoValueRow}>
+					<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{Number(cryptoValue).toFixed(8)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
+				</View>
+			{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && 
+				<View style={styles.cryptoValueRow}>
+					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
+					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${formatNumber(exchangeRate)} ${selectedCurrency}`}</Text>
+				</View> 
+			}
 
 			{isOnline !== true &&
 				<Text style={[styles.errorRow, { marginTop: 10, fontSize: fontSize/2.5 }]}>Currently Offline</Text>
