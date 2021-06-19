@@ -133,8 +133,9 @@ const _TransactionRow = (
 					<Text type={textColor} style={[styles.smallText, { fontWeight, fontSize: 14  }]}>Confirmations: {getConfirmations()}</Text>
 				</View>
 				<View style={styles.col2}>
-					<Text type={textColor} style={[styles.text, { fontWeight }]}>{getFiatAmountLabel()}</Text>
+					{Number(exchangeRate) !== 0 &&<Text type={textColor} style={[styles.text, { fontWeight }]}>{getFiatAmountLabel()}</Text> }
 					<Text type={textColor} style={[styles.text, { fontWeight  }]}>{type === "received" ? "+" : "-"}{getCryptoAmountLabel()}</Text>
+					{Number(exchangeRate) === 0 && <Text></Text> }
 				</View>
 			</View>
 			{messages.length > 0 &&
