@@ -48,5 +48,9 @@
     {"host": "lenoir.ecoincore.com", "ssl": 12343, "tcp": 12342 },
     {"host": "electrumx.aur.ewmcx.info", "ssl": 50002, "tcp": 12342 },
     {"host": "failover.aur.ewmcx.biz", "ssl": 50002, "tcp": 12342 },
+  ],
+  "egulden": [
+    {"host": "electrum1.egulden.org", "ssl": 50002, "tcp": 50001 },
+    {"host": "electrum2.egulden.org", "ssl": 50002, "tcp": 50001 },
   ]
 }
