@@ -59,10 +59,9 @@ interface LoadingComponent {
 const _Loading = ({ theme = {}, loadingOpacity = 0, loadingMessage = "Loading State", loadingProgress = 0, animationName = "", enableProgressBar = true, enableSpinner = true, enableErrorIcon = false, enableSuccessIcon = false, width = 200, style = {}, textStyle = {}}: LoadingComponent) => {
 
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
-	let pbarColor = theme.text || "#888888";
+	let pbarColor = getCoinData({selectedCrypto: animationName}).color || "#888888";
 	const Icon = () => {
 		if (availableCoins.includes(animationName)) {
-			pbarColor = getCoinData({selectedCrypto: animationName}).color
 			return (
 				<Image
 					style={{width: 100, height: 100, marginBottom: 40}}
@@ -97,7 +96,7 @@ const _Loading = ({ theme = {}, loadingOpacity = 0, loadingMessage = "Loading St
 			</View>
 
 			<View style={styles.messageContainer}>
-				<Text style={[styles.boldText, { ...textStyle, color: theme.text }]}>{loadingMessage}</Text>
+				<Text style={[styles.boldText, { ...textStyle, color: "#888888" }]}>{loadingMessage}</Text>
 			</View>
 
 		</Animated.View>

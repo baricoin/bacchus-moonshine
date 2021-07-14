@@ -1029,7 +1029,8 @@ class SendTransaction extends Component {
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={[styles.rightIconContainer, {
-								backgroundColor: this.state.spendMaxAmount ? "#813fb1" : this.getTheme().background2
+								// TODO:  Fix this color, make it reference a variable.
+								backgroundColor: this.state.spendMaxAmount ? "#AAAAAA" : this.getTheme().background2
 							}]}
 							onPress={this.onMaxPress}
 						>
