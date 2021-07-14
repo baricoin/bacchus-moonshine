@@ -92,9 +92,9 @@ const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, 
 	let fiatPrice = Number(exchangeRate / fiatRate)
 	let fiatBalance = Number(fiatPrice * (balance/100000000)).toFixed(2);
 
-	if(fiatPrice < .01) { 
+	if(fiatPrice < .1) { 
 		fiatPrice = Number(fiatPrice).toFixed(4);
-	} else if(fiatPrice < 0.1) {
+	} else if(fiatPrice < 1) {
 		fiatPrice = Number(fiatPrice).toFixed(3);
 	} else fiatPrice = Number(fiatPrice).toFixed(2);
 
