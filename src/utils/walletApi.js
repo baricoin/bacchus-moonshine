@@ -90,17 +90,8 @@ const eCoinCoreExchangeRateHelper = async (selectedCrypto, selectedCurrency) => 
 	if(!coinRate || !fiatRate) return ({ error: true, data: "Not able to aquire exchange rate data, are we offline?" });
 
 	let exchangeRate = Number(Number(coinRate.rate) / Number(fiatRate.rate));
-	if(exchangeRate > 1000 ){
-		exchangeRate = Number(exchangeRate).toFixed(0);
-	} else if(exchangeRate > 0.1 ){
-		exchangeRate = Number(exchangeRate).toFixed(2);
-	} else if(exchangeRate > 0.01 ){
-		exchangeRate = Number(exchangeRate).toFixed(3);
-	} else {
-		exchangeRate = Number(exchangeRate).toFixed(4);
-	};
-
 	if(!exchangeRate) return ({ error: true, data: "Not able to aquire exchange rate data, are we offline?" });
+
 	return ({ error: false, data: exchangeRate });
 };
 
