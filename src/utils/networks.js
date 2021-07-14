@@ -216,7 +216,7 @@ const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => 
 				satoshi = "satoshi";
 				oshi = "sats";
 				acronym = cryptoUnit === "satoshi" ? "sats" : "EFL";
-				blockTime = 2;
+				blockTime = 120;
 				color = "#FF940B";
 				return { acronym, label: "eGulden", crypto: "EFL", satoshi, oshi, blockTime, color };
 			default:

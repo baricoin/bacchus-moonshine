@@ -4,6 +4,7 @@ class Clients {
 		this.mainClient = {
 			canadaecoin: false,
 			auroracoin: false,
+			egulden: false,
 			bitcoin: false,
 			litecoin: false
 
@@ -11,12 +12,14 @@ class Clients {
 		this.peer = {
 			canadaecoin: { port: 0, host: "", protocol: "" },
 			auroracoin: { port: 0, host: "", protocol: "" },
+			egulden: { port: 0, host: "", protocol: "" },
 			bitcoin: { port: 0, host: "", protocol: "" },
 			litecoin: { port: 0, host: "", protocol: "" }
 		};
 		this.peers = {
 			canadaecoin: [],
 			auroracoin: [],
+			egulden: [],
 			bitcoin: [],
 			litecoin: []
 		};

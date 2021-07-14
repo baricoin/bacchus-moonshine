@@ -702,6 +702,7 @@ const openTxId = (txid = "", selectedCrypto = ""): void => {
 	if (selectedCrypto === "litecoinTestnet") url = `https://chain.so/tx/LTCTEST/${txid}`;
 	if (selectedCrypto === "canadaecoin") url = `https://chainz.cryptoid.info/cdn/tx.dws?${txid}.htm`;
 	if (selectedCrypto === "auroracoin") url = `https://chainz.cryptoid.info/aur/tx.dws?${txid}.htm`;
+	if (selectedCrypto === "egulden") url = `https://chainz.cryptoid.info/efl/tx.dws?${txid}.htm`;
 	openUrl(url);
 };
 

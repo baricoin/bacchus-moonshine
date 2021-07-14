@@ -30,7 +30,7 @@ let eCoinCore = new DDP({
 eCoinCore.collections=new minimongo();
 eCoinCore.collections.debug = false;
 
-eCoinCore.subscribe({ name: "ExchangeRates", data: { rates: ["USD", "CAD", "CDN", "BTC", "LTC", "UNO"]} });
+eCoinCore.subscribe({ name: "ExchangeRates", data: { rates: ["USD", "CAD", "CDN", "BTC", "LTC", "UNO", "EFL"]} });
 eCoinCore.subscribe({ name: "Chainpacks" });
 
 eCoinCore.collections.addCollection("ExchangeRates");
