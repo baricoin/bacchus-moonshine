@@ -74,20 +74,20 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 				if (typeof cryptoValue !== "number") cryptoValue = Number(cryptoValue);
 				cryptoValue = `${(cryptoValue * 0.00000001).toFixed(8)}`;
 			} else {
-
-				if(exchangeRate > 1000 ){
-					exchangeRate = Number(exchangeRate).toFixed(0);
-				} else if(exchangeRate > 1 ){
-					exchangeRate = Number(exchangeRate).toFixed(2);
-				} else if(exchangeRate > 0.1 ){
-					exchangeRate = Number(exchangeRate).toFixed(3);
-				} else {
-					exchangeRate = Number(exchangeRate).toFixed(4);
-				};
-
 				cryptoValue = bitcoinUnits(cryptoValue, "satoshi").to(cryptoUnit).value();
 			}
 		}
+
+		if(exchangeRate > 1000 ){
+			exchangeRate = Number(exchangeRate).toFixed(0);
+		} else if(exchangeRate > 1 ){
+			exchangeRate = Number(exchangeRate).toFixed(2);
+		} else if(exchangeRate > 0.1 ){
+			exchangeRate = Number(exchangeRate).toFixed(3);
+		} else {
+			exchangeRate = Number(exchangeRate).toFixed(4);
+		};
+
 	} catch (e) {}
 
 	const _onSelectCoinPress = () => onSelectCoinPress();
