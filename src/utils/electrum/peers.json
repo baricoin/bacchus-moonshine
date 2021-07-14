@@ -46,7 +46,9 @@
     {"host": "failover.aur.ewmcx.biz", "ssl": 50002, "tcp": 12342 },
   ],
   "egulden": [
-    {"host": "electrum1.egulden.org", "ssl": 50002, "tcp": 50001 },
-    {"host": "electrum2.egulden.org", "ssl": 50002, "tcp": 50001 },
+    {"host": "holland.ecoincore.com", "ssl": 11017, "tcp": 11016 },
+    {"host": "lenoir.ecoincore.com", "ssl": 11017, "tcp": 11016 },
+    {"host": "46.101.220.249", "ssl": 11017, "tcp": 11016 },
+    {"host": "136.144.210.129", "ssl": 50002, "tcp": 50001 },
   ]
 }
