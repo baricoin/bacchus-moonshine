@@ -32,15 +32,11 @@
     // {"host": "ltc.litepay.ch", "ssl": 50002, "tcp": 50001}
   ],
   "canadaecoin": [
-    {"host": "explorer.canadaecoin.ca", "ssl": 50002, "tcp": 50001 },
     {"host": "woolloomooloo.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "miami.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "holland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "oakland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "tokyo.ecoincore.com", "ssl": 50002, "tcp": 34332 },
     {"host": "seattle.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "chicago.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "172.105.219.217", "ssl": 50002, "tcp": 50001 },
     {"host": "mumbai.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "lenoir.ecoincore.com", "ssl": 34333, "tcp": 34332 },
   ],
