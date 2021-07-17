@@ -90,6 +90,9 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 
 	} catch (e) {}
 
+	// If we are displaying bitcoin, then the bitcoin price is also the same as bitcoin... This prevents the display messing with rounded-off decimals;
+	if(selectedCrypto == "bitcoin") bitcoinRate = exchangeRate;
+
 	const _onSelectCoinPress = () => onSelectCoinPress();
 
 	return (
@@ -112,7 +115,7 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 			{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && 
 				<View style={styles.cryptoValueRow}>
 					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
-					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${formatNumber(exchangeRate)} ${selectedCurrency}`}</Text>
+					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${exchangeRate} ${selectedCurrency}`}</Text>
 				</View> 
 			}
 
