@@ -2,7 +2,7 @@ export const themes = {
 	light: {
 		mode: "light",
 
-		gradient:["#FFFC", "#FFFC"],
+		gradient:["#FFFE", "#FFFE"],
 		
 		// some generic things we want to use
 
@@ -44,7 +44,7 @@ export const themes = {
 	},
 	dark: {
 		mode: "dark",
-		gradient:["#000000AA", "#222222DD"],
+		gradient:["#000000DD", "#000000DD"],
 		transparent: "transparent",
 		background: "#222222",
 		background2: "#111111",

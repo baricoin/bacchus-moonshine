@@ -168,12 +168,12 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.semibold,
-		fontSize: 19,
+		fontSize: 21,
 		textAlign: "right"
 	},
 	subText: {
 		...systemWeights.regular,
-		fontSize: 12,
+		fontSize: 16,
 		textAlign: "right"
 	},
 	errorText: {
