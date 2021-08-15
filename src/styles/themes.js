@@ -2,7 +2,7 @@ export const themes = {
 	light: {
 		mode: "light",
 
-		gradient:["#FFFE", "#FFFE"],
+		gradient:["#FFFC", "#FFFC"],
 		
 		// some generic things we want to use
 
@@ -11,9 +11,9 @@ export const themes = {
 		black: "#000",
 		red: "#f00",						//
 
-		button: "#bd4246",					//
+		button: "#344443",					//
 		card: "#ddd",						// Background of the cards inside the settings page
-		input: "#efefef", 				//
+		input: "#00000022", 				//
 		surface: "#abc",					// Background of large surfaces like the bottom half of the main screen
 		selection: "#f0f0f0", 					//
 
@@ -21,13 +21,14 @@ export const themes = {
 		editable: "#efefef", 				//
 
 		text: "#000000", 					//.
+		invert: "#eee",
+		muted: "#777",
 		text2: "#222", 						//
 		placeholder: "#222", 						//
 
 		gray: "#efefef", 					//
 		gray2: "#6e6e6e", 					//
 		gray3: "#e6e6e6", 					//
-		nightlight: "#214121", 				//
 		PRIMARY_DARK: "#f0191c", 			//
 		lightPurple: "#001b1f", 			//
 
@@ -36,8 +37,9 @@ export const themes = {
 		background2: "#fefefe",				// Background of the input boxes
 		background3: "#cccccc",				//
 
-		shadow: "#90191c", 					//
-		highlight: "#bd8286",				//
+		shadow: "#ffffff88", 				//
+		highlight: "#444",				//
+		nightlight: "#00000022", 				//
 		warning: "#F15B2A", 				//
 		danger: "#EE1010",					//
 
@@ -53,10 +55,14 @@ export const themes = {
 		card: "#333",
 		card2: "transparent",
 		card3: "#555",
-		input: "#0009", 				//
+		input: "#00000011", 				//
 		editable: "#0009", 				//
-		highlight: "#999",			//
+		uneditable: "#11232234", 	
+		highlight: "#bbb",			//
+		nightlight: "#ffffff22", 				//
 		text: "#eee",
+		invert: "#222",
+		muted: "#999",
 		text2: "#fff",
 		text3: "#aaa",
 		primary: "#333",
@@ -65,8 +71,7 @@ export const themes = {
 		gray2: "#efefef",
 		gray3: "#000000",
 		warning: "#F15B2A",
-		uneditable: "#0009", 	
-		shadow: "#444",
+		shadow: "#00000032",
 		PRIMARY_DARK: "#222", //colors.darkPurple
 		danger: "#991010",
 		lightPurple: "#981b1f",
@@ -93,7 +98,7 @@ export const themes = {
 		warning: "#F15B2A",
 		uneditable: "#410b0d",
 		highlight: "#008800",
-		shadow: "#90191c",
+		shadow: "#88888833",
 		PRIMARY_DARK: "#90191c", //colors.darkPurple
 		danger: "#991010",
 		lightPurple: "#981b1f",
