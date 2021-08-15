@@ -262,30 +262,6 @@ const getTransactionData = ({ txId = "", selectedCrypto = "bitcoin" } = {}) => {
 	});
 };
 
-const getExchangeRate = ({ selectedCrypto = "bitcoin", selectedCurrency = "cad", selectedService = "coingecko" } = {}) => {
-	return new Promise(async (resolve) => {
-		const failure = (errorTitle = "", errorMsg = "") => {
-			resolve({ error: true, errorTitle, errorMsg });
-		};
-
-		const isConnected = await isOnline();
-		if (!isConnected) {
-			failure("Offline");
-			return;
-		}
-
-		let exchangeRate = 0;
-		try {
-			exchangeRate = await walletHelpers.exchangeRate.default({ service: selectedService, selectedCurrency, selectedCrypto });
-			if (exchangeRate.error) failure("Invalid Exchange Rate Data");
-			resolve({ error: false, data: exchangeRate.data });
-		} catch (e) {
-			console.log(e);
-			failure();
-		}
-	});
-};
-
 const getAddressTransactions = async ({ address = "", addresses = [], changeAddresses = [], currentBlockHeight = 0, selectedCrypto = "bitcoin" } = {}) => {
 	return new Promise(async (resolve) => {
 		const failure = (data = "") => {
@@ -1114,7 +1090,6 @@ module.exports = {
 	getAddressTransactions,
 	getAllTransactions,
 	getTransactionData,
-	getExchangeRate,
 	isOnline,
 	removeDupsFromArrOfObj,
 	createTransaction,
