@@ -7,6 +7,9 @@
 // https://www.npmjs.com/package/react-ddp
 import DDP from "react-ddp";
 
+import * as actions from "../actions"
+import { store } from "../../Root.js";
+
 // Using react-ddp with minimongo-cache is relatively easy because of how DDP messages are structured
 import minimongo from "minimongo-cache";
 
@@ -46,11 +49,15 @@ eCoinCore.on('disconnected', function(){
 });
 
 eCoinCore.on('added', function(data){
+
+	if (data.collection == "ExchangeRates") store.dispatch({type: actions.EXCHANGE_RATES_UPDATED, payload: {... data.fields}})
+
 	if (!eCoinCore.collections[data.collection]){
 		console.log('creating in-memory collection:', data.collection)
 		eCoinCore.collections.addCollection(data.collection);
 	}
 	eCoinCore.collections[data.collection].upsert({_id: data.id, ...data.fields})
+
 });
 
 eCoinCore.on('changed', function(data){
