@@ -25,7 +25,6 @@ module.exports = (state = {
 	wallets: {},
 	selectedTransaction: "",
 	availableCoins,
-	exchangeRate: zeroValueItems,
 	blockHeight: { ...zeroValueItems, timestamp: null },
 	transactionMemos: {}, //{ [txhash]: "memo" }
 }, action) => {
@@ -368,7 +367,6 @@ module.exports = (state = {
 				wallets: {},
 				selectedTransaction: "",
 				availableCoins,
-				exchangeRate: zeroValueItems,
 				blockHeight: { ...zeroValueItems, timestamp: null }
 			};
 
@@ -376,3 +374,4 @@ module.exports = (state = {
 			return state;
 	}
 };
+

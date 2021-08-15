@@ -23,12 +23,9 @@ const {
 const { height, width } = Dimensions.get("window");
 const {
 	capitalize,
-	getExchangeRate
 } = require("../utils/helpers");
 
-const {
-	availableCoins
-} = require("../utils/networks");
+import { getCoinData, availableCoins } from "../utils/networks";
 
 interface WalletSliderEntryComponent {
 	walletId: string,
@@ -42,7 +39,7 @@ interface WalletSliderEntryComponent {
 }
 
 
-const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedCurrency: "", selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
+const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedCurrency: "", selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", fiatSymbol = "", rates, updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	const { selectedCurrency } = wallet;
@@ -110,6 +107,20 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 		}
 	};
 	
+	const bitcoinRate = () => {
+			if(!wallet.selectedCurrency.toUpperCase()) return 0;
+			if(!rates[wallet.selectedCurrency.toUpperCase()]) return 0;
+	 		return	1 / Number(rates[wallet.selectedCurrency.toUpperCase()].rate);
+	}
+	
+	const fiatRate = () => {
+		if(!getCoinData( wallet.selectedCrypto )) return 0;
+		if(!rates[getCoinData( wallet.selectedCrypto ).acronym.toUpperCase()]) return 0;
+		const rateObj = rates[getCoinData( wallet.selectedCrypto ).acronym.toUpperCase()]
+		if(!rateObj) return 0;
+ 		return  bitcoinRate() * Number(rateObj.rate);
+	};
+
 	return (
 		<View style={styles.container}>
 			<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={styles.innerContainer}>

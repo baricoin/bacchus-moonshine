@@ -257,7 +257,7 @@ class TransactionDetail extends PureComponent {
 			const { selectedWallet, selectedCrypto } = this.props.wallet;
 			const { hash } = this.props.wallet.selectedTransaction;
 			const cryptoUnit = this.props.settings.cryptoUnit;
-			const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+			const exchangeRate = this.fiatRate()
 			const rbfData = this.props.wallet.wallets[selectedWallet].rbfData[selectedCrypto][hash];
 			const fiatSymbol = this.props.settings.fiatSymbol;
 			

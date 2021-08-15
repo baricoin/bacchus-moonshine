@@ -187,7 +187,7 @@ class SendTransaction extends PureComponent {
 	calculateFees = async () => {
 		try {
 			const { selectedCrypto, selectedWallet } = this.props.wallet;
-			const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+			const exchangeRate = this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym.toUpperCase()].rate;
 			const addressType = this.props.wallet.wallets[selectedWallet].addressType[selectedCrypto];
 			let utxos = [];
 			utxos = utxos.concat(this.state.privateKeyData.bech32Utxos);
@@ -225,7 +225,7 @@ class SendTransaction extends PureComponent {
 		try {
 			const { selectedCrypto } = this.props.wallet;
 			const totalFee = this.state.totalFee;
-			let exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+			let exchangeRate = this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym.toUpperCase()].rate;
 			exchangeRate = Number(exchangeRate);
 			let balance = Number(this.state.privateKeyData.balance);
 			let balanceMinusFees = balance - Number(totalFee);
@@ -292,7 +292,7 @@ class SendTransaction extends PureComponent {
 	updateFee = (fee = 0) => {
 		try {
 			const selectedCrypto = this.props.wallet.selectedCrypto;
-			const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+			const exchangeRate = this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym.toUpperCase()].rate;
 			const cryptoUnit = this.props.settings.cryptoUnit;
 			let totalFee = this.getTotalFee(fee);
 			totalFee = Number(totalFee);
@@ -817,7 +817,7 @@ class SendTransaction extends PureComponent {
 		try {
 			//return this.state.fiatBalance;
 			//const { selectedCrypto } = this.props.wallet;
-			//const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+			//const exchangeRate = this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym.toUpperCase()].rate;
 			const balance = this.state.fiatBalance.balanceMinusFees;
 			if (isNaN(balance)) return 0;
 			return Number(balance);
