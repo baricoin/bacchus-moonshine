@@ -1,9 +1,5 @@
 // @flow weak
-const {
-	Constants: {
-		actions
-	}
-} = require("../../ProjectData.json");
+import * as actions from "../actions"
 
 const {
 	availableCoins

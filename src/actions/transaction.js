@@ -1,10 +1,6 @@
 import bitcoinUnits from "bitcoin-units";
+import * as actions from "../actions"
 
-const {
-	Constants: {
-		actions
-	}
-} = require("../../ProjectData.json");
 const {
 	walletHelpers
 } = require("../utils/walletApi");

@@ -1,9 +1,6 @@
 import "../../shim";
-const {
-	Constants: {
-		actions
-	}
-} = require("../../ProjectData.json");
+import * as actions from "../actions"
+
 const moment = require("moment");
 const bip39 = require("bip39");
 const {
@@ -29,28 +26,6 @@ const updateWallet = (payload) => ({
 	payload
 });
 
-const getExchangeRate = ({ selectedCoin = "bitcoin", selectedCurrency = "usd", selectedService = "coingecko" } = {}) => () => {
-	return new Promise(async (resolve) => {
-
-		const failure = (errorTitle = "", errorMsg = "") => {
-			resolve({ error: true, errorTitle, errorMsg });
-		};
-
-		const isConnected = await isOnline();
-		if (!isConnected) return failure("Offline");
-
-		let exchangeRate = 0;
-		try {
-			exchangeRate = await walletHelpers.exchangeRate.default({ service: selectedService, selectedCurrency, selectedCrypto: selectedCoin });
-			if (exchangeRate.error) failure("Invalid Exchange Rate Data");
-			resolve({ error: false, data: exchangeRate.data });
-		} catch (e) {
-			console.log(e);
-			failure();
-		}
-	});
-};
-
 const deleteWallet = ({ wallet } = {}) => async (dispatch) => {
 	return new Promise(async (resolve) => {
 		const failure = (data) => {
@@ -74,7 +49,7 @@ const deleteWallet = ({ wallet } = {}) => async (dispatch) => {
 	});
 };
 
-const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressAmount = 2, changeAddressAmount = 2, mnemonic = "", generateAllAddresses = true, keyDerivationPath = "84" } = {}) => async (dispatch) => {
+const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressAmount = 2, changeAddressAmount = 2, mnemonic = "", generateAllAddresses = true, keyDerivationPath = "44" } = {}) => async (dispatch) => {
 	return new Promise(async (resolve) => {
 		const failure = (data) => {
 			resolve({error: true, data});
@@ -111,7 +86,8 @@ const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressA
 							changeAddressAmount,
 							selectedCrypto: coin,
 							wallet,
-							keyDerivationPath
+							keyDerivationPath: defaultWalletShape.keyDerivationPath[coin],
+							addressType: defaultWalletShape.addressType[coin],
 						});
 						if (addresses.error) addresses = {data: {addresses: [], changeAddresses: []}};
 						allAddresses[coin].addresses = addresses.data.addresses;
@@ -119,7 +95,15 @@ const createWallet = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressA
 					})
 				);
 			} else {
-				let generatedAddresses = await generateAddresses({ addressAmount, changeAddressAmount, selectedCrypto, wallet, keyDerivationPath });
+				let generatedAddresses = await generateAddresses({ 
+					addressAmount, 
+					changeAddressAmount, 
+					selectedCrypto, 
+					wallet, 
+					keyDerivationPath: defaultWalletShape.keyDerivationPath[selectedCrypto],
+					addressType: defaultWalletShape.addressType[selectedCrypto]
+
+				});
 				if (generatedAddresses.error) {
 					allAddresses[selectedCrypto].addresses = generatedAddresses.data.addresses;
 					allAddresses[selectedCrypto].changeAddresses = generatedAddresses.data.changeAddresses;
@@ -301,7 +285,7 @@ const updateBlockHeight = ({ selectedCrypto = "bitcoin" } = {}) => async (dispat
 	});
 };
 
-const addAddresses = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressAmount = 5, changeAddressAmount = 5, addressIndex = 0, changeAddressIndex = 0, keyDerivationPath = "84" }) => async (dispatch) => {
+const addAddresses = ({ wallet = "wallet0", selectedCrypto = "bitcoin", addressAmount = 5, changeAddressAmount = 5, addressIndex = 0, changeAddressIndex = 0, keyDerivationPath = "44" }) => async (dispatch) => {
 	return new Promise(async (resolve) => {
 		const failure = (data) => {
 			resolve({error: true, data});
@@ -354,7 +338,7 @@ const toggleUtxoBlacklist = ({ transaction = "", selectedWallet = "wallet0", sel
 	});
 };
 
-const initialImportSync = ({ wallet = "wallet0", selectedCrypto = "bitcoin", currentBlockHeight = 0, keyDerivationPath = "84" }) => async (dispatch) => {
+const initialImportSync = ({ wallet = "wallet0", selectedCrypto = "bitcoin", currentBlockHeight = 0, keyDerivationPath = "44" }) => async (dispatch) => {
 	return new Promise(async (resolve) => {
 		const failure = (data) => {
 			resolve({ error: true, data });
@@ -475,7 +459,7 @@ const updateRbfData = ({ wallet = "wallet0", selectedCrypto = "", rbfData = {} }
 	});
 };
 
-const getNextAvailableAddress = ({ wallet = "wallet0", addresses = [], changeAddresses = [], addressIndex = 0, changeAddressIndex = 0, selectedCrypto = "bitcoin", currentBlockHeight = 0, keyDerivationPath = "84", addressType = "bech32" } = {}) => async (dispatch) => {
+const getNextAvailableAddress = ({ wallet = "wallet0", addresses = [], changeAddresses = [], addressIndex = 0, changeAddressIndex = 0, selectedCrypto = "bitcoin", currentBlockHeight = 0, keyDerivationPath = "44", addressType = "legacy" } = {}) => async (dispatch) => {
 	return new Promise(async (resolve) => {
 		const failure = (data) => {
 			resolve({ error: true, data });
@@ -587,7 +571,6 @@ const getNextAvailableAddress = ({ wallet = "wallet0", addresses = [], changeAdd
 module.exports = {
 	deleteWallet,
 	updateWallet,
-	getExchangeRate,
 	getAddress,
 	createWallet,
 	updateBalance,
@@ -600,3 +583,4 @@ module.exports = {
 	initialImportSync,
 	updateRbfData
 };
+

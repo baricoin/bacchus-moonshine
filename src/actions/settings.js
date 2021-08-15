@@ -1,8 +1,5 @@
-const {
-	Constants: {
-		actions
-	}
-} = require("../../ProjectData.json");
+import * as actions from "../actions"
+
 const {
 	resetKeychainValue
 } = require("../utils/helpers");

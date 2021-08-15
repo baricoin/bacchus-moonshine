@@ -8,7 +8,8 @@ const appReducers = combineReducers({
 	user: require("./user"),
 	wallet: require("./wallet"),
 	transaction: require("./transaction"),
-	settings: require("./settings")
+	settings: require("./settings"),
+	rates: require("./rates")
 });
 
 export default appReducers;
