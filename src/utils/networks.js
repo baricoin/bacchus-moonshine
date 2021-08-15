@@ -161,7 +161,7 @@ const getCoinImage = (coin = "bitcoin") => {
 			case "litecoin":
 				return require(`../assets/ecoins/litecoin.png`);
 			case "canadaecoin":
-				return require(`../assets/canadaecoin.png`);
+				return require(`../assets/ecoins/canadaecoin.png`);
 			case "auroracoin":
 				return require(`../assets/ecoins/auroracoin.png`);
 			case "egulden":
@@ -170,7 +170,7 @@ const getCoinImage = (coin = "bitcoin") => {
 				return require(`../assets/ecoins/canadaecoin.png`);
 		}
 	} catch (e) {
-		return require(`../assets/canadaecoin.png`);
+		return require(`../assets/ecoins/canadaecoin.png`);
 	}
 };
 
