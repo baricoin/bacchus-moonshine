@@ -556,10 +556,15 @@ class TransactionDetail extends PureComponent {
 		} catch {return " ";}
 	};
 	
+
 	render() {
 		if (!this.props.wallet.selectedTransaction) return <View />;
 		const { selectedCrypto } = this.props.wallet;
-		const { block, type, hash, timestamp, fee, address, amount, sentAmount } = this.props.wallet.selectedTransaction;
+		const { 
+			address, amount, block, data, fee, hash, inputAmount, 
+			messages, outputAmount, path, recievedAmount, sentAmount,
+			timestamp, transactionInputAmount, transactionOutputAmount, type
+		} = this.props.wallet.selectedTransaction;
 		const confirmations = this.getConfirmations();
 		const status = block === 0 || block === null || confirmations === 0 ? "Pending" : "Confirmed";
 		const blockHeight = block === 0 ? "?" : block;
@@ -571,31 +576,111 @@ class TransactionDetail extends PureComponent {
 		try {amountReceived = this.getAmount(amount);} catch (e) {}
 		try {transactionFee = this.getAmount(fee);} catch (e) {}
 		try {totalSent = this.getAmount(sentAmount);} catch (e) {}
+
+    const firstHalf = (address) => {
+        let addrLength = Math.floor(address.length /2);
+        address = address.slice(0, addrLength)
+        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+        return `${res} ${address.slice(12, address.length)}`;
+    }
+
+    const secondHalf = (address) => {
+        let addrLength = Math.floor(address.length /2);
+        address = address.slice(addrLength,  addrLength.length);
+        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+        return `${res} ${address.slice(12, address.length)}`;
+    }   
+
+	    const prettifyAddress = (address) => {
+	    	return `${firstHalf(address)} ${secondHalf(address)}`
+	    }
 		return (
 			<View style={styles.container}>
 				
 				<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={{ flex: 0.9 }}>
 					<View style={styles.transactionData}>
-						<Text type="text2" style={styles.header}>Transaction Details</Text>
+						<View style={styles.headerContainer}>
+							<Text style={styles.header}>{getCoinData({selectedCrypto}).label} Transaction</Text>
+		</View>
+							
+
+
+<TouchableOpacity style={styles.row} onPress={() => this.openAddress(address)}>
+	<View style={[styles.col1]}>
+		{type === "sent" && <Text style={[styles.title]}>Sent from (tap to explore wallet)</Text>}
+		{type === "received" && <Text style={[styles.title]}>received to (tap to explore wallet)</Text>}
+
+
+		<Text style={styles.code}>{prettifyAddress(address)}</Text>
+		<Text style={styles.subtext}>{this.props.wallet.wallets[this.props.wallet.selectedWallet].label}://{path}</Text>
+
+
+
+	</View>
+</TouchableOpacity>
+
+
+
+{/*{this.Row({ title: "Network:", value: getCoinData({selectedCrypto}).label })}*/}
+
+
+
+<TouchableOpacity style={styles.row} onPress={() => this.openBlock(blockHeight)}>
+	<View style={[styles.col1]}>
+		<Text style={[styles.title]}>status: (tap to explore block)</Text>
+		<Text style={[styles.text]}>{capitalize(status)} within block { formatNumber(blockHeight) }</Text>						
+		<Text style={[styles.subtext]}>{moment.unix(timestamp).format('dddd, MMMM D, YYYY h:mm A Z')}</Text>						
+		<Text style={[styles.subtext]}>({this.getConfirmations()} blocks ago/confirmations)</Text>						
+	</View>
+</TouchableOpacity>
+
+
+<TouchableOpacity style={styles.row} onPress={() => openTxId(hash, selectedCrypto)}>
+	<View style={[styles.col1]}>
+		<Text style={[styles.title]}>transaction: (tap to explore tx)</Text>
+
+
+						{type === "sent" && <Text style={[styles.text]}>Spent {totalSent}</Text>}
+						{type === "sent" && <Text style={[styles.text]}>Sent {amountSent}</Text>}
+						{type === "received" && <Text style={[styles.text]}>Received {amountReceived}</Text>}
+
+		<Text style={[styles.subtext]}>inputs: { this.getAmount(transactionInputAmount) }</Text>		
+		<Text style={[styles.subtext]}>outputs: { this.getAmount(transactionOutputAmount) }</Text>		
+		<Text style={[styles.subtext]}>fee: { transactionFee }</Text>						
+
+
+	</View>
+</TouchableOpacity>
+
+
+<TouchableOpacity style={styles.row} onPress={() => openTxId(hash, selectedCrypto)}>
+	<View style={[styles.col1]}>
+		<Text style={[styles.title]}>txid/hash: (tap to explore tx)</Text>
+		<Text style={[styles.code]}>{ firstHalf(hash) }</Text>		
+		<Text style={[styles.code]}>{ secondHalf(hash) }</Text>		
+	</View>
+</TouchableOpacity>
+
+
+
+{messagesLength > 0 && this.Row({ title: "Message:", value: this.getMessages(), onPress: () => this.openMessage(hash), valueStyle: { textDecorationLine: "underline" } })}
 						
-						{this.Row({ title: "Network:", value: capitalize(selectedCrypto) })}
-						<View type="text" style={styles.separator} />
 						
-						{messagesLength > 0 && this.Row({ title: "Message:", value: this.getMessages(), onPress: () => this.openMessage(hash), valueStyle: { textDecorationLine: "underline" } })}
-						{messagesLength > 0 && <View style={styles.separator} />}
+
+
+
+{this.state.rbfIsSupported && confirmations === 0 && this.RbfRow()}
+
+
+
+
+
+
 						
-						{type === "sent" && this.Row({ title: "Amount Sent:", value: amountSent })}
-						{type === "received" && this.Row({ title: "Amount Received:", value: amountReceived })}
-						<View type="text" style={styles.separator} />
 						
-						{this.Row({ title: "Transaction Fee:", value: transactionFee })}
-						{this.state.rbfIsSupported && confirmations === 0 && this.RbfRow()}
-						<View type="text" style={styles.separator} />
-						
-						{type === "sent" && this.Row({ title: "Total Sent:", value: totalSent })}
-						{type === "sent" && <View type="text" style={styles.separator} />}
-						
-						<View style={styles.row}>
+{/*						<View style={styles.row}>
 							<View style={styles.col1}>
 								<Text type="text2" style={styles.title}>Memo: </Text>
 							</View>
@@ -611,32 +696,13 @@ class TransactionDetail extends PureComponent {
 									multiline={true}
 								/>
 							</View>
-						</View>
-						<View type="text" style={styles.separator} />
+						</View>*/}
 						
-						{this.Row({ title: "Type:", value: capitalize(type) })}
-						<View type="text" style={styles.separator} />
+
 						
-						{this.Row({ title: "Confirmations:", value: this.getConfirmations() })}
-						<View type="text" style={styles.separator} />
-						
-						{this.Row({ title: "Status:", value: capitalize(status) })}
-						<View type="text" style={styles.separator} />
-						
-						{this.Row({ title: `Date ${capitalize(type)}:`, value: moment.unix(timestamp).format('l @ h:mm a') })}
-						<View type="text" style={styles.separator} />
-						
-						{this.Row({ title: "Block:", value: formatNumber(blockHeight), onPress: () => this.openBlock(blockHeight), valueStyle: { textDecorationLine: "underline" } })}
-						<View type="text" style={styles.separator} />
-						
-						{type === "received" && this.Row({ title: "Received By\nAddress:", onPress: () => this.openAddress(address), value: address, valueStyle: { textDecorationLine: "underline" } })}
-						{type === "received" && <View type="text" style={styles.separator} />}
-						
-						{this.Row({ title: "TxId:", value: hash, onPress: () => openTxId(hash, selectedCrypto), valueStyle: { textDecorationLine: "underline" } })}
-						<View type="text" style={styles.separator} />
 						
 						{this.isActiveUtxo() &&
-						<Button style={{ ...styles.button, backgroundColor: isBlacklisted ? colors.red : "#813fb1" }} text={isBlacklisted ? "Whitelist UTXO" : "Blacklist UTXO"} onPress={this.toggleUtxoBlacklist} />}
+						<Button style={{ ...styles.button, backgroundColor: isBlacklisted ? colors.red : "transparent" }} text={isBlacklisted ? "Unlock unspent transaction" : "Lock unspent transaction"} onPress={this.toggleUtxoBlacklist} />}
 						
 					</View>
 				</ScrollView>
@@ -741,7 +807,7 @@ const styles = StyleSheet.create({
 		width: "90%"
 	},
 	modalContent: {
-		backgroundColor: colors.lightGray
+		// backgroundColor: colors.lightGray
 	},
 	textInput: {
 		width: "80%",

@@ -54,10 +54,13 @@ import Welcome from "./Welcome";
 import BackupPhrase from "./BackupPhrase";
 import TransactionListHeader from "./TransactionListHeader";
 import { v4 as uuidv4 } from "uuid";
-import { networks, getCoinImage } from "../utils/networks";
+import { getCoinData, networks, getCoinImage } from "../utils/networks";
 import * as bip38 from "bip38";
 import * as wif from "wif";
 //import ElectrumTesting from "./ElectrumTesting";
+
+import eCoinCore from "../utils/ecoincore";
+
 
 const { UIManager } = NativeModules;
 const Url = require("url-parse");
@@ -73,7 +76,6 @@ const {
 	pauseExecution,
 	capitalize,
 	getInfoFromAddressPath,
-	getExchangeRate,
 	validatePrivateKey,
 	getByteCount,
 	loginWithBitid,
@@ -208,19 +210,6 @@ export default class App extends Component {
 		isAnimating: false,
 	};
 
-	setExchangeRate = async ({ selectedCrypto = "canadaecoin", selectedCurrency = "cad", selectedService = "coingecko" } = {}) => {
-		const exchangeRate = await getExchangeRate({ selectedCrypto, selectedCurrency, selectedService });
-		if (exchangeRate.error === false) {
-			this.props.updateWallet({
-				exchangeRate: {
-					...this.props.wallet.exchangeRate,
-					[selectedCrypto]: exchangeRate.data,
-				},
-			});
-		}
-		return exchangeRate;
-	};
-
 	onCoinPress = async ({ coin = "canadaecoin", walletId = "wallet0", initialLoadingMessage = "" } = {}) => {
 		try {
 			const sameCoin = this.props.wallet.selectedCrypto === coin;
@@ -322,6 +311,7 @@ export default class App extends Component {
 			walletLength = this.props.wallet.walletOrder.length;
 		} catch (e) {
 		}
+
 		if (walletLength < 1) {
 			this.createWallet("wallet0", true);
 			return;
@@ -1265,7 +1255,7 @@ export default class App extends Component {
 					display: false,
 					duration: 200,
 				},
-				{ stateId: "displayXButton", opacityId: "xButtonOpacity", display: true },
+				{ stateId: "displayXButton", opacityId: "xButtonOpacity", display: false },
 				{ stateId: "displayTextInput", opacityId: "textInputOpacity", display: true, duration: 600 },
 				{ stateId: "displaySettings", opacityId: "settingsOpacity", display: false },
 			];
@@ -1826,6 +1816,7 @@ export default class App extends Component {
 
 	//Returns the next available empty address of the selected crypto.
 	getNextAvailableAddress = () => {
+		let path = "";
 		let address = "";
 		let addressScriptHash = "";
 		let changeAddress = "";
@@ -1836,6 +1827,7 @@ export default class App extends Component {
 				const addressIndex = this.props.wallet.wallets[selectedWallet].addressIndex[selectedCrypto];
 				const addressObj = this.props.wallet.wallets[selectedWallet].addresses[selectedCrypto][addressIndex];
 				address = addressObj.address;
+				path = addressObj.path;
 				if ("scriptHash" in addressObj) {
 					addressScriptHash = addressObj.scriptHash;
 				} else {
@@ -1852,9 +1844,9 @@ export default class App extends Component {
 					changeAddressScriptHash = getScriptHash(changeAddress, selectedCrypto);
 				}
 			} catch {}
-			return { address, addressScriptHash, changeAddress, changeAddressScriptHash };
+			return { address, addressScriptHash, changeAddress, changeAddressScriptHash, path };
 		} catch (e) {
-			return { address, addressScriptHash, changeAddress, changeAddressScriptHash };
+			return { address, addressScriptHash, changeAddress, changeAddressScriptHash, path };
 		}
 	};
 
@@ -2108,7 +2100,7 @@ export default class App extends Component {
 											loadingOpacity={this.state.loadingOpacity}
 											loadingMessage={this.state.loadingMessage}
 											loadingProgress={this.state.loadingProgress}
-											width={width / 1.2}
+											minWidth={SCREEN_WIDTH / 1.2}
 											theme={this.getTheme()}
 											animationName={this.state.loadingAnimationName}
 										/>}
@@ -2176,10 +2168,11 @@ export default class App extends Component {
 											<ReceiveTransaction
 												address={this.getNextAvailableAddress().address || ""}
 												selectedCrypto={this.props.wallet.selectedCrypto}
-												size={200}
-												exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
+												size={normalize(240)}
+												exchangeRate={this.fiatRate()}
 												cryptoUnit={this.props.settings.cryptoUnit}
 												selectedCurrency={this.props.wallet.selectedCurrency}
+												path={this.getNextAvailableAddress().path || ""}
 											/>
 										</Animated.View>}
 

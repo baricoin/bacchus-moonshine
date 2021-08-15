@@ -875,6 +875,16 @@ class SendTransaction extends Component {
 		}
 	};
 
+	getWalletLabel = () => {
+		try {
+			const selectedWallet = this.props.wallet.selectedWallet;
+			try { if (this.props.wallet.wallets[selectedWallet].label.trim() !== "") return this.props.wallet.wallets[selectedWallet].label; } catch (e) {}
+			try { return `Wallet ${this.props.wallet.walletOrder.indexOf(selectedWallet)}`; } catch (e) {}
+		} catch (e) {
+			return "?";
+		}
+	};
+
 	toggleFeeEstimateModal = async () => {
 		try {
 			this.setState({ displayFeeEstimateModal: !this.state.displayFeeEstimateModal });
@@ -958,30 +968,44 @@ class SendTransaction extends Component {
 		try {return nextProps.transaction !== this.props.transaction || nextState !== this.state;} catch (e) {return false;}
 	}
 
+	bitcoinRate = () => {
+			if(!this.props.wallet.selectedCurrency.toUpperCase()) return 0;
+			if(!this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()]) return 0;
+	 		return	1 / Number(this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()].rate);
+	}
+	
+	fiatRate = () => {
+			if(!getCoinData({selectedCrypto: this.props.wallet.selectedCrypto})) return 0;
+			if(!this.props.rates[getCoinData({selectedCrypto: this.props.wallet.selectedCrypto}).acronym]) return 0;
+			const fiatRate = this.bitcoinRate() * Number(this.props.rates[getCoinData({selectedCrypto: this.props.wallet.selectedCrypto}).acronym.toUpperCase()].rate)
+	 		return Number(fiatRate);
+	};
+
 	render() {
 		const { selectedCrypto, selectedWallet } = this.props.wallet;
-		const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+		const exchangeRate = this.props.rates[getCoinData({selectedCrypto: this.props.wallet.selectedCrypto}).acronym.toUpperCase()].rate;
 		const { crypto: cryptoFeeLabel, fiat: fiatFeeLabel } = this.getFeesToDisplay(exchangeRate);
 
 		return (
 			<View style={styles.container}>
 				<View style={{ backgroundColor: "transparent" }}>
+      	<Text style={[styles.header]}>Send {getCoinData({ selectedCrypto }).label}</Text>
+
 					<Header
 						compress={true}
-						fontSize={45}
+						fontSize={normalize(64)}
 						activeOpacity={1}
 						onSelectCoinPress={Keyboard.dismiss}
-						fiatValue={this.state.fiatBalance || this.getFiatBalance()}
+						fiatValue={this.getSendButtonFiatLabel()}
 						fiatSymbol={this.props.settings.fiatSymbol}
-						cryptoValue={this.state.cryptoBalance || this.getCryptoBalance()}
+						cryptoValue={Number(this.props.transaction.amount) || 0}
 						cryptoUnit={this.props.settings.cryptoUnit}
 						selectedCrypto={this.props.wallet.selectedCrypto}
 						selectedCryptoStyle={{ fontSize: 30, marginTop: 10 }}
 						selectedWallet={`Wallet ${this.props.wallet.walletOrder.indexOf(selectedWallet)}`}
-						exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
-						bitcoinRate={this.props.wallet.exchangeRate['bitcoin']}
+						exchangeRate={this.fiatRate()}
+						bitcoinRate={this.bitcoinRate()}
 						isOnline={this.props.user.isOnline}
-						walletName={this.getWalletName()}
 					/>
 
 					<View style={styles.row}>
@@ -990,22 +1014,22 @@ class SendTransaction extends Component {
 						</View>
 					</View>
 
-					<View style={styles.textInputRow}>
+					<View style={[styles.textInputRow, { borderColor: this.getTheme().nightlight } ]}>
 						<TextInput
 							style={styles.textInput}
 							autoCapitalize="none"
 							autoCompleteType="off"
 							autoCorrect={false}
-							selectionColor={this.getTheme().selection}
+							selectionColor={this.getTheme().text}
 							onChangeText={(address) => this.props.updateTransaction({ address })}
 							value={this.props.transaction.address}
 						>
 						</TextInput>
-						<TouchableOpacity style={[styles.leftIconContainer, { backgroundColor: this.getTheme().input }]} onPress={this.getClipboardContent}>
-							<FontAwesome style={styles.clipboardIcon} name={"clipboard"} size={25} />
+						<TouchableOpacity style={[styles.leftIconContainer, { backgroundColor: this.getTheme().shadow }]} onPress={this.getClipboardContent}>
+							<FontAwesome style={styles.clipboardIcon} name={"clipboard"} size={normalize(24)} />
 						</TouchableOpacity>
-						<TouchableOpacity style={[styles.rightIconContainer, { backgroundColor: this.getTheme().input }]} onPress={this.state.onCameraPress}>
-							<EvilIcon style={styles.cameraIcon} name={"camera"} size={40} />
+						<TouchableOpacity style={[styles.rightIconContainer, { backgroundColor: this.getTheme().shadow }]} onPress={this.state.onCameraPress}>
+							<EvilIcon style={styles.cameraIcon} name={"camera"} size={normalize(36)} />
 						</TouchableOpacity>
 					</View>
 
