@@ -329,9 +329,8 @@ export default class App extends Component {
 		} catch (e) {
 		}
 
-		clearInterval(this._refreshWallet);
-
 		this.setState({ loadingMessage: "Fetching Network Status", loadingProgress: 0.35, appHasLoaded: true });
+
 		/*
 		 Clear or Reset any pending transactions to start from a clean slate.
 		 &&
@@ -477,8 +476,6 @@ export default class App extends Component {
 				}
 			}
 
-			this.setExchangeRate({ selectedCrypto, selectedService, selectedCurrency }); //Set the exchange rate for the selected currency
-			
 			//If the address object does not contain scriptHash data, add it for future reference.
 			//TODO: Remove once standard.
 			await this.checkForScriptHash();
@@ -503,13 +500,7 @@ export default class App extends Component {
 					alert("Unable to connect to an electrum server at this time. Please check your connection and try again.");
 					return;
 				}
-				//Remove any pre-existing instance of this._refreshWallet
-				clearInterval(this._refreshWallet);
 
-				//Set an interval to update the exchange rate approximately every 2 minutes.
-				this._refreshWallet = setInterval(async () => {
-					this.setExchangeRate({ selectedCrypto, selectedService, selectedCurrency }); //Set the exchange rate for the selected currency
-				}, 60 * 1000);
 			}
 
 			//Update peer list if needed.
@@ -999,8 +990,6 @@ export default class App extends Component {
 		if (this.state.appState.match(/active/) && nextAppState.match(/inactive|background/) && !this.state.displayCamera) {
 			if (this.authenticating) return;
 			electrum.stop({ coin: this.props.wallet.selectedCrypto });
-			//Clear/Remove Wallet Refresh Timer
-			clearInterval(this._refreshWallet);
 			if (this.state.appHasLoaded !== false) this.setState({ appHasLoaded: false });
 		}
 		//Background -> Foreground
@@ -1094,8 +1083,6 @@ export default class App extends Component {
 			if (Platform.OS === "android") BackHandler.removeEventListener("hardwareBackPress");
 			//Start the listener that detects if the app is in the background or foreground
 			AppState.removeEventListener("change", this._handleAppStateChange);
-			//Clear/Remove Wallet Refresh Timer
-			clearInterval(this._refreshWallet);
 		} catch (e) {
 		}
 	}
@@ -1797,7 +1784,7 @@ export default class App extends Component {
 		try {
 			const { selectedWallet, selectedCrypto } = this.props.wallet;
 			const confirmedBalance = Number(this.props.wallet.wallets[selectedWallet].confirmedBalance[selectedCrypto]);
-			bitcoinUnits.setFiat("usd", Number(this.props.wallet.exchangeRate[selectedCrypto]));
+			bitcoinUnits.setFiat("usd", Number(this.fiatRate()));
 			const fiatBalance = bitcoinUnits(confirmedBalance, "satoshi").to("usd").value().toFixed(2);
 			if (isNaN(fiatBalance)) return 0;
 			return Number(fiatBalance);
@@ -2008,6 +1995,28 @@ export default class App extends Component {
 		}
 	};
 
+	bitcoinRate = () => {
+			if(!this.props.wallet.selectedCurrency.toUpperCase()) return 0;
+			if(!this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()]) return 0;
+	 		return	1 / Number(this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()].rate);
+	}
+	
+	fiatRate = () => {
+			const { selectedCrypto } = this.props.wallet;
+
+			const  coinData = getCoinData( {selectedCrypto} )
+			if(!coinData) return 0;
+
+			const rates = this.props.rates
+			if(!rates) return 0;
+
+			if(!rates[coinData.acronym]) return 0;
+
+			const fiatRate = Number(rates[coinData.acronym].rate)
+	 		return fiatRate * this.bitcoinRate();
+	};
+
+
 	render() {
 		//return <ElectrumTesting />;
 		//TODO: Remove nested SafeAreaView. Note: Removing it affects XButton position along with a few other items.
@@ -2132,10 +2141,11 @@ export default class App extends Component {
 												selectedCrypto={this.props.wallet.selectedCrypto}
 												selectedWallet={this.props.wallet.selectedWallet}
 												selectedCurrency={this.props.wallet.selectedCurrency.toUpperCase()}
-												exchangeRate={this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto]}
-												bitcoinRate={this.props.wallet.exchangeRate['bitcoin']}
+												exchangeRate={this.fiatRate()}
+												bitcoinRate={this.bitcoinRate()}
 												isOnline={this.props.user.isOnline}
 												onSelectCoinPress={this.onSelectCoinPress}
+												fontSize={normalize(64)}
 											/>
 										</Animated.View>
 
@@ -2205,6 +2215,8 @@ export default class App extends Component {
 										createNewWallet={this.createNewWallet}
 										displayTestnet={this.props.settings.testnet}
 										theme={this.getTheme()}
+										settings={this.props.settings}
+										rates={this.props.rates}
 									/>
 								</Animated.View>}
 
@@ -2232,7 +2244,7 @@ export default class App extends Component {
 											theme={this.getTheme()}
 										/>
 										<TransactionList
-											exchangeRate={String(this.props.wallet.exchangeRate[this.props.wallet.selectedCrypto])}
+											exchangeRate={String(this.fiatRate())}
 											blockHeight={this.props.wallet.blockHeight[this.props.wallet.selectedCrypto]}
 											blacklistedUtxos={this.getBlacklistedUtxos()}
 											selectedCrypto={this.props.wallet.selectedCrypto}

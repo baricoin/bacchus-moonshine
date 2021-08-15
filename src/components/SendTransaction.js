@@ -463,7 +463,7 @@ class SendTransaction extends Component {
 
 	getSendButtonFiatLabel = () => {
 		try {
-			return this.props.transaction.fiatAmount;
+			return Number(this.props.transaction.fiatAmount);
 		} catch (e) {
 			return 0;
 		}
