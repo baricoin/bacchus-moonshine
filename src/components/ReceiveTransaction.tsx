@@ -4,7 +4,9 @@ import {
 	View,
 	LayoutAnimation,
 	Platform,
-	TouchableOpacity
+	TouchableOpacity,
+	Dimensions,
+	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import ShareButtons from "./ShareButtons";
@@ -28,9 +30,27 @@ const {
 	parseFiat
 } = require("../utils/helpers");
 const {
+	getCoinImage,
 	getCoinData,
 	maxCoins
 } = require("../utils/networks");
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 interface Default {
 	selectedCrypto: string, // bitcoin, bitcoinTestnet, litecoin, litecoinTestnet, etc...
@@ -58,7 +78,7 @@ interface ReceiveTransactionComponent extends Default, FormatUri {
 	size?: number, // Size of QRCode
 	disabled?: boolean // Disable the Copy/Share buttons
 }
-const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "usd", address = "", amount = "", label = "", cryptoUnit = "satoshi", exchangeRate = 0, size = 200, disabled = false }: ReceiveTransactionComponent) => {
+const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "usd", address = "", amount = "", label = "", cryptoUnit = "satoshi", exchangeRate = 0, size = 200, disabled = false, path}: ReceiveTransactionComponent) => {
 
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	const [requestedAmount, setRequestedAmount] = useState(amount || "0"); //Represented as sats
@@ -73,6 +93,8 @@ const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "u
 	const [displayInCrypto, setDisplayInCrypto] = useState(true); //Determines whether the specifyAmount modal is updating fiat or BTC/LTC
 
 	const acronym = getCoinData({ selectedCrypto, cryptoUnit }).acronym;
+	const cryptoCurrency = getCoinData({ selectedCrypto, cryptoUnit }).label;
+	const hyper = selectedCrypto;
 
 	if (!address) return <View />;
 
@@ -147,19 +169,38 @@ const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "u
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.qrCodeContainer}>
-				<QRCode value={uri} size={size} />
+			<View style={styles.topHalf}>
+      	<Text style={[styles.header]}>Receive {cryptoCurrency}</Text>
+        <Text type="text" style={styles.subHeader}>To protect your privacy, your address will change once it receives a payment.</Text>
 			</View>
-			<ShareButtons
-				text={address}
-				shareMessage={getShareMessage()}
-				shareTitle={shareTitle}
-				shareDialogTitle={shareTitle}
-				onCopySuccessText="Address Copied!"
-				disabled={disabled}
-			/>
+			<View style={styles.topHalf}>
+				<ShareButtons
+					text={address}
+					shareMessage={getShareMessage()}
+					shareTitle={shareTitle}
+					shareDialogTitle={shareTitle}
+					onCopySuccessText="Address Copied!"
+					disabled={disabled}
+					cryptoCurrency={cryptoCurrency}
+					path={path}
+				/>
+			</View>
 
-			<TouchableOpacity style={styles.specifyAmountButton} onPress={toggleSpecifyAmount}>
+			<View style={styles.bottomHalf}>
+				<View style={styles.qrCodeContainer}>
+				<QRCode 
+					value={uri} 
+					size={size} 
+					logoSize={size/4}
+					logo={getCoinImage(hyper)}
+					logoBackgroundColor="transparent"
+				/>
+				</View>
+				<Text style={styles.hyperLabel}>{hyper}:{address}</Text>
+			</View>
+
+
+{/*			<TouchableOpacity style={styles.specifyAmountButton} onPress={toggleSpecifyAmount}>
 				{!hasRequestedAmount() &&
 					<Text style={[styles.requestButtonText, { fontSize: 14, ...systemWeights.regular }]}>
 						Specify Amount
@@ -175,8 +216,8 @@ const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "u
 					</View>
 				}
 			</TouchableOpacity>
-
-			<DefaultModal
+*/}
+{/*			<DefaultModal
 				isVisible={displaySpecifyAmount}
 				onClose={toggleSpecifyAmount}
 				type="View"
@@ -198,7 +239,7 @@ const _ReceiveTransaction = ({ selectedCrypto = "bitcoin", selectedCurrency = "u
 						<MaterialIcons type="text" name={"check-circle"} size={70} />
 					</TouchableOpacity>
 				</View>
-			</DefaultModal>
+			</DefaultModal>*/}
 
 		</View>
 	);
@@ -215,14 +256,30 @@ _ReceiveTransaction.propTypes = {
 
 const styles = StyleSheet.create({
 	container: {
+		flex: 1,
 		backgroundColor: "transparent",
 		alignItems: "center",
 		justifyContent: "center"
 	},
+	topHalf: {
+		flex: 1,
+		backgroundColor: "transparent",
+		alignItems: "center",
+		justifyContent: "center",
+		width: "100%"
+	},
+	bottomHalf: {
+		flex: 4,
+		backgroundColor: "transparent",
+		marginBottom: 32,
+		alignItems: "center",
+		justifyContent: "center"
+	},
 	qrCodeContainer: {
-		padding: 5,
+		margin: normalize(6),
+		padding: normalize(6),
 		backgroundColor: "#fff",
-		borderRadius: 3
+		borderRadius: normalize(3)
 	},
 	specifyAmountButton: {
 		backgroundColor: "transparent",
@@ -257,6 +314,22 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		...systemWeights.semibold,
 		fontSize: 18
+	},
+	header: {
+		textAlign: "center",
+		...systemWeights.semibold,
+		fontSize: normalize(24)
+	},
+	subHeader: {
+		textAlign: "center",
+		...systemWeights.light,
+		fontSize: normalize(12),
+		maxWidth: normalize(256)
+	},
+	hyperLabel: {
+		textAlign: "center",
+		...systemWeights.light,
+		fontSize: normalize(10)
 	},
 	swapIcon: {
 		marginRight: 3,

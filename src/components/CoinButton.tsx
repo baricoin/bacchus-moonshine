@@ -2,7 +2,9 @@ import React, { memo } from "react";
 import {
 	TouchableOpacity,
 	StyleSheet,
-	Image
+	Image,
+	Dimensions,
+	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
@@ -10,6 +12,24 @@ import bitcoinUnits from "bitcoin-units";
 import { Text, View } from "../styles/components";
 
 const { eCoinCore } = require("../utils/ecoincore");
+
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 
 const {
@@ -156,11 +176,11 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent",
 		justifyContent: "center",
 		padding: 10,
-		minHeight: 76
+		minHeight: normalize(76)
 	},
 	buttonImage: {
-		width: 64,
-		height: 64,
+		width: normalize(64),
+		height: normalize(64),
 		position: "absolute",
 		alignItems: "center",
 		justifyContent: "center",
@@ -168,22 +188,22 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.semibold,
-		fontSize: 21,
+		fontSize: normalize(21),
 		textAlign: "right"
 	},
 	subText: {
 		...systemWeights.regular,
-		fontSize: 16,
+		fontSize: normalize(14),
 		textAlign: "right"
 	},
 	errorText: {
 		...systemWeights.regular,
-		fontSize: 10,
+		fontSize: normalize(10),
 		textAlign: "right"
 	},
 	balanceText: {
 		...systemWeights.regular,
-		fontSize: 16,
+		fontSize: normalize(16),
 		textAlign: "right"
 	}
 });

@@ -1,18 +1,15 @@
 import React, { memo } from "react";
 import {
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+	Dimensions,
+	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
 import bitcoinUnits from "bitcoin-units";
 import { View, Text } from "../styles/components";
 
-const {
-	Constants: {
-		colors
-	}
-} = require("../../ProjectData.json");
 const moment = require("moment");
 const {
 	formatNumber
@@ -21,6 +18,23 @@ const {
 const {
 	getCoinData
 } = require("../utils/networks");
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 interface TransactionRowComponent {
 	id: string,
@@ -117,34 +131,32 @@ const _TransactionRow = (
 	if (!label) label = address;
 	if (label.length > 32) label = `${label.substr(0, 32)}...`;
 	const fontWeight = type === "sent" ? "normal" : "bold";
-	const textColor = "text2";
+
 	return (
 		<TouchableOpacity onPress={() => onTransactionPress(id)} style={[styles.container, {borderColor: `${getCoinData({selectedCrypto:coin}).color}99`}]}>
 			<View type="gray3" style={styles.header}>
-				<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 11  }]}>{type} -- {label}</Text>
-
-				{/*{isBlacklisted &&<Text style={[styles.text, { fontWeight: "bold", fontSize: 16, color: colors.red  }]}>UTXO Blacklisted</Text>}*/}
-				{/*<Text type="text2" style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>*/}
+				<Text style={[styles.text, { fontWeight, fontSize: normalize(11)  }]}>{type} -- {label}</Text>
+				{isBlacklisted &&<Text style={[styles.text, { fontWeight: "bold", fontSize: normalize(16) }]}>locked</Text>}
 			</View>
 			<View style={styles.row}>
 				<View style={styles.col1}>
-					{/*<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 14  }]}>{label}</Text>*/}
-					<Text type="text2" style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>
-					<Text type={textColor} style={[styles.smallText, { fontWeight, fontSize: 14  }]}>Confirmations: {getConfirmations()}</Text>
+					{/*<Text style={[styles.text, { fontWeight, fontSize: normalize(14)  }]}>{label}</Text>*/}
+					<Text style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>
+					<Text style={[styles.smallText, { fontWeight, fontSize: normalize(14)  }]}>Confirmations: {getConfirmations()}</Text>
 				</View>
 				<View style={styles.col2}>
-					{Number(exchangeRate) !== 0 &&<Text type={textColor} style={[styles.text, { fontWeight }]}>{getFiatAmountLabel()}</Text> }
-					<Text type={textColor} style={[styles.text, { fontWeight  }]}>{type === "received" ? "+" : "-"}{getCryptoAmountLabel()}</Text>
+					{Number(exchangeRate) !== 0 &&<Text style={[styles.text, { fontWeight }]}>{getFiatAmountLabel()}</Text> }
+					<Text style={[styles.text, { fontWeight  }]}>{type === "received" ? "+" : "-"}{getCryptoAmountLabel()}</Text>
 					{Number(exchangeRate) === 0 && <Text></Text> }
 				</View>
 			</View>
 			{messages.length > 0 &&
 			<View style={styles.row}>
 				<View style={[styles.col1, { flex: 0.6 }]}>
-					<Text type={textColor} style={[styles.text, { fontWeight, fontSize: 16  }]}>Message:</Text>
+					<Text style={[styles.text, { fontWeight, fontSize: normalize(16)  }]}>Message:</Text>
 				</View>
 				<View style={[styles.col2, { flex: 1 }]}>
-					<Text type={textColor} style={[styles.text, { fontWeight }]}>{getMessages()}</Text>
+					<Text style={[styles.text, { fontWeight }]}>{getMessages()}</Text>
 				</View>
 			</View>}
 		</TouchableOpacity>
@@ -208,12 +220,12 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.light,
-		fontSize: 14,
+		fontSize: normalize(14),
 		textAlign: "center"
 	},
 	smallText: {
 		...systemWeights.thin,
-		fontSize: 14,
+		fontSize: normalize(14),
 		textAlign: "center"
 	}
 });

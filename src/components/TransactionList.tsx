@@ -2,12 +2,31 @@ import React, {memo} from "react";
 import {
 	StyleSheet,
 	FlatList,
-	RefreshControl
+	RefreshControl,
+	Dimensions,
+	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
 import TransactionRow from "./TransactionRow";
 import { View, Text } from "../styles/components";
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 interface DisplayItemComponent {
 	transaction: {
@@ -211,7 +230,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 18,
+		fontSize: normalize(18),
 		textAlign: "center"
 	},
 	emptyComponentContainer: {

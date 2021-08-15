@@ -20,7 +20,7 @@ export const LinearGradient = styled(_LinearGradient).attrs((props) => ({
 `;
 
 export const View = styled.View`
-  background-color: ${props => props.type ? props.theme[props.type] : props.theme.background};
+  background-color: ${props => props.type ? props.theme[props.type] : props.theme.shadow};
   ${props => props.borderColor ? `border-color: ${props.theme[props.borderColor]}` : null};
 `;
 
@@ -30,7 +30,6 @@ export const ScrollView = styled.ScrollView`
 
 export const Text = styled.Text`
   color: ${props => props.theme.text};
-  ${props => props.backgroundColor ? `background-color: ${props.theme[props.backgroundColor]}` : null};
 `;
 
 export const TouchableOpacity = styled.TouchableOpacity`
@@ -44,10 +43,10 @@ export const TouchableHighlight = styled.TouchableHighlight`
 `;
 
 export const TextInput = styled.TextInput.attrs((props) => ({
-	placeholderTextColor: props.theme.mode === "light" ? props.theme.gray2 : props.theme.card,
+	placeholderTextColor: props.theme.muted,
 	keyboardAppearance: props.theme.mode === "light" ? "light" : "dark"
 }))`
-  background-color: ${props => props.editable === false ? props.theme.uneditable : props.theme.editable};
+  background-color: ${props => props.editable === false ? props.theme.muted : props.theme.shadow};
   color: ${props => props.theme.text};
   border-color: ${props => props.theme.text};
 `;
@@ -107,7 +106,7 @@ export const XButton = styled.View`
 `;
 
 export const QRCode = styled(_QRCode).attrs((props) => ({
-	color: "#000"
+  color: "#000"
 }))`
 `;
 

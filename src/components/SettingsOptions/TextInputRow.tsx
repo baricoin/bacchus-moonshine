@@ -90,8 +90,7 @@ const styles = StyleSheet.create({
 		borderRadius: 2,
 		padding: 5,
 		borderWidth: 1,
-		fontWeight: "bold",
-		borderColor: colors.white,
+		fontWeight: "bold"
 	},
 	displayOptionContainer: {
 		flexDirection: "row",

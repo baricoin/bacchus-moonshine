@@ -3,13 +3,32 @@ import {
     StyleSheet,
     Animated,
     Share,
-    Easing
+    Easing,
+    Dimensions,
+    PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import {systemWeights} from "react-native-typography";
 import Button from "./Button";
 import {Text, View, CopiedLinearGradient} from "../styles/components";
 import Clipboard from "@react-native-community/clipboard";
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 interface ShareButtonsComponent {
     text: string,
@@ -25,13 +44,15 @@ interface ShareButtonsComponent {
 const _ShareButtons = (
     {
         text = "",
+        path = "",
         shareMessage = "",
         shareUrl = "google.com",
         shareTitle = "",
         shareDialogTitle = "", //Android Only
         onCopySuccessText = "Copied!",
         disabled = false,
-        textContainerStyle = {}
+        textContainerStyle = {},
+        cryptoCurrency
     }: ShareButtonsComponent) => {
     const [textOpacity] = useState(new Animated.Value(0));
 
@@ -48,6 +69,23 @@ const _ShareButtons = (
             console.log(e);
         }
     };
+
+
+    const firstHalf = (address) => {
+        let addrLength = Math.floor(address.length /2);
+        address = address.slice(0, addrLength)
+        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+        return `${res} ${address.slice(12, address.length)}`;
+    }
+
+    const secondHalf = (address) => {
+        let addrLength = Math.floor(address.length /2);
+        address = address.slice(addrLength,  addrLength.length);
+        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+        return `${res} ${address.slice(12, address.length)}`;
+    }   
 
     const onCopyPress = () => {
         let duration = 1500;
@@ -81,10 +119,15 @@ const _ShareButtons = (
     };
 
     return (
-        <View type="transparent">
-            <View borderColor="text" style={[styles.textContainer, textContainerStyle]}>
-                <Text type="text" style={styles.text}>{text}</Text>
-                <Animated.View style={[styles.copiedContainer, textContainerStyle, {opacity: textOpacity}]}>
+        <View type="transparent" style={[{width: "100%"}]}>
+            <View style={[styles.textContainer, textContainerStyle]}>
+    
+
+                <Text style={styles.text}>{firstHalf(text)}</Text>
+                <Text style={styles.text}>{secondHalf(text)}</Text>
+                <Text style={styles.subText}>{path}</Text>
+
+                <Animated.View style={[styles.copiedContainer, {opacity: textOpacity}]}>
                     <CopiedLinearGradient
                         style={[textContainerStyle, {flex: 1, borderRadius: 5}]}
                         start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 1.0}}
@@ -117,17 +160,28 @@ _ShareButtons.propTypes = {
 
 const styles = StyleSheet.create({
     textContainer: {
-        borderRadius: 5,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 10,
-        padding: 10,
-        borderWidth: 1
+        marginTop: 6,
+        padding: 6,
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: "#fff2",
+        backgroundColor: "#7772"
     },
     text: {
         ...systemWeights.light,
-        fontSize: 12,
-        textAlign: "center"
+        fontSize: normalize(16),
+        textAlign: "center",
+        fontFamily: 'monospace' 
+
+    },
+    subText: {
+        ...systemWeights.light,
+        fontSize: normalize(12),
+        textAlign: "center",
+        fontFamily: 'monospace',
+        backgroundColor: "transparent"
     },
     copiedContainer: {
         flex: 1,
@@ -144,13 +198,13 @@ const styles = StyleSheet.create({
     },
     copiedText: {
         ...systemWeights.bold,
-        fontSize: 16,
+        fontSize: normalize(16),
         textAlign: "center"
     },
     button: {
         minWidth: "20%",
-        paddingHorizontal: 10,
-        paddingVertical: 6,
+        paddingHorizontal: normalize(10),
+        paddingVertical: normalize(6),
     },
     row: {
         marginTop: 5,
@@ -158,6 +212,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "transparent"
+    },
+    header: {
+        backgroundColor: "transparent",
+        textAlign: "center",
+        ...systemWeights.semibold,
+        marginTop: 15,
+        fontSize:normalize(24)
     },
 });
 

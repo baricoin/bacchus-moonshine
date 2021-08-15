@@ -3,7 +3,9 @@ import {
 	StyleSheet,
 	View,
 	LayoutAnimation,
-	Platform
+	Platform,
+	Dimensions,
+	PixelRatio
 } from "react-native";
 import { systemWeights } from "react-native-typography";
 import {
@@ -18,7 +20,25 @@ const {
 	}
 } = require("../../ProjectData.json");
 
-const ROW_HEIGHT = 36;
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
+const ROW_HEIGHT = normalize(32);
+
 
 interface CameraComponent {
 	onSendPress: Function,
@@ -59,7 +79,7 @@ const _CameraRow = ({ onSendPress = () => null, onReceivePress = () => null, onC
 						borderColor: `${getCoinData({ selectedCrypto:coin }).color}99`
 					}}
 				>
-					<EvilIcon style={{ color: "#FFF", bottom: 0, left: 0.3 }} name={"camera"} size={48} />
+					<EvilIcon style={{ color: "#FFF", bottom: 0, left: 0.3 }} name={"camera"} size={normalize(48)} />
 				</TouchableHighlight>
 			</View>
 			<TouchableOpacity type="background" onPress={_onReceivePress} style={{...styles.rightItem, ...brandStyle}}>
@@ -115,7 +135,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		...systemWeights.bold,
-		fontSize: 18,
+		fontSize: ROW_HEIGHT /2,
 		textAlign: "center",
 		color: "#fff"
 	}

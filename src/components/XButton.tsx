@@ -1,7 +1,9 @@
 import React, { memo } from "react";
 import {
 	StyleSheet,
-	TouchableOpacity
+	TouchableOpacity,
+    Dimensions,
+    PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
@@ -12,7 +14,28 @@ interface XButtonComponent {
 	size?: number,
 	style?: object
 }
-const _XButton = ({ onPress = () => null, size = 28, style = {} }: XButtonComponent) => {
+
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
+
+
+const _XButton = ({ onPress = () => null, size = normalize(28), style = {} }: XButtonComponent) => {
 	const _onPress = () => onPress();
 	return (
 		<TouchableOpacity onPress={_onPress} style={[styles.container, { height: size, width: size * 3, ...style }]}>
@@ -39,11 +62,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		borderWidth: 1,
-		borderRadius: 6
+		borderRadius: normalize(6)
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 12,
+		fontSize: normalize(12),
 		textAlign: "center"
 	}
 });
