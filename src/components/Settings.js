@@ -47,7 +47,6 @@ const {
 	resetKeychainValue,
 	getKeychainValue,
 	capitalize,
-	getExchangeRate,
 	setKeychainValue
 } = require("../utils/helpers");
 const {
@@ -80,10 +79,6 @@ const generalHelpItems = [
 	{
 		title: "Selected Fiat Currency:",
 		text: "This option allows you to select from a variety of fiat currencies. The app will use the selected fiat currency to determine and calculate the exchange rate displayed throughout the app."
-	},
-	{
-		title: "Exchange Rate Source:",
-		text: `This option allows you to select where the app sources its data to determine the fiat price of Bitcoin & Litecoin.`
 	},
 	{
 		title: "Crypto Units:",
@@ -785,44 +780,6 @@ class Settings extends PureComponent {
 		}
 	};
 
-	updateExchangeRateService = async ({ selectedService = "coingecko" } = {}) => {
-		try {
-			await this.props.updateSettings({ selectedService });
-			const { selectedWallet, selectedCrypto, selectedCurrency } = this.props.wallet;
-			const exchangeRate = await getExchangeRate({ selectedCrypto, selectedCurrency, selectedService });
-			if (exchangeRate.error === false) {
-				await this.props.updateWallet({
-					exchangeRate: {
-						...this.props.wallet.exchangeRate,
-						[selectedCrypto]: exchangeRate.data
-					}
-				});
-
-				try {
-					const utxos = this.props.wallet.wallets[selectedWallet].utxos[selectedCrypto] || [];
-					const blacklistedUtxos = this.props.wallet.wallets[selectedWallet].blacklistedUtxos[selectedCrypto];
-					this.props.updateBalance({ utxos, blacklistedUtxos, selectedCrypto, selectedWallet, wallet: selectedWallet });
-				} catch (e) {
-					//console.log(e);
-				}
-			}
-		} catch {}
-	};
-
-	getExchangeRateSourceUrl = ({ selectedService = "coingecko"} = {}) => {
-		try {
-			switch (selectedService) {
-				case "coingecko":
-					return "coingecko.com";
-				case "coincap":
-					return "coincap.io";
-				default: return "?";
-			}
-		} catch {
-			return "?";
-		}
-	};
-
 	getBackupPhrase = () => {
 		const backupPhrase = this.state.backupPhrase.split(" ");
 		let phrase = [];
@@ -857,7 +814,7 @@ class Settings extends PureComponent {
 			const fiatSymbol = currencies[selectedCurrency].symbol;
 			this.props.updateWallet({ selectedCurrency });
 			this.props.updateSettings({ fiatSymbol });
-			const result = await this.props.setExchangeRate({ selectedCrypto, selectedCurrency, selectedService });
+			const result = await this.props.setExchangeRate({ selectedCrypto, selectedCurrency });
 			if (result.error && rollbackAttempt === false) {
 				//Roll back and notify user
 				this.updateFiatCurrency(previouslySelectedCurrency, true);
@@ -906,13 +863,6 @@ class Settings extends PureComponent {
 			this.props.updateSettings({ verifyMessage });
 			return verifyMessage;
 		}
-	};
-
-	getExchangeRateOptions = () => {
-		return [
-			{value: "Coingecko", onPress: () => this.updateExchangeRateService({ selectedService: "coingecko" })},
-			{value: "CoinCap", onPress: () => this.updateExchangeRateService({ selectedService: "coincap" })}
-		];
 	};
 
 	getSelectedCurrency = () => {
@@ -972,15 +922,6 @@ class Settings extends PureComponent {
 
 							{/*
 							<SettingSwitch setting="testnet" value={this.props.settings["testnet"]} title="Enable Testnet" onPress={this.toggleTestnet} />
-
-
-							<MultiOptionRow
-								title="Exchange Rate Source"
-								subTitle={this.getExchangeRateSourceUrl({ selectedService: this.props.settings.selectedService})}
-								subTitleIsLink={true}
-								currentValue={this.props.settings.selectedService}
-								options={this.getExchangeRateOptions()}
-							/>
 
 							<MultiOptionRow
 								title="Crypto Units"
