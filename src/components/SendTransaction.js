@@ -9,7 +9,8 @@ import {
 	InteractionManager,
 	Keyboard,
 	Easing,
-	BackHandler
+	BackHandler,
+	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import Slider from "@react-native-community/slider";
@@ -36,6 +37,23 @@ import {
 import {themes} from "../styles/themes";
 import { MaterialCommunityIcons } from "../styles/components";
 import FeeEstimate from "./FeeEstimate";
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 const {
 	Constants: {
@@ -997,12 +1015,13 @@ class SendTransaction extends Component {
 						</View>
 					</View>
 
-					<View style={styles.textInputRow}>
+					<View style={[styles.textInputRow, { borderColor: this.getTheme().nightlight } ]}>
 						<TextInput
 							style={[styles.textInput, {
-								backgroundColor: this.state.spendMaxAmount ? this.getTheme().uneditable : this.getTheme().input
+								backgroundColor: this.state.spendMaxAmount ? this.getTheme().uneditable : this.getTheme().shadow,
+								color: this.state.spendMaxAmount ? this.getTheme().muted : this.getTheme().text
 							}]}
-							selectionColor={this.getTheme().selection}
+							selectionColor={this.getTheme().text}
 							autoCompleteType="off"
 							autoCorrect={false}
 							onChangeText={(amount) => this.updateAmount(amount)}
@@ -1014,13 +1033,13 @@ class SendTransaction extends Component {
 
 						<TouchableOpacity
 							style={[styles.leftIconContainer, {
-								backgroundColor: this.state.spendMaxAmount ? this.getTheme().gray3 : this.getTheme().background2
+								backgroundColor: this.getTheme().shadow
 							}]}
 							onPress={this.onDisplayInCryptoToggle}
 						>
 							<View type="transparent" style={{ flexDirection: "row" }}>
 								<View style={styles.rotatedIcon}>
-									<FontAwesome name={"exchange"} size={15} />
+									<FontAwesome name={"exchange"} size={normalize(13)} />
 								</View>
 								<Text style={styles.amountText}>
 									{this.state.displayInCrypto ? `${this.coinData().acronym}` : this.getSelectedCurrency().unit}
@@ -1030,13 +1049,13 @@ class SendTransaction extends Component {
 						<TouchableOpacity
 							style={[styles.rightIconContainer, {
 								// TODO:  Fix this color, make it reference a variable.
-								backgroundColor: this.state.spendMaxAmount ? "#AAAAAA" : this.getTheme().background2
+								backgroundColor: this.state.spendMaxAmount ? this.getTheme().text : this.getTheme().shadow
 							}]}
 							onPress={this.onMaxPress}
 						>
 							<Text
 								style={[styles.amountText, {
-									color: this.state.spendMaxAmount ? this.getTheme().text : this.getTheme().text
+									color: this.state.spendMaxAmount ? this.getTheme().invert : this.getTheme().text
 								}]}
 							>
 								Max
@@ -1046,19 +1065,18 @@ class SendTransaction extends Component {
 
 					<View style={styles.row}>
 						<View style={styles.messageHeaderContainer}>
-							<Text style={styles.text}>Message (Optional)</Text>
+							<Text style={styles.text}>Optional public message</Text>
 						</View>
 					</View>
 
-					<View style={styles.textInputRow}>
+					<View style={[styles.textInputRow, { borderColor: this.getTheme().nightlight } ]}>
 						<TextInput
 							maxLength={MAX_MESSAGE_LENGTH}
 							autoCapitalize="none"
 							autoCompleteType="off"
 							autoCorrect={false}
-							placeholder="Anything entered here will be public"
 							style={[styles.textInput, { borderRadius: 5 }]}
-							selectionColor={this.getTheme().selection}
+							selectionColor={this.getTheme().text}
 							onChangeText={async (message) => {
 								if (message.length <= MAX_MESSAGE_LENGTH) {
 									await this.props.updateTransaction({message}); //Set message
@@ -1101,7 +1119,7 @@ class SendTransaction extends Component {
 						onPress={this.toggleCoinControlModal}
 						style={[styles.row, {justifyContent: "center", paddingVertical: 4 }]}
 					>
-						<FontAwesome5 type="white" name="coins" size={20} />
+						<FontAwesome5 type="white" name="coins" size={normalize(20)} />
 						<Text style={styles.text}>Coin Control</Text>
 						{this.state.whiteListedUtxos.length > 0 &&
 						<Text style={styles.text}>{`(${this.state.whiteListedUtxos.length}/${this.props.wallet.wallets[selectedWallet].utxos[selectedCrypto].length})`}</Text>
@@ -1112,17 +1130,20 @@ class SendTransaction extends Component {
 					</TouchableOpacity>}
 				</View>
 
-				<View style={styles.sendButtonContainer}>
-					<View style={styles.sendButton}>
-						<Button
-							disabled={!this.state.cryptoBalance}
-							title={`Send ~${this.props.settings.fiatSymbol}${this.getSendButtonFiatLabel() || "0"} ${this.props.wallet.selectedCurrency.toUpperCase()}`}
-							text={this.getSendButtonCryptoLabel()}
-							textStyle={{ paddingTop: 5, ...systemWeights.light, }}
-							onPress={this.validateTransaction}
-						/>
-					</View>
+				<View style={[styles.buttonPanel]}>
+					<Button 
+						style={{ backgroundColor: this.getTheme().shadow }}
+						title={`cancel`}
+						onPress={this.onBack}
+					/>
+					<Button 
+						style={{ backgroundColor: this.getTheme().shadow }}
+						title={`continue`}
+						onPress={this.validateTransaction}
+					/>
 				</View>
+
+
 				<View style={{ height: "8%", backgroundColor: "transparent" }} />
 
 				<DefaultModal
@@ -1166,7 +1187,7 @@ class SendTransaction extends Component {
 					style={{ flex: 1 }}
 					isVisible={this.state.displayConfirmationModal}
 				>
-					<View style={styles.modalContainer}>
+					<View style={[styles.modalContainer, { backgroundColor: this.getTheme().background}]}>
 
 						<View style={styles.modalContent}>
 							<View style={{ flex: 1 }}>
@@ -1213,7 +1234,7 @@ class SendTransaction extends Component {
 										<Button
 											title="Copy TxHex"
 											loading={this.state.generatingTxHex}
-											style={{ backgroundColor: this.getTheme().input }}
+											style={{ backgroundColor: this.getTheme().shadow }}
 											onPress={async () => {
 												this.setState({ generatingTxHex: true });
 												let rawTx = await this.createTransaction();
@@ -1227,7 +1248,7 @@ class SendTransaction extends Component {
 												if (this.state.rawTx !== rawTx) this.setState({ rawTx });
 											}}
 										/>
-										<Button style={{ backgroundColor: this.getTheme().input }} title="Send" onPress={this.sendTransaction} activeOpacity={0.6} />
+										<Button style={{ backgroundColor: this.getTheme().shadow }} title="Send" onPress={this.sendTransaction} activeOpacity={0.6} />
 									</View>
 								</View>
 
@@ -1280,7 +1301,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: "transparent"
 	},
-	xButton: {
+	header: {
+		textAlign: "center",
+		fontSize: normalize(24)
+	},
+	button: {
 		position: "absolute",
 		alignItems: "center",
 		left: 0,
@@ -1304,12 +1329,12 @@ const styles = StyleSheet.create({
 	},
 	copiedText: {
 		...systemWeights.bold,
-		fontSize: 16,
+		fontSize: normalize(16),
 		textAlign: "center"
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 18,
+		fontSize: normalize(12),
 		textAlign: "left",
 		marginLeft: 5
 	},
@@ -1317,16 +1342,16 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		borderBottomWidth: 1
 	},
 	textInput: {
 		flex: 1,
 		height: 30,
-		borderTopLeftRadius: 5,
-		borderBottomLeftRadius: 5,
-		paddingLeft: 5,
+		paddingLeft: 6,
 		paddingTop: 0,
 		paddingBottom: 0,
+		fontSize: normalize(13),
 		fontWeight: "bold"
 	},
 	cameraIcon: {
@@ -1339,16 +1364,16 @@ const styles = StyleSheet.create({
 	},
 	boldModalText: {
 		...systemWeights.bold,
-		fontSize: 16
+		fontSize: normalize(16)
 	},
 	modalText: {
 		...systemWeights.light,
-		fontSize: 16
+		fontSize: normalize(16)
 	},
 	amountText: {
 		textAlign: "right",
 		...systemWeights.regular,
-		fontSize: 16
+		fontSize: normalize(16)
 	},
 	leftIconContainer: {
 		height: 30,
@@ -1361,9 +1386,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		paddingHorizontal: 4,
-		borderTopRightRadius: 5,
-		borderBottomRightRadius: 5,
-		borderLeftColor: colors.purple,
+		borderTopRightRadius: 6,
+		paddingRight: 5,
 		height: 30
 	},
 	sliderRow: {
@@ -1381,18 +1405,17 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flexDirection: "row",
-		marginTop: 6,
+		marginTop: normalize(16),
+		marginBottom: 2,
 		backgroundColor: "transparent"
 	},
-	sendButtonContainer: {
-		flex: 1,
-		justifyContent: "space-around",
-		backgroundColor: "transparent"
-	},
-	sendButton: {
+	buttonPanel: {
+		flexDirection: "row",
+		width: "80%",
+		alignSelf: "center",
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
 	},
 	loadingContainer: {
 		position: "absolute",

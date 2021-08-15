@@ -17,8 +17,10 @@ import {
 	TouchableWithoutFeedback,
 	Easing,
 	Linking,
-	ImageBackground
+	ImageBackground,
+	PixelRatio
 } from "react-native";
+
 import { ThemeProvider } from "styled-components/native";
 import { LinearGradient, Text, TextInput } from "../styles/components";
 import { themes } from "../styles/themes";
@@ -86,8 +88,26 @@ const {
 	version,
 } = require("../../package");
 
-const { width, height } = Dimensions.get("window");
-const aspectRatio =  height / width;
+
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
+const aspectRatio =  SCREEN_HEIGHT / SCREEN_WIDTH;
 let verticalOffset = 0;
 if(aspectRatio < 2 && aspectRatio >= 1.5) verticalOffset = (2 - aspectRatio) * 400;
 
@@ -2409,11 +2429,10 @@ const styles = StyleSheet.create({
 	},
 	ReceiveTransaction: {
 		position: "absolute",
-		top: -100,
+		top: 0,
 		bottom: 0,
 		left: 0,
 		right: 0,
-		justifyContent: "center",
 		backgroundColor: "transparent",
 	},
 	transactionDetail: {
@@ -2453,12 +2472,12 @@ const styles = StyleSheet.create({
 	},
 	boldText: {
 		...systemWeights.semibold,
-		fontSize: 20,
+    	fontSize: normalize(20),
 		textAlign: "center",
 	},
 	text: {
 		...systemWeights.light,
-		fontSize: 20,
+    	fontSize: normalize(20),
 		textAlign: "center",
 	},
 	camera: {
@@ -2478,7 +2497,7 @@ const styles = StyleSheet.create({
 	cryptoValue: {
 		...systemWeights.regular,
 		// color: colors.white,
-		fontSize: 14,
+    	fontSize: normalize(14),
 		textAlign: "center",
 		backgroundColor: "transparent",
 	},

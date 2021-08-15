@@ -144,8 +144,8 @@ class TransactionDetail extends PureComponent {
 						</TouchableOpacity>
 					</View>
 					<View style={[styles.row, { marginTop: 20 }]}>
-						<Button style={{ ...styles.button, backgroundColor: "#813fb1", width: "47%", marginRight: 5 }} textStyle={{...systemWeights.semibold, fontSize: 16 }} text={"Cancel\nTransaction"} onPress={() => this.cancelTransaction(nextAvailableAddress)} />
-						<Button style={{ ...styles.button, backgroundColor: "#813fb1", width: "47%", marginLeft: 5 }} textStyle={{...systemWeights.semibold, fontSize: 16 }} text={"Increase\nFee"} onPress={this.attemptRbf} />
+						<Button style={{ ...styles.button, width: "47%", marginRight: 5 }} textStyle={{...systemWeights.semibold, fontSize: 16 }} text={"Cancel\nTransaction"} onPress={() => this.cancelTransaction(nextAvailableAddress)} />
+						<Button style={{ ...styles.button, width: "47%", marginLeft: 5 }} textStyle={{...systemWeights.semibold, fontSize: 16 }} text={"Increase\nFee"} onPress={this.attemptRbf} />
 					</View>
 				</View>
 			);
@@ -230,10 +230,11 @@ class TransactionDetail extends PureComponent {
 			//If rbfIsSupported include the initialFee provided by the rbfData for the transaction
 			if (this.state.rbfIsSupported && displayFeePerByte) {
 				const initialFee = this.state.initialFee;
-				const { acronym, oshi } = getCoinData({selectedCrypto, cryptoUnit});
+				const { acronym, oshi, label } = getCoinData({selectedCrypto, cryptoUnit});
 				return `${fiat}\n${formatNumber(crypto)} ${acronym}\n${initialFee} ${oshi}/byte`;
 			}
-			return `${formatNumber(crypto)} ${getCoinData({ selectedCrypto, cryptoUnit }).acronym} // ${fiat} ${selectedCurrency.toUpperCase()}`;
+			// return `${formatNumber(crypto)} ${getCoinData({ selectedCrypto, cryptoUnit }).acronym} // ${fiat} ${selectedCurrency.toUpperCase()}`;
+			return `${formatNumber(crypto)} ${getCoinData({ selectedCrypto, cryptoUnit }).acronym}`;
 		} catch (e) {
 			return "$0.00\n0 sats";
 		}
@@ -675,41 +676,51 @@ const styles = StyleSheet.create({
 		marginVertical: 8
 	},
 	col1: {
-		flex: 0.4,
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: "flex-start",
 	},
 	col2: {
-		flex: 0.6,
+		fontSize: 12,
 		alignItems: "flex-start",
-		justifyContent: "center",
 	},
 	transactionData: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "transparent",
 		paddingHorizontal: 5
 	},
 	row: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-		backgroundColor: "transparent"
+		flexDirection: "column",
+		width: "100%",
+		marginBottom: 20
 	},
 	title: {
-		...systemWeights.bold,
-		fontSize: 16,
-		textAlign: "center"
+		...systemWeights.light,
+		fontSize: 12,
+		textAlign: "center",
 	},
 	text: {
-		...systemWeights.light,
-		fontSize: 16,
+		fontSize: 18,
 		textAlign: "left"
+	},
+	code: {
+		fontSize: 14,
+		textAlign: "left",
+		fontFamily: 'monospace'
+	},
+	subtext: {
+		fontSize: 14,
+		textAlign: "left"
+	},
+	subHeader: {
+		fontSize: 12,
+		textAlign: "center",
 	},
 	header: {
 		...systemWeights.bold,
+		textAlign: "center",
 		fontSize: 20,
+	},
+	headerContainer: {
 		textAlign: "center",
 		marginVertical: 20
 	},
