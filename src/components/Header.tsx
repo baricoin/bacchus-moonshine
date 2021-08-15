@@ -5,10 +5,6 @@ import bitcoinUnits from "bitcoin-units";
 import {systemWeights} from "react-native-typography";
 import { Text } from "../styles/components";
 
-const { 
-	eCoinCore
-} = require("../utils/ecoincore");
-
 const {
 	formatNumber,
 	capitalize
@@ -91,7 +87,7 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 	} catch (e) {}
 
 	// If we are displaying bitcoin, then the bitcoin price is also the same as bitcoin... This prevents the display messing with rounded-off decimals;
-	if(selectedCrypto == "bitcoin") bitcoinRate = exchangeRate;
+	if(selectedCrypto == "bitcoin") bitcoinRate = 0;
 
 	const _onSelectCoinPress = () => onSelectCoinPress();
 
@@ -112,12 +108,14 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 				<View style={styles.cryptoValueRow}>
 					<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{Number(cryptoValue).toFixed(8)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
 				</View>
-			{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && 
 				<View style={styles.cryptoValueRow}>
-					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
-					<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${exchangeRate} ${selectedCurrency}`}</Text>
+					{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(bitcoinRate) && 
+						<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${Number( exchangeRate / bitcoinRate ).toFixed(8)} BTC`}</Text>
+					}
+					{exchangeRate !== NaN && exchangeRate !== 0 && !isInfinite(exchangeRate) && 
+						<Text style={[styles.exchangeRate, { fontSize: fontSize/4 }]}>{`1  ${getCoinData({selectedCrypto, cryptoUnit}).crypto} = ${fiatSymbol} ${exchangeRate} ${selectedCurrency}`}</Text>
+					}
 				</View> 
-			}
 
 			{isOnline !== true &&
 				<Text style={[styles.errorRow, { marginTop: 10, fontSize: fontSize/2.5 }]}>Currently Offline</Text>
@@ -198,7 +196,6 @@ const Header = memo(
 	(prevProps, nextProps) => {
 		if (!prevProps || !nextProps) return true;
 		return (
-			nextProps.exchangeRate === prevProps.exchangeRate &&
 			nextProps.fiatValue === prevProps.fiatValue &&
 			nextProps.cryptoValue === prevProps.cryptoValue &&
 			nextProps.isOnline === prevProps.isOnline &&
