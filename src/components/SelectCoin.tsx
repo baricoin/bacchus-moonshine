@@ -25,7 +25,7 @@ interface SelectCoinComponent {
 	deleteWallet: Function,
 	displayTestnet: boolean
 }
-const _SelectCoin = ({ theme = {}, wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, createNewWallet = () => null, onCoinPress = () => null, cryptoUnit = "satoshi", updateWallet = () => null, deleteWallet = () => null, displayTestnet = true }: SelectCoinComponent) => {
+const _SelectCoin = ({ theme = {}, wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, createNewWallet = () => null, onCoinPress = () => null, cryptoUnit = "satoshi", settings = {}, rates = {}, updateWallet = () => null, deleteWallet = () => null, displayTestnet = true }: SelectCoinComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	
@@ -43,6 +43,8 @@ const _SelectCoin = ({ theme = {}, wallet = { wallets: {}, selectedWallet: "wall
 				updateWallet={updateWallet}
 				deleteWallet={deleteWallet}
 				displayTestnet={displayTestnet}
+				fiatSymbol={settings.fiatSymbol}
+				rates={rates}
 			/>
 		</View>
 	);

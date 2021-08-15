@@ -199,12 +199,28 @@ class TransactionDetail extends PureComponent {
 		openUrl(url);
 	};
 	
+
+	bitcoinRate = () => {
+			if(!this.props.wallet.selectedCurrency.toUpperCase()) return 0;
+			if(!this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()]) return 0;
+	 		return	1 / Number(this.props.rates[this.props.wallet.selectedCurrency.toUpperCase()].rate);
+	}
+	
+	fiatRate = () => {
+			if(!getCoinData( this.props.wallet.selectedCrypto )) return 0;
+			if(!this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym]) return 0;
+			const fiatRate = this.bitcoinRate() * Number(this.props.rates[getCoinData( this.props.wallet.selectedCrypto ).acronym.toUpperCase()].rate)
+	 		return fiatRate;
+	};
+	
 	getAmount = (amount, displayFeePerByte = true): string => {
 		try {
 			const cryptoUnit = this.props.settings.cryptoUnit;
 			const selectedCrypto = this.props.wallet.selectedCrypto;
 			const selectedCurrency = this.props.wallet.selectedCurrency;
-			const exchangeRate = this.props.wallet.exchangeRate[selectedCrypto];
+
+
+			const exchangeRate = this.fiatRate()
 			const fiatSymbol = this.props.settings.fiatSymbol;
 			amount = Number(amount);
 			const crypto = cryptoUnit === "satoshi" ? amount : bitcoinUnits(amount, "satoshi").to(cryptoUnit).value();

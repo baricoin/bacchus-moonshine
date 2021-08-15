@@ -37,7 +37,7 @@ interface WalletCarouselComponent {
 	cryptoUnit: string, //satoshi or btc
 	displayTestnet: boolean
 }
-const _WalletCarousel = ({ wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, onCoinPress = () => null, updateWallet = () => null, deleteWallet = () => null, cryptoUnit = "satoshi", displayTestnet = true }: WalletCarouselComponent) => {
+const _WalletCarousel = ({ wallet = { wallets: {}, selectedWallet: "wallet0", walletOrder: [] }, onCoinPress = () => null, updateWallet = () => null, deleteWallet = () => null, cryptoUnit = "satoshi", rates = {}, fiatSymbol = "", displayTestnet = true }: WalletCarouselComponent) => {
 
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 
@@ -58,6 +58,8 @@ const _WalletCarousel = ({ wallet = { wallets: {}, selectedWallet: "wallet0", wa
 					displayTestnet={displayTestnet}
 					onCoinPress={onCoinPress}
 					updateActiveSlide={updateActiveSlide}
+					fiatSymbol={fiatSymbol}
+					rates={rates}
 				/>
 			);
 		} catch (e) {

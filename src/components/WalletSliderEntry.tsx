@@ -146,8 +146,10 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 								walletId={walletId}
 								balance={balance}
 								cryptoUnit={cryptoUnit}
-								selectedCrypto="canadaecoin"
+								selectedCrypto={coin}
 								selectedCurrency={selectedCurrency}
+								fiatSymbol={fiatSymbol}
+								fiatRate={fiatRate()}
 							/>
 						);
 					})}
