@@ -1,5 +1,5 @@
 import React, {memo} from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image, Dimensions, PixelRatio } from "react-native";
 import {systemWeights} from "react-native-typography";
 import PropTypes from "prop-types";
 import { View, TouchableOpacity, Text } from "../styles/components";
@@ -11,6 +11,23 @@ const ListItem = ({ id = 0, word = "" } = {}) => {
 		</View>
 	);
 };
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 interface BackupPhraseComponent {
 	onPress: () => null,
@@ -26,12 +43,26 @@ const _BackupPhrase = ({ phrase = [{ id: 0, word: "" }], onPress = () => null }:
 
 	try {
 		return (
-			<TouchableOpacity type="background" onPress={onPress} activeOpacity={1} style={styles.container}>
+			<TouchableOpacity type="background" onPress={onPress} activeOpacity={1}>
+
+				{/*<Text style={styles.header}>Canada eCoin Mobile</Text>*/}
+				<Image
+					style={styles.icon}
+					source={require("../assets/logo/main_icon.png")}
+				/>
+
+				{/*<Text style={[styles.text]}>This set of words is your `seed phrase`.  It is the seed that sprouts all of the wallets used within.</Text>*/}
+				<Text style={[styles.text]}>It is VERY IMPORTANT that you write these words down by hand!!</Text>
+				<Text style={[styles.text]}>Include the date and the app name (cdn-moonshine) aswell, and put them in the safest place you have.</Text>
+				<View style={styles.container}>
+					
+
 				<View type="transparent" style={[styles.column, { right: "-10%" }]}>
 					{p1.map(({ id, word }) => <ListItem key={`${id}${word}`} id={id} word={word} />)}
 				</View>
 				<View type="transparent" style={[styles.column, { right: "-5%" }]}>
 					{p2.map(({ id, word }) => <ListItem key={`${id}${word}`} id={id} word={word} />)}
+				</View>
 				</View>
 			</TouchableOpacity>
 		);
@@ -54,12 +85,25 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		marginVertical: 0
 	},
+	header: {
+		...systemWeights.semibold,
+		textAlign: "center",
+		margin: 20,
+		marginTop: 30,
+		fontSize: normalize(24)
+	},
+	icon: {
+		alignSelf: "center",
+		width: normalize(48),
+		height: normalize(48),
+		margin: normalize(16),
+	},
 	listItem: {
 		flexDirection: "row"
 	},
 	text: {
 		...systemWeights.semibold,
-		fontSize: 18,
+		fontSize: normalize(14),
 		textAlign: "center",
 		marginVertical: 4
 	},
