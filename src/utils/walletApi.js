@@ -3,10 +3,7 @@ import * as electrum from "./electrum";
 import "../../shim";
 
 const moment = require("moment");
-const {
-	ExchangeRates,
-	Chainpacks
-} = require("./ecoincore");
+
 const {
 	networks
 } = require("./networks");
@@ -61,83 +58,6 @@ const decodeOpReturnMessage = (opReturn = "") => {
 		return messages;
 	} catch (e) {
 		console.log(e);
-	}
-};
-
-// Canada eCoin : We get our prices from the cdn-foundation's DB,. since CoinCap and CoinGecko do not track CDN.
-const eCoinCoreExchangeRateHelper = async (selectedCrypto, selectedCurrency) => {
-	// CDN TODO:  Our connection to Marsha is a DDP connection that will notify us any time there is an update
-	// to the exchange rates.   Maybe we want to push these updates to the UI somehow?
-	// https://www.npmjs.com/package/react-ddp/v/1.1.11
-
-
-
-	if(selectedCrypto == "bitcoin"){
-		selectedCrypto = "btc";
-	} else if(selectedCrypto == "litecoin"){
-		selectedCrypto = "ltc";
-	} else {
-		let chain = Chainpacks.findOne({hyper: `${selectedCrypto}`})
-		if(!chain) return ({ error: true, data: 'Unable to get exchange rates!' });
-		selectedCrypto = String(chain.sign).toLowerCase();
-	}
-
-	if(!selectedCrypto || !selectedCurrency) return ({ error: true, data: 'Unable to get exchange rates!' });
-	if(!ExchangeRates) return { error: true, data: "Have not yet aquired exchange rate data..." };
-	
-	let coinRate = await ExchangeRates.findOne({'call': String(selectedCrypto).toUpperCase()});
-	let fiatRate = await ExchangeRates.findOne({'call': String(selectedCurrency).toUpperCase()});
-	if(!coinRate || !fiatRate) return ({ error: true, data: "Not able to aquire exchange rate data, are we offline?" });
-
-	let exchangeRate = Number(Number(coinRate.rate) / Number(fiatRate.rate));
-	if(!exchangeRate) return ({ error: true, data: "Not able to aquire exchange rate data, are we offline?" });
-
-	return ({ error: false, data: exchangeRate });
-};
-
-const coinCapExchangeRateHelper = async ({ selectedCrypto = "bitcoin", selectedCurrency = "usd" } = {}) => {
-	// Canada eCoin:  We get exchange data from Marsha, so lets use that instead...
-	return await eCoinCoreExchangeRateHelper(selectedCrypto, selectedCurrency);
-	
-	let exchangeRate = 0;
-	try {
-		let coin = selectedCrypto.toLowerCase();
-		coin = coin.replace("testnet", "");
-		//Get coin rate in usd.
-		const coinRateResponse = await fetch(`https://api.coincap.io/v2/rates/${coin}`);
-		const jsonCoinRateResponse = await coinRateResponse.json();
-		const coinRate = Number(jsonCoinRateResponse.data.rateUsd);
-		//Get selected fiat rate in usd.
-		const fiatId = currencies[selectedCurrency].id;
-		const fiatRateResponse = await fetch(`https://api.coincap.io/v2/rates/${fiatId}`);
-		const jsonFiatRateResponse = await fiatRateResponse.json();
-		const fiatRate = Number(jsonFiatRateResponse.data.rateUsd);
-		//Calculate Exchange Rate
-		exchangeRate = (coinRate * (1 / fiatRate)).toFixed(2);
-
-		if (exchangeRate === 0 || isNaN(exchangeRate)) return ({ error: true, data: "Invalid Exchange Rate Data." });
-		return ({ error: false, data: exchangeRate });
-	} catch (e) {
-		return ({ error: true, data: "Invalid Exchange Rate Data." });
-	}
-};
-
-const coinGeckoExchangeRateHelper = async ({ selectedCrypto = "bitcoin", selectedCurrency = "usd" } = {}) => {
-	// Canada eCoin:  We already get exchange data from Marsha, so lets use that instead...
-	return await eCoinCoreExchangeRateHelper(selectedCrypto, selectedCurrency);
-
-	let exchangeRate = 0;
-	try {
-		let coin = selectedCrypto.toLowerCase();
-		coin = coin.replace("testnet", "");
-
-		const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coin}&vs_currencies=${selectedCurrency}`);
-		const jsonResponse = await response.json();
-		exchangeRate = Number(jsonResponse[selectedCrypto][selectedCurrency]).toFixed(2);
-		if (exchangeRate === 0 || isNaN(exchangeRate)) return ({ error: true, data: "Invalid Exchange Rate Data." });
-		return ({ error: false, data: exchangeRate });
-	} catch (e) {
-		return ({ error: true, data: "Invalid Exchange Rate Data." });
 	}
 };
 
@@ -559,29 +479,6 @@ const walletHelpers = {
 		},
 		default: async ({ rawTx = "", service = "electrum", selectedCrypto = "bitcoin" } = {}) => {
 			return await walletHelpers.pushtx[service]({ rawTx, selectedCrypto });
-		}
-	},
-	exchangeRate: {
-		coingecko: async ({ selectedCurrency = "usd", selectedCrypto = "bitcoin" } = {}) => {
-			const exchangeRate = await coinGeckoExchangeRateHelper({ selectedCrypto, selectedCurrency });
-			if (exchangeRate.error === false) {
-				return ({ error: false, data: exchangeRate.data });
-			} else {
-				return ({ error: true, data: "Invalid Exchange Rate Data." });
-			}
-		},
-		coincap: async ({ selectedCurrency = "usd", selectedCrypto = "bitcoin" } = {}) => {
-			const exchangeRate = await coinCapExchangeRateHelper({ selectedCrypto, selectedCurrency });
-			if (exchangeRate.error === false) {
-				return ({ error: false, data: exchangeRate.data });
-			} else {
-				return ({ error: true, data: "Invalid Exchange Rate Data." });
-			}
-		},
-		default: async ({ service = "coingecko", selectedCurrency = "usd", selectedCrypto = "bitcoin" } = {}) => {
-			selectedCrypto = selectedCrypto.toLowerCase();
-			selectedCrypto = selectedCrypto.replace("testnet", "");
-			return await walletHelpers.exchangeRate[service]({ selectedCurrency, selectedCrypto });
 		}
 	},
 	feeEstimate: {
