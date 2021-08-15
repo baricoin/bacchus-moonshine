@@ -49,7 +49,7 @@ const persistConfig = {
 // wrap persist API around root reducer and store
 const persistedReducer = persistReducer(persistConfig, reducer);
 
-const store = createStoreWithMiddleware(persistedReducer);
+export const store = createStoreWithMiddleware(persistedReducer);
 const persistor = persistStore(store);
 
 // Root component
@@ -73,4 +73,3 @@ const Root = () => {
 };
 
 module.exports = Root;
-
