@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
 		...systemWeights.thin,
 		textAlign: "left",
 		backgroundColor: "transparent",
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: "bold"
 	},
 	row: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
 	},
 	coinControlText: {
 		...systemWeights.regular,
-		fontSize: 22,
+		fontSize: 18,
 		textAlign: "center"
 	},
 	coinControlHeader: {
