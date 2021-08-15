@@ -1,8 +1,25 @@
 import React, {useEffect, memo} from "react";
-import {StyleSheet, View, LayoutAnimation, Platform, Image, Linking} from "react-native";
+import {StyleSheet, View, LayoutAnimation, Platform, Image, Linking, Dimensions, PixelRatio} from "react-native";
 import {systemWeights} from "react-native-typography";
-import XButton from "./XButton";
+import Button from "./Button";
 import { Text } from "../styles/components";
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 const updates = [
 	"Cloned github://coreyphillips/moonshine",
@@ -15,12 +32,18 @@ const _Welcome = ({ onClose = () => null, children = <View /> } = {}) => {
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	return (
 		<View style={styles.container}>
-			<Text style={styles.header}>Canada eCoin - Mobile Multiwallet</Text>
+			<Text style={styles.header}>Canada eCoin Mobile</Text>
+			<Image
+				style={styles.icon}
+				source={require("../assets/logo/main_icon.png")}
+			/>
 			<View style={{ width: "100%" }}>
 				{children}
-				<Text style={[styles.subHeader, { textAlign: "center" }]}>Updates in this build include:</Text>
-				{updates.map((update, i) => <Text key={update} style={styles.text}><Text style={styles.semiBoldText}>{i+1}. </Text>{update}</Text>)}
 
+				<Text style={[styles.subHeader, { textAlign: "center" }]}>Thank you for trying the Canada eCoin experience.</Text>
+
+				<Text style={styles.subHeader}>BETA TESTERS ONLY</Text>
+				<Text style={styles.text}>This software is currently in the beta testing phase.  Please refrain from storing any value in this software while not testing it.  </Text>
 				<Text style={styles.subHeader}>Will you join us?</Text>
 
 				<Text style={styles.text}>Find us in our community social channels:</Text>
@@ -49,7 +72,7 @@ const _Welcome = ({ onClose = () => null, children = <View /> } = {}) => {
 					<Text style={styles.semiBoldText}>Email: </Text>support@canadaecoin.foundation
 				</Text>
 			</View>
-			<XButton style={{marginVertical: 30}} onPress={onClose} />
+			<Button text="continue" style={{marginVertical: 30}} onPress={onClose} />
 		</View>
 	);
 };
@@ -59,7 +82,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "flex-start",
-		marginVertical: 10,
+		margin: 10,
 		paddingBottom: 20
 	},
 	icon: {
@@ -68,28 +91,30 @@ const styles = StyleSheet.create({
 	header: {
 		...systemWeights.semibold,
 		textAlign: "center",
-		fontSize: 24
+		margin: 20,
+		marginTop: 30,
+		fontSize: normalize(24)
 	},
 	text: {
 		...systemWeights.regular,
-		fontSize: 15,
+		fontSize: normalize(15),
 		alignSelf: "flex-start",
 		textAlign: "left",
 		marginTop: 10
 	},
 	semiBoldText: {
 		...systemWeights.semibold,
-		fontSize: 13,
+		fontSize: normalize(13),
 		alignSelf: "flex-start",
 		textAlign: "left",
 		marginTop: 10
 	},
 	subHeader: {
 		...systemWeights.light,
-		fontSize: 15,
+		marginTop: 30,
+		fontSize: normalize(15),
 		alignSelf: "flex-start",
 		textAlign: "left",
-		marginTop: 20,
 		...systemWeights.semibold
 	}
 });
