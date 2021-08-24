@@ -577,21 +577,21 @@ class TransactionDetail extends PureComponent {
 		try {transactionFee = this.getAmount(fee);} catch (e) {}
 		try {totalSent = this.getAmount(sentAmount);} catch (e) {}
 
-    const firstHalf = (address) => {
-        let addrLength = Math.floor(address.length /2);
-        address = address.slice(0, addrLength)
-        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
-        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
-        return `${res} ${address.slice(12, address.length)}`;
-    }
+	    const firstHalf = (address) => {
+	        let addrLength = Math.floor(address.length /2);
+	        address = address.slice(0, addrLength)
+	        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+	        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+	        return `${res} ${address.slice(12, address.length)}`;
+	    }
 
-    const secondHalf = (address) => {
-        let addrLength = Math.floor(address.length /2);
-        address = address.slice(addrLength,  addrLength.length);
-        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
-        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
-        return `${res} ${address.slice(12, address.length)}`;
-    }   
+	    const secondHalf = (address) => {
+	        let addrLength = Math.floor(address.length /2);
+	        address = address.slice(addrLength,  addrLength.length);
+	        let res = `${address.slice(0,4)} ${address.slice(4,8)} ${address.slice(8,12)}`
+	        if(address.length > 20) return `${res} ${address.slice(12,16)} ${address.slice(16, address.length)}`;
+	        return `${res} ${address.slice(12, address.length)}`;
+	    }   
 
 	    const prettifyAddress = (address) => {
 	    	return `${firstHalf(address)} ${secondHalf(address)}`
