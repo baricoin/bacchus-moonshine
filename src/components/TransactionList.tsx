@@ -56,6 +56,7 @@ const _DisplayItem = (
 
 	try {
 		const hash = transaction.item.hash;
+		const address = transaction.item.address;
 		const timestamp = transaction.item.timestamp;
 		const type = transaction.item.type;
 		const block = transaction.item.block;
@@ -67,7 +68,8 @@ const _DisplayItem = (
 				<TransactionRow
 					id={hash}
 					coin={selectedCrypto}
-					address={hash}
+					address={address}
+					hash={hash}
 					amount={amount}
 					messages={messages}
 					label=""

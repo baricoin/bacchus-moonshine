@@ -84,6 +84,17 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 			exchangeRate = Number(exchangeRate).toFixed(4);
 		};
 
+
+		if(cryptoValue > 100000 ){
+			cryptoValue = Number(cryptoValue).toFixed(2);
+		} else if(cryptoValue > 10000 ){
+			cryptoValue = Number(cryptoValue).toFixed(4);
+		} else if(cryptoValue > 100 ){
+			cryptoValue = Number(cryptoValue).toFixed(6);
+		} else {
+			cryptoValue = Number(cryptoValue).toFixed(8);
+		};
+
 	} catch (e) {}
 
 	// If we are displaying bitcoin, then the bitcoin price is also the same as bitcoin... This prevents the display messing with rounded-off decimals;
@@ -170,23 +181,31 @@ const styles = StyleSheet.create({
 		...systemWeights.light,
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		fontFamily: 'monospace'
 	},
 	fiatValue: {
 		...systemWeights.thin,
 		textAlign: "center",
-		left: -4,
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		fontFamily: 'monospace'
+	},
+	cryptoHeader: {
+		...systemWeights.thin,
+		textAlign: "center",
+		backgroundColor: "transparent",
 	},
 	cryptoValue: {
 		...systemWeights.thin,
 		textAlign: "center",
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		fontFamily: 'monospace'
 	},
 	exchangeRate: {
 		...systemWeights.light,
 		textAlign: "center",
-		backgroundColor: "transparent"
+		backgroundColor: "transparent",
+		fontFamily: 'monospace'
 	}
 });
 

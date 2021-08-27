@@ -12,34 +12,19 @@ import { View, Text } from "../styles/components";
 
 const moment = require("moment");
 const {
-	formatNumber
+	formatNumber,
+	normalize
 } = require("../utils/helpers");
 
 const {
 	getCoinData
 } = require("../utils/networks");
 
-const {
-  width: SCREEN_WIDTH,
-  height: SCREEN_HEIGHT,
-} = Dimensions.get('window');
-
-// based on iphone 5s's scale
-const scale = SCREEN_WIDTH / 320;
-
-export function normalize(size) {
-  const newSize = size * scale 
-  if (Platform.OS === 'ios') {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize))
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
-  }
-}
-
 interface TransactionRowComponent {
 	id: string,
 	coin: string,
 	address: string,
+	hash: string,
 	amount: number,
 	label: string,
 	date: number,
@@ -58,6 +43,8 @@ const _TransactionRow = (
 		id = "",
 		coin = "bitcoin",
 		address = "",
+		hash = "",
+		txid = "",
 		amount = 0,
 		label = "",
 		date = 0,
@@ -128,28 +115,54 @@ const _TransactionRow = (
 
 	if (!address || !amount) return <View />;
 
-	if (!label) label = address;
-	if (label.length > 32) label = `${label.substr(0, 32)}...`;
+	// if (!label) label = address;
+	label = hash;
+	if (label.length > 32) label = `${label.substr(0, 5)}:${label.substr(label.length-5, label.length)}`;
 	const fontWeight = type === "sent" ? "normal" : "bold";
+	const txidText = `${label.substr(0, 5)}:${label.substr(label.length-5, label.length)}`;
+	const addressText = `${address.substr(0, 6)}:${address.substr(address.length-4, address.length)}`;
 
 	return (
 		<TouchableOpacity onPress={() => onTransactionPress(id)} style={[styles.container, {borderColor: `${getCoinData({selectedCrypto:coin}).color}99`}]}>
 			<View type="gray3" style={styles.header}>
-				<Text style={[styles.text, { fontWeight, fontSize: normalize(11)  }]}>{type} -- {label}</Text>
-				{isBlacklisted &&<Text style={[styles.text, { fontWeight: "bold", fontSize: normalize(16) }]}>locked</Text>}
+
+			{type === 'received' && <Text style={[styles.labelText, styles.receivedText]}>received</Text>}
+			{type === 'sent' && <Text style={[styles.labelText, styles.sentText]}>sent</Text>}
+				<Text style={[ styles.labelSubtext ]}> via</Text>
+				<Text style={[ styles.labelSubtext ]}> txid</Text>
+				<Text style={[ styles.labelText ]}> {txidText}</Text>
+
+				<Text style={[ styles.labelSubtext ]}> to</Text>
+
+
+				<Text style={[ styles.labelSubtext ]}> address</Text>
+				<Text style={[ styles.labelText ]}> {addressText}</Text>
+
+
+
+
 			</View>
 			<View style={styles.row}>
 				<View style={styles.col1}>
 					{/*<Text style={[styles.text, { fontWeight, fontSize: normalize(14)  }]}>{label}</Text>*/}
-					<Text style={[styles.smallText, { ...systemWeights.semibold, }]}>{moment.unix(date).format('l @ h:mm a')}</Text>
-					<Text style={[styles.smallText, { fontWeight, fontSize: normalize(14)  }]}>Confirmations: {getConfirmations()}</Text>
+					<Text style={[styles.dateText]}>{moment.unix(date).format('l @ h:mm a')}</Text>
+					<Text style={[styles.smallText]}>{getConfirmations()} blocks ago</Text>
 				</View>
 				<View style={styles.col2}>
-					{Number(exchangeRate) !== 0 &&<Text style={[styles.text, { fontWeight }]}>{getFiatAmountLabel()}</Text> }
-					<Text style={[styles.text, { fontWeight  }]}>{type === "received" ? "+" : "-"}{getCryptoAmountLabel()}</Text>
+					<Text style={[styles.balanceText]}>{type === "received" ? "+" : "-"}{getCryptoAmountLabel()}</Text>
+
+				{isBlacklisted &&<Text style={[styles.text, { color: "red", fontWeight: "bold", fontSize: normalize(12) }]}>locked from spending</Text> ||  Number(exchangeRate) !== 0 &&<Text style={[styles.subBalance, { fontWeight }]}>{getFiatAmountLabel()}</Text>  }
+
+
 					{Number(exchangeRate) === 0 && <Text></Text> }
 				</View>
 			</View>
+
+
+
+
+
+
 			{messages.length > 0 &&
 			<View style={styles.row}>
 				<View style={[styles.col1, { flex: 0.6 }]}>
@@ -192,43 +205,100 @@ const styles = StyleSheet.create({
 
 	},
 	header: {
-		flex: 1,
+		flexDirection: 'row',
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "space-between",
 		paddingVertical: 2,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		borderColor: "#3333",
+		borderBottomWidth: 1
 	},
 	row: {
 		flex: 1,
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "space-between",
 		paddingBottom: 8,
 		paddingTop: 2
 	},
 	col1: {
-		flex: 1,
+		flex: 2,
 		alignItems: "flex-start",
+		flexShrink: 1,
 		justifyContent: "center",
-		paddingLeft: 10
+		paddingLeft: 10,
 	},
 	col2: {
-		flex: 0.9,
+		flex: 3,
 		alignItems: "flex-end",
 		justifyContent: "center",
 		paddingRight: 10
 	},
+	labelText: {
+		...systemWeights.bold,
+		fontSize: normalize(12),
+		fontFamily: 'monospace',
+		textAlign: "right"
+	},
+	labelSubtext: {
+		...systemWeights.regular,
+		fontSize: normalize(11),
+		textAlign: "right"
+	},
 	text: {
 		...systemWeights.light,
 		fontSize: normalize(14),
+		fontFamily: 'monospace',
+		textAlign: "center"
+	},
+	balanceText: {
+		...systemWeights.bold,
+		fontFamily: 'monospace',
+		fontSize: normalize(16),
+		textAlign: "center"
+	},
+	subBalance: {
+		...systemWeights.regular,
+		fontFamily: 'monospace',
+		fontSize: normalize(12),
+		textAlign: "center"
+	},
+	dateText: {
+		...systemWeights.regular,
+		fontFamily: 'system',
+		fontSize: normalize(12),
 		textAlign: "center"
 	},
 	smallText: {
-		...systemWeights.thin,
-		fontSize: normalize(14),
+		...systemWeights.regular,
+		fontFamily: 'system',
+		fontSize: normalize(12),
 		textAlign: "center"
+	},
+	sentText: {
+		...systemWeights.bold,
+		fontSize: normalize(12),
+		textAlign: "left",
+    backgroundColor: "#3F100022",
+    borderColor: "#9F6000",
+    borderRadius:3,
+    borderWidth: 1,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+	},
+	receivedText: {
+		...systemWeights.bold,
+		fontSize: normalize(12),
+		textAlign: "left",
+    backgroundColor: "#1F2A1022",
+    borderColor: "#4F8A10",
+    borderRadius:3,
+    borderWidth: 1,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
 	}
 });
+
 
 //ComponentShouldNotUpdate
 const TransactionRow = memo(

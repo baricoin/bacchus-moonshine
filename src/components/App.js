@@ -2157,7 +2157,7 @@ export default class App extends Component {
 												bitcoinRate={this.bitcoinRate()}
 												isOnline={this.props.user.isOnline}
 												onSelectCoinPress={this.onSelectCoinPress}
-												fontSize={normalize(64)}
+												fontSize={normalize(56)}
 											/>
 										</Animated.View>
 

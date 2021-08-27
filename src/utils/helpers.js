@@ -1,5 +1,7 @@
 import {
 	Linking,
+	Dimensions,
+	PixelRatio,
 	Vibration
 } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -1076,6 +1078,23 @@ const getScriptHash = (address = "", network = networks["bitcoin"]) => {
 	return reversedHash.toString("hex");
 };
 
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 320;
+
+function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
 module.exports = {
 	getItem,
 	setItem,
@@ -1124,5 +1143,6 @@ module.exports = {
 	satsToBtc,
 	getLastWordInString,
 	getByteCount,
-	getScriptHash
+	getScriptHash,
+	normalize
 };

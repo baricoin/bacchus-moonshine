@@ -20,7 +20,6 @@ export const LinearGradient = styled(_LinearGradient).attrs((props) => ({
 `;
 
 export const View = styled.View`
-  background-color: ${props => props.type ? props.theme[props.type] : props.theme.shadow};
   ${props => props.borderColor ? `border-color: ${props.theme[props.borderColor]}` : null};
 `;
 

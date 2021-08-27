@@ -15,15 +15,19 @@ import { systemWeights } from "react-native-typography";
 import CoinButton from "./CoinButton";
 import WalletOptions from "./WalletOptions";
 
+
+const {
+	formatNumber,
+	capitalize
+} = require("../utils/helpers");
+
 const {
 	Constants: {
 		colors
 	}
 } = require("../../ProjectData.json");
+
 const { height, width } = Dimensions.get("window");
-const {
-	capitalize,
-} = require("../utils/helpers");
 
 import { getCoinData, availableCoins } from "../utils/networks";
 
@@ -39,7 +43,7 @@ interface WalletSliderEntryComponent {
 }
 
 
-const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedCurrency: "", selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", fiatSymbol = "", rates, updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
+const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, selectedCurrency: "", selectedWallet: "wallet0", walletOrder: [] }, cryptoUnit = "satoshi", fiatSymbol = "", rates = [], updateWallet = () => null, deleteWallet = () => null, displayTestnet = true, onCoinPress = () => null, updateActiveSlide }: WalletSliderEntryComponent) => {
 	
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	const { selectedCurrency } = wallet;
@@ -107,35 +111,182 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 		}
 	};
 	
-	const bitcoinRate = () => {
+	const fiatInBitcoin = () => {
+		// console.log(coin)
+			if(!wallet.selectedCurrency.toUpperCase()) return 0;
+			if(!rates[wallet.selectedCurrency.toUpperCase()]) return 0;
+	 		return	Number(rates[wallet.selectedCurrency.toUpperCase()].rate);
+	}
+	
+	
+	const exchangeRate = (coin) => {
+		// console.log(coin)
 			if(!wallet.selectedCurrency.toUpperCase()) return 0;
 			if(!rates[wallet.selectedCurrency.toUpperCase()]) return 0;
 	 		return	1 / Number(rates[wallet.selectedCurrency.toUpperCase()].rate);
 	}
 	
-	const fiatRate = () => {
-		if(!getCoinData( wallet.selectedCrypto )) return 0;
-		if(!rates[getCoinData( wallet.selectedCrypto ).acronym.toUpperCase()]) return 0;
-		const rateObj = rates[getCoinData( wallet.selectedCrypto ).acronym.toUpperCase()]
+	const fiatRate = (acronym) => {
+		if(!rates[acronym.toUpperCase()]) return 0;
+		const rateObj = rates[acronym.toUpperCase()]
 		if(!rateObj) return 0;
- 		return  bitcoinRate() * Number(rateObj.rate);
+ 		return Number(rateObj.rate);
 	};
+	
+	const priceInSatoshi = (selectedCurrency) => {
+		if(!selectedCurrency) return 0;
+		if(!rates[selectedCurrency.toUpperCase()]) return 0;
+		const rateObj = rates[selectedCurrency.toUpperCase()]
+		if(!rateObj) return 0;
+ 		return Number(rateObj.rate);
+	};
+
+
+	const getEstWalletValue = (walletId)=> {
+		if(!walletId) return [];
+		console.log(walletId)
+		let balances = wallet.wallets[walletId].confirmedBalance;
+		let estTotalWalletValue = 0;
+
+
+
+		console.log("balances")
+		console.log(balances)
+
+				
+		Object.keys(balances).filter((hyper)=>{
+
+			if(hyper==='timestamp') return false;
+const acronym = getCoinData({ selectedCrypto: hyper }).acronym
+
+console.log("acronym]");
+console.log(acronym);
+
+
+				let balance = balances[hyper];
+				balance = Number(balance / 100000000);
+
+
+console.log("balance]");
+console.log(balance);
+
+let exchangeRate = priceInSatoshi(acronym)
+console.log("exchangeRate]");
+console.log(exchangeRate);
+
+
+let btcrate = 1/fiatInBitcoin(acronym)
+console.log("btcrate]");
+console.log(btcrate);
+
+
+				let estValueInFiat = ((balance * exchangeRate )  *btcrate);
+
+console.log("estValueInFiat]");
+console.log(estValueInFiat);
+				estTotalWalletValue = estTotalWalletValue + estValueInFiat;
+
+
+		})
+
+			return estTotalWalletValue
+	}
+
+
+
+
+	const sortedBalances = (walletId)=> {
+		if(!walletId) return [];
+		console.log(walletId)
+		let balances = {...wallet.wallets[walletId].confirmedBalance};
+
+
+
+		console.log("balances")
+		console.log(balances)
+
+				
+		Object.keys(balances).filter((hyper)=>{
+
+			if(hyper==='timestamp') return false;
+const acronym = getCoinData({ selectedCrypto: hyper }).acronym
+
+console.log("acronym]");
+console.log(acronym);
+
+
+				let balance = balances[hyper];
+				balance = Number(balance / 100000000);
+
+
+console.log("balance]");
+console.log(balance);
+
+let exchangeRate = priceInSatoshi(acronym)
+console.log("exchangeRate]");
+console.log(exchangeRate);
+
+
+let btcrate = 1/fiatInBitcoin(acronym)
+console.log("btcrate]");
+console.log(btcrate);
+
+
+				let estValueInFiat = ((balance * exchangeRate )  *btcrate);
+
+console.log("estValueInFiat]");
+console.log(estValueInFiat);
+
+				balances[hyper] = estValueInFiat;
+
+		})
+
+
+	    return Object.keys(balances).sort((a, b) => balances[b] - balances[a]).reduce((r, k) => (r[k] = balances[k], r), {});
+
+
+
+
+	}
 
 	return (
 		<View style={styles.container}>
-			<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={styles.innerContainer}>
-				
+
 				<View style={styles.header}>
 					<Text style={[styles.headerText ]}>
 						{getWalletName()}
 					</Text>
+					<Text style={[styles.headerBalance ]}>
+						${formatNumber(Number(getEstWalletValue(walletId)).toFixed(2))} 
+					</Text>
+				</View>
+				<View style={styles.headerBalanceContainer}>
+
+{/*						
+
+	      <View style={[styles.box, { transform: [{ rotateZ: "90deg" }] }] }>
+				<Text style={[styles.headerFiatSign]}>
+					{selectedCurrency.toUpperCase()}
+				</Text>
+			</View>
+*/}
+
 				</View>
 				
+			<ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} style={styles.innerContainer}>
+				
 				<View style={styles.scrollViewContent}>
-					{availableCoins.map((coin, i) => {
-						if (!displayTestnet && coin.toLowerCase().includes("testnet")) return;
 
-						let balance = wallet.wallets[walletId].confirmedBalance[coin];
+
+					{Object.keys(sortedBalances(walletId)).map((coin, i) => {
+						if (!displayTestnet && coin.toLowerCase().includes("testnet")) return;
+						if (coin.toLowerCase().includes("timestamp")) return;
+
+						let seed = wallet.wallets[walletId]
+						let balance = seed.confirmedBalance[coin];
+						const acronym = getCoinData({ selectedCrypto: coin }).acronym
+
+						{/*let balance = wallet.wallets[walletId].confirmedBalance[coin];*/}
 
 						return (
 							<CoinButton
@@ -144,12 +295,28 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 								label={capitalize(coin)}
 								onCoinPress={() => onCoinPress({coin, walletId})}
 								walletId={walletId}
-								balance={balance}
+								acronym={acronym}
+								balance={ balance / 100000000 }
 								cryptoUnit={cryptoUnit}
 								selectedCrypto={coin}
 								selectedCurrency={selectedCurrency}
+
+								priceInSatoshi={priceInSatoshi(acronym)}
+								estValueInSatoshi={(balance / 100000000) * priceInSatoshi(acronym)}
+								estValueInFiat={((balance / 100000000) * priceInSatoshi(acronym)*fiatInBitcoin(acronym))}
+								fiatPrice={fiatRate(acronym) * (1/fiatInBitcoin(acronym))}
+
+								fiatBalance={((balance / 100000000) * priceInSatoshi(acronym)*(1/fiatInBitcoin(acronym)))}
+
+
+
+								selectedCryptoByName={getCoinData({ selectedCrypto: coin }).label}
 								fiatSymbol={fiatSymbol}
-								fiatRate={fiatRate()}
+								fiatInBitcoin={fiatInBitcoin(selectedCurrency)}
+								fiatValue={(fiatRate(selectedCurrency) * ( 1/ fiatInBitcoin(acronym)))}
+								fiatSign={String(selectedCurrency).toUpperCase()}
+								fiatRate={fiatRate(selectedCurrency)}
+								exchangeRate={(fiatRate(selectedCurrency))}
 							/>
 						);
 					})}
@@ -188,27 +355,50 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent"
 	},
 	header: {
-		marginBottom: 6
+		borderBottomWidth: 1,
+		borderBottomColor: "#8888",
+		width: "100%"
+
+	},
+	headerBalanceContainer: {
+		flexDirection: "row",
+	},
+	headerBalance: {
+		...systemWeights.regular,
+		fontFamily: 'monospace',
+		fontSize: 24,
+		textAlign: "center",
+		paddingTop: 3,
+		paddingBottom: 3,
+	},
+	headerFiatSign: {
+		...systemWeights.regular,
+		fontSize: 10,
+		textAlign: "center",
+		paddingTop: 3,
+		paddingBottom: 3,
 	},
 	headerText: {
 		...systemWeights.thin,
-		fontSize: 28,
+		fontSize: 21,
 		textAlign: "center"
 	},
 	innerContainer: {
 		flex: 1,
 		backgroundColor: "transparent",
-		height: height * .9,
-		width: width * .9
+		height: height * 1,
+		width: width * 1,
+		paddingHorizontal: width * 0.05
 	},
 	scrollViewContent: {
 		alignItems: "center",
-		justifyContent: "flex-start"
+		justifyContent: "flex-start",
+		margin: 6
 	},
 	deleteButton: {
 		width: "100%",
 		minHeight: 40,
-		marginBottom: 15,
+		marginBottom: 35,
 		borderRadius: 6,
 		borderWidth: 1,
 		backgroundColor: `${colors.danger}22`,

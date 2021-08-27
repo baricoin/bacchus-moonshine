@@ -92,7 +92,7 @@ const _WalletCarousel = ({ wallet = { wallets: {}, selectedWallet: "wallet0", wa
 					containerStyle={styles.paginationContainer}
 					dotColor={'rgba(255, 255, 255, 0.92)'}
 					dotStyle={styles.paginationDot}
-					inactiveDotColor={colors.black}
+					inactiveDotColor={'#777'}
 					inactiveDotOpacity={0.7}
 					inactiveDotScale={0.8}
 					// @ts-ignore
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "transparent"
 	},
 	walletContainer: {
-		marginVertical: 20
+		marginTop: 20
 	},
 	slider: {
 		marginTop: 15

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: Platform.OS === "ios" ? "80%" : "94%",
 		borderWidth: 1,
-		borderRadius: 6
+		borderRadius: 3,
 	},
 	modalScrollView: {
 		flex: 1,

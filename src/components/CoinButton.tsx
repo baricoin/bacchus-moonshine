@@ -3,8 +3,6 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	Image,
-	Dimensions,
-	PixelRatio
 } from "react-native";
 import PropTypes from "prop-types";
 import { systemWeights } from "react-native-typography";
@@ -13,29 +11,11 @@ import { Text, View } from "../styles/components";
 
 const { eCoinCore } = require("../utils/ecoincore");
 
-
-const {
-  width: SCREEN_WIDTH,
-  height: SCREEN_HEIGHT,
-} = Dimensions.get('window');
-
-// based on iphone 5s's scale
-const scale = SCREEN_WIDTH / 320;
-
-export function normalize(size) {
-  const newSize = size * scale 
-  if (Platform.OS === 'ios') {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize))
-  } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
-  }
-}
-
-
 const {
 	formatNumber,
 	getFiatBalance,
-	getExchangeRate
+	getExchangeRate,
+	normalize
 } = require("../utils/helpers");
 
 const {
@@ -91,26 +71,38 @@ const isInfinite = (n) => {
   return n === n/0;
 }
 
-const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, fiatValue, selectedCurrency}: CoinButtonComponent) => {
-	let acronym = getCoinData({ selectedCrypto: coin, cryptoUnit }).acronym
-	let exchangeRate = 0;
-	let fiatRate = 0;
-	let fiatSymbol = "";
+const _CoinButton = (
+	{ onCoinPress, cryptoUnit, coin, label, walletId, balance, fiatSign, 
+		selectedCryptoByName, fiatPrice, fiatSymbol, selectedCrypto, fiatValue, 
+		fiatBalance, exchangeRate, selectedCurrency,fiatInBitcoin, acronym, priceInSatoshi, estValueInSatoshi, estValueInFiat
 
-	if(eCoinCore.collections && eCoinCore.collections.ExchangeRates){
-		exchangeRate = eCoinCore.collections.ExchangeRates.findOne({call: acronym});
-		if(exchangeRate) exchangeRate = exchangeRate.rate
+	}: CoinButtonComponent) => {
+	// let acronym = getCoinData({ selectedCrypto: coin, cryptoUnit }).acronym
+	// let exchangeRate = 0;
+	// let fiatRate = 0;
+	// let fiatSymbol = "";
 
-		fiatRate = eCoinCore.collections.ExchangeRates.findOne({call: String(selectedCurrency).toUpperCase()})
-		if(fiatRate) {
-			fiatSymbol = fiatRate.symbol
-			fiatRate = fiatRate.rate
-		}
+	// if(eCoinCore.collections && eCoinCore.collections.ExchangeRates){
+	// 	exchangeRate = eCoinCore.collections.ExchangeRates.findOne({call: acronym});
+	// 	if(exchangeRate) exchangeRate = exchangeRate.rate
 
-	}
+	// 	fiatRate = eCoinCore.collections.ExchangeRates.findOne({call: String(selectedCurrency).toUpperCase()})
+	// 	if(fiatRate) {
+	// 		fiatSymbol = fiatRate.symbol
+	// 		fiatRate = fiatRate.rate
+	// 	}
 
-	let fiatPrice = Number(exchangeRate / fiatRate)
-	let fiatBalance = Number(fiatPrice * (balance/100000000)).toFixed(2);
+	// }
+
+	// let fiatPrice = Number(exchangeRate / fiatRate)
+	// let fiatBalance = Number(fiatPrice * (balance/100000000)).toFixed(2);
+
+	if(fiatBalance < .1) { 
+		fiatBalance = Number(fiatBalance).toFixed(4);
+	} else if(fiatBalance < 1) {
+		fiatBalance = Number(fiatBalance).toFixed(3);
+	} else fiatBalance = Number(fiatBalance).toFixed(2);
+
 
 	if(fiatPrice < .1) { 
 		fiatPrice = Number(fiatPrice).toFixed(4);
@@ -119,14 +111,15 @@ const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, 
 	} else fiatPrice = Number(fiatPrice).toFixed(2);
 
 
+
 	let brandStyle = {
 		width: "100%",
 		flexDirection: "row",
 		backgroundColor: `${getCoinData({selectedCrypto:coin}).color}16`,
 		borderColor: `${getCoinData({selectedCrypto:coin}).color}88`,
 		borderWidth: 1,
-		borderRadius: 6,
-		marginBottom: 6,
+		borderRadius: normalize(6),
+		marginBottom: normalize(6),
 	}
 
 	return (
@@ -136,11 +129,41 @@ const _CoinButton = ({ onCoinPress, cryptoUnit, coin, label, walletId, balance, 
 					style={styles.buttonImage}
 					source={getCoinImage(coin)}
 				/>
-				{fiatRate && !isInfinite(fiatRate) && 
+				{exchangeRate && !isInfinite(exchangeRate) && 
 					<View type='transparent'>
-						<Text type="text" style={styles.subText}>{getCoinData({selectedCrypto:coin}).label}</Text>
-						<Text type="text" style={styles.text}>{fiatSymbol} {formatNumber(fiatBalance)}</Text>
-						<Text type="text" style={styles.subText}>{formatBalance({ balance, coin, cryptoUnit })} @ {fiatSymbol} {fiatPrice}</Text>
+					<View style={styles.leftHandContainer}>
+						<Text type="text" style={styles.title}>{selectedCryptoByName}</Text>
+
+						<Text type="text" style={styles.subText}>{Number(priceInSatoshi).toFixed(8)} BTC</Text>
+						<Text type="text" style={styles.subText}>{fiatSymbol}{formatNumber(fiatPrice)} {fiatSign}</Text>
+					</View>
+
+					<View style={styles.rightHandContainer}>
+						<Text type="text" style={styles.balance}>{balance.toFixed(8)}</Text>
+						<Text type="text" style={styles.subBalance}>{Number(estValueInSatoshi).toFixed(8)} BTC</Text>
+						<Text type="text" style={styles.subBalance}>{fiatSymbol}{formatNumber(fiatBalance)} {fiatSign}</Text>
+					</View>
+
+{/*						
+	<Text type="text" style={styles.subText}>coin: {formatNumber(coin)}</Text>
+	<Text type="text" style={styles.subText}>label: {formatNumber(label)}</Text>
+	<Text type="text" style={styles.subText}>balance: {formatNumber(balance)}</Text>
+	<Text type="text" style={styles.subText}>fiatValue: {fiatValue}</Text>
+	<Text type="text" style={styles.subText}>fiatInBitcoin: {formatNumber(fiatInBitcoin)}</Text>
+	<Text type="text" style={styles.subText}>acronym: {acronym}</Text>
+	<Text type="text" style={styles.subText}>priceInSatoshi: {Number(priceInSatoshi).toFixed(8)}</Text>
+	<Text type="text" style={styles.subText}>fiatPrice: {formatNumber(fiatPrice)}</Text>
+	<Text type="text" style={styles.subText}>fiatBalance: {fiatBalance}</Text>
+	<Text type="text" style={styles.subText}>selectedCryptoByName: {selectedCryptoByName}</Text>
+	<Text type="text" style={styles.subText}>estValueInFiat: {estValueInFiat}</Text>
+	<Text type="text" style={styles.subText}>fiatSymbol: {formatNumber(fiatSymbol)}</Text>
+	<Text type="text" style={styles.subText}>exchangeRate: {formatNumber(exchangeRate)}</Text>
+	<Text type="text" style={styles.subText}>fiatSign: {formatNumber(fiatSign)}</Text>
+	<Text type="text" style={styles.subText}>selectedCrypto: {formatNumber(selectedCrypto)}</Text>
+	<Text type="text" style={styles.subText}>selectedCurrency: {formatNumber(selectedCurrency)}</Text>
+*/}
+
+
 					</View>
 				||
 					<View type='transparent'>
@@ -166,34 +189,74 @@ _CoinButton.propTypes = {
 const styles = StyleSheet.create({
 	button: {
 		width: "82%",
-		minHeight: 60,
+		minHeight: normalize(60),
 		flexDirection: "row",
 		backgroundColor: "transparent",
-		marginBottom: 15
+		marginBottom: normalize(15)
 	},
 	buttonContent: {
 		flex: 1,
 		backgroundColor: "transparent",
-		justifyContent: "center",
-		padding: 10,
-		minHeight: normalize(76)
+		padding: normalize(10),
+		minHeight: normalize(60)
 	},
 	buttonImage: {
-		width: normalize(64),
-		height: normalize(64),
+		width: normalize(20),
+		height: normalize(20),
 		position: "absolute",
 		alignItems: "center",
 		justifyContent: "center",
-		left: 4
+    opacity: 0.9,
+    top: normalize(34),
+    left: normalize(10)
+
+
+	},
+	leftHandContainer: {
+		position: "absolute",
+		textAlign: "left",
+		left: normalize(26)
+	},
+	rightHandContainer: {
+		position: "absolute",
+		textAlign: "right",
+		right: 0,
+
+	},
+	title: {
+		...systemWeights.regular,
+		marginBottom: normalize(3),
+		fontSize: normalize(19),
+		marginLeft: normalize(-22)
+	},
+	balance: {
+		...systemWeights.bold,
+		fontSize: normalize(16),
+		marginBottom: normalize(3),
+		marginTop: normalize(2),
+		textAlign: "right",
+		fontFamily: 'monospace'
 	},
 	text: {
 		...systemWeights.semibold,
 		fontSize: normalize(21),
 		textAlign: "right"
 	},
+	subBalance: {
+		...systemWeights.regular,
+		fontSize: normalize(12),
+		textAlign: "right",
+		fontFamily: 'monospace'
+	},
 	subText: {
 		...systemWeights.regular,
-		fontSize: normalize(14),
+		fontSize: normalize(12),
+		textAlign: "left",
+		fontFamily: 'monospace'
+	},
+	unsubText: {
+		...systemWeights.regular,
+		fontSize: normalize(19),
 		textAlign: "right"
 	},
 	errorText: {
