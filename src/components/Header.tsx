@@ -105,19 +105,19 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 	return (
 		<TouchableOpacity style={styles.container} activeOpacity={activeOpacity} onPress={_onSelectCoinPress}>
 			{walletName !== "" &&
-			<Text style={[styles.cryptoValue, { fontSize: fontSize/2 }]}>{walletName}{compress && `: ${getCryptoLabel({selectedCrypto})}`}</Text>}
-			{!compress && <Text style={[styles.cryptoValue, { fontSize: fontSize/1.8, ...selectedCryptoStyle }]}>{getCryptoLabel({selectedCrypto})}</Text>}
+			<Text style={[styles.header, { fontSize: fontSize/2 }]}>{walletName}{compress && `: ${getCryptoLabel({selectedCrypto})}`}</Text>}
+			{!compress && <Text style={[styles.cryptoHeader, { fontSize: fontSize/1.8, ...selectedCryptoStyle }]}>{getCryptoLabel({selectedCrypto})}</Text>}
 			
-			{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(exchangeRate) && 
+			{fiatValue !== NaN && fiatValue !== 0 && !isInfinite(fiatValue) && 
 				<View style={styles.row}>
 					<View style={{ flexDirection: "row", alignItems: "center", left: -4 }}>
-						<Text style={[styles.fiatSymbol, { fontSize: fontSize/2 }]}>{fiatSymbol} </Text>
-						<Text style={[styles.fiatValue, { fontSize: fontSize/1.2 }]}>{formatNumber(fiatValue)}</Text>
+						<Text style={[styles.fiatSymbol, { fontSize: fontSize/2 }]}>{fiatSymbol}</Text>
+						<Text style={[styles.fiatValue, { fontSize: fontSize/1.2 }]}>{formatNumber(Number(fiatValue).toFixed(2))}</Text>
 					</View>
 				</View>
 			}
 				<View style={styles.cryptoValueRow}>
-					<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{Number(cryptoValue).toFixed(8)}  {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
+					<Text style={[styles.cryptoValue, { fontSize: fontSize/2.5 }]}>{cryptoValue} {getCryptoUnitLabel({ cryptoUnit, selectedCrypto })}</Text>
 				</View>
 				<View style={styles.cryptoValueRow}>
 					{bitcoinRate !== NaN && bitcoinRate !== 0 && !isInfinite(bitcoinRate) && 
