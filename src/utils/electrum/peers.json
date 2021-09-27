@@ -36,7 +36,6 @@
     {"host": "miami.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "holland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "tokyo.ecoincore.com", "ssl": 50002, "tcp": 34332 },
-    {"host": "seattle.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "mumbai.ecoincore.com", "ssl": 34333, "tcp": 34332 },
     {"host": "lenoir.ecoincore.com", "ssl": 34333, "tcp": 34332 },
   ],
