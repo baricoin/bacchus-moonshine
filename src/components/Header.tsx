@@ -1,5 +1,5 @@
 import React, {memo} from "react";
-import {StyleSheet, TouchableOpacity, View} from "react-native";
+import { StyleSheet, TouchableOpacity, View, StatusBar } from "react-native";
 import PropTypes from "prop-types";
 import bitcoinUnits from "bitcoin-units";
 import {systemWeights} from "react-native-typography";
@@ -104,6 +104,7 @@ const _Header = ({compress = false, selectedCurrency = "", fiatSymbol = "$", sel
 
 	return (
 		<TouchableOpacity style={styles.container} activeOpacity={activeOpacity} onPress={_onSelectCoinPress}>
+			<StatusBar barStyle="light-content" backgroundColor={getCoinData({selectedCrypto}).color} />
 			{walletName !== "" &&
 			<Text style={[styles.header, { fontSize: fontSize/2 }]}>{walletName}{compress && `: ${getCryptoLabel({selectedCrypto})}`}</Text>}
 			{!compress && <Text style={[styles.cryptoHeader, { fontSize: fontSize/1.8, ...selectedCryptoStyle }]}>{getCryptoLabel({selectedCrypto})}</Text>}
