@@ -111,16 +111,16 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
 		}
 	};
 	
+
+
+	// TODO: revamp this section, 
 	const fiatInBitcoin = () => {
-		// console.log(coin)
 			if(!wallet.selectedCurrency.toUpperCase()) return 0;
 			if(!rates[wallet.selectedCurrency.toUpperCase()]) return 0;
 	 		return	Number(rates[wallet.selectedCurrency.toUpperCase()].rate);
 	}
 	
-	
 	const exchangeRate = (coin) => {
-		// console.log(coin)
 			if(!wallet.selectedCurrency.toUpperCase()) return 0;
 			if(!rates[wallet.selectedCurrency.toUpperCase()]) return 0;
 	 		return	1 / Number(rates[wallet.selectedCurrency.toUpperCase()].rate);
@@ -141,113 +141,49 @@ const _WalletSliderEntry = ({ walletId = "bitcoin", wallet = { wallets: {}, sele
  		return Number(rateObj.rate);
 	};
 
-
 	const getEstWalletValue = (walletId)=> {
 		if(!walletId) return [];
-		console.log(walletId)
 		let balances = wallet.wallets[walletId].confirmedBalance;
 		let estTotalWalletValue = 0;
-
-
-
-		console.log("balances")
-		console.log(balances)
-
 				
 		Object.keys(balances).filter((hyper)=>{
 
 			if(hyper==='timestamp') return false;
-const acronym = getCoinData({ selectedCrypto: hyper }).acronym
+			const acronym = getCoinData({ selectedCrypto: hyper }).acronym
 
-console.log("acronym]");
-console.log(acronym);
+			let balance = balances[hyper];
+			balance = Number(balance / 100000000);
 
+			let exchangeRate = priceInSatoshi(acronym)
+			let btcrate = 1/fiatInBitcoin(acronym)
+			let estValueInFiat = ((balance * exchangeRate )  *btcrate);
 
-				let balance = balances[hyper];
-				balance = Number(balance / 100000000);
+			estTotalWalletValue = estTotalWalletValue + estValueInFiat;
+		});
 
-
-console.log("balance]");
-console.log(balance);
-
-let exchangeRate = priceInSatoshi(acronym)
-console.log("exchangeRate]");
-console.log(exchangeRate);
-
-
-let btcrate = 1/fiatInBitcoin(acronym)
-console.log("btcrate]");
-console.log(btcrate);
-
-
-				let estValueInFiat = ((balance * exchangeRate )  *btcrate);
-
-console.log("estValueInFiat]");
-console.log(estValueInFiat);
-				estTotalWalletValue = estTotalWalletValue + estValueInFiat;
-
-
-		})
-
-			return estTotalWalletValue
+		return estTotalWalletValue
 	}
-
-
-
 
 	const sortedBalances = (walletId)=> {
 		if(!walletId) return [];
 		console.log(walletId)
 		let balances = {...wallet.wallets[walletId].confirmedBalance};
-
-
-
-		console.log("balances")
-		console.log(balances)
-
 				
 		Object.keys(balances).filter((hyper)=>{
-
 			if(hyper==='timestamp') return false;
-const acronym = getCoinData({ selectedCrypto: hyper }).acronym
+			const acronym = getCoinData({ selectedCrypto: hyper }).acronym
 
-console.log("acronym]");
-console.log(acronym);
+			let balance = balances[hyper];
+			balance = Number(balance / 100000000);
 
-
-				let balance = balances[hyper];
-				balance = Number(balance / 100000000);
-
-
-console.log("balance]");
-console.log(balance);
-
-let exchangeRate = priceInSatoshi(acronym)
-console.log("exchangeRate]");
-console.log(exchangeRate);
-
-
-let btcrate = 1/fiatInBitcoin(acronym)
-console.log("btcrate]");
-console.log(btcrate);
-
-
-				let estValueInFiat = ((balance * exchangeRate )  *btcrate);
-
-console.log("estValueInFiat]");
-console.log(estValueInFiat);
-
-				balances[hyper] = estValueInFiat;
-
-		})
-
+			let exchangeRate = priceInSatoshi(acronym)
+			let btcrate = 1/fiatInBitcoin(acronym)
+			let estValueInFiat = ((balance * exchangeRate )  *btcrate);
+			balances[hyper] = estValueInFiat;
+		});
 
 	    return Object.keys(balances).sort((a, b) => balances[b] - balances[a]).reduce((r, k) => (r[k] = balances[k], r), {});
-
-
-
-
-	}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -262,14 +198,13 @@ console.log(estValueInFiat);
 				</View>
 				<View style={styles.headerBalanceContainer}>
 
-{/*						
-
-	      <View style={[styles.box, { transform: [{ rotateZ: "90deg" }] }] }>
-				<Text style={[styles.headerFiatSign]}>
-					{selectedCurrency.toUpperCase()}
-				</Text>
-			</View>
-*/}
+					{/*						
+					<View style={[styles.box, { transform: [{ rotateZ: "90deg" }] }] }>
+						<Text style={[styles.headerFiatSign]}>
+							{selectedCurrency.toUpperCase()}
+						</Text>
+					</View>
+					*/}
 
 				</View>
 				
@@ -307,8 +242,6 @@ console.log(estValueInFiat);
 								fiatPrice={fiatRate(acronym) * (1/fiatInBitcoin(acronym))}
 
 								fiatBalance={((balance / 100000000) * priceInSatoshi(acronym)*(1/fiatInBitcoin(acronym)))}
-
-
 
 								selectedCryptoByName={getCoinData({ selectedCrypto: coin }).label}
 								fiatSymbol={fiatSymbol}
