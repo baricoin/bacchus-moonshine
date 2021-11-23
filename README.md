@@ -10,7 +10,7 @@ The Canada eCoin mobile wallet is a fork of the [Moonshine wallet by Corey Phill
 
 <p style="align-items: center">
   <img src="./src/assets/screenshots/send_transaction.png" width="30%" alt="Send Transaction" />
-  <img src="./src/assets/screenshots/cdn-moonshine-2021-05-15.gif" width="30%" alt="Main"/> 
+  <img src="./src/assets/screenshots/cdn-moonshine-2021-11-23.gif" width="30%" alt="Main"/> 
   <img src="./src/assets/screenshots/receive_transaction.png" width="30%" alt="Receive Transaction" />
 </p>
 
