@@ -1,26 +1,15 @@
 // https://en.bitcoin.it/wiki/List_of_address_prefixes
 const networks = {
-	canadaecoin: {
-		messagePrefix: '\x19Canada eCoin Signed Message:\n',
-		bech32: 'cdn',
+	baricoin: {
+		messagePrefix: '\Bari Coin Signed Message:\n',
+		bech32: 'bari',
 		bip32: {
 			public: 0x0488b21e,
 			private: 0x0488ade4
 		},
-		pubKeyHash: 0x1c,
-		scriptHash: 0x05,
-		wif: 0x9C
-	},
-	auroracoin: {
-		messagePrefix: "\x1bAuroracoin Signed Message:\n",
-		bech32: 'aur',
-		bip32: {
-			public: 0x0488b21e,
-			private: 0x0488ade4
-		},
-		pubKeyHash: 0x17,
-		scriptHash: 0x5,
-		wif: 0xb0
+		pubKeyHash: 0x1a,
+		scriptHash: 0x15,
+		wif: 0x9a
 	},
 	bitcoin: {
 		messagePrefix: '\x18Bitcoin Signed Message:\n',
@@ -43,27 +32,14 @@ const networks = {
 		pubKeyHash: 0x30,
 		scriptHash: 0x32,
 		wif: 0xb0
-	},
-	egulden: {
-		messagePrefix: '\x19Egulden Signed Message:\n',
-		bech32: 'efl',
-		bip32: {
-			public: 0x0488b21e,
-			private: 0x0488ade4
-		},
-		pubKeyHash: 0x30,
-		scriptHash: 0x05,
-		wif: 0xb0
 	}
 };
 
 //Max amount of BTC/LTC.
 const maxCoins = {
-	canadaecoin: 11250000000000000,
+	baricoin: 1000000000000000000,
 	bitcoin: 2100000000000000,
 	litecoin: 8400000000000000,
-	auroracoin: 2331805500000000,
-	egulden: 2100000000000000,
 };
 
 //Returns an array of all available coins from the networks object.
@@ -72,35 +48,27 @@ const availableCoins = Object.keys(networks).map(coin => coin);
 const supportsRbf = {
 	bitcoin: true,
 	litecoin: false,
-	canadaecoin: false,
-	auroracoin: true,
-	egulden: false,
+	baricoin: true
 };
 
 const zeroValueItems = {
 	bitcoin: 0,
 	litecoin: 0,
-	canadaecoin: 0,
-	auroracoin: 0,
-	egulden: 0,
+	baricoin: 0,
 	timestamp: null
 };
 
 const arrayTypeItems = {
 	bitcoin: [],
 	litecoin: [],
-	canadaecoin: [],
-	auroracoin: [],
-	egulden: [],
+	baricoin: [],
 	timestamp: null
 };
 
 const objectTypeItems = {
 	bitcoin: {},
 	litecoin: {},
-	canadaecoin: {},
-	auroracoin: {},
-	egulden: {},
+	baricoin: {},
 	timestamp: null
 };
 
@@ -125,27 +93,21 @@ const defaultWalletShape = {
 		bitcoinTestnet: "84",
 		litecoin: "44",
 		litecoinTestnet: "44",
-		canadaecoin: "44",
-		auroracoin: "44",
-		egulden: "44",
+		baricoin: "44",
 	},
 	coinTypePath: {
 		bitcoin: "0",
 		bitcoinTestnet: "1",
 		litecoin: "2",
 		litecoinTestnet: "1",
-		canadaecoin: "34",
-		auroracoin: "85",
-		egulden: "78",
+		baricoin: "810",
 	},
 	addressType: { //Accepts bech32, segwit, legacy
 		bitcoin: "bech32",
 		bitcoinTestnet: "bech32",
 		litecoin: "legacy",
 		litecoinTestnet: "legacy",
-		canadaecoin: "legacy",
-		auroracoin: "legacy",
-		egulden: "legacy",
+		baricoin: "legacy",
 	},
 	rbfData: objectTypeItems
 };
@@ -160,23 +122,19 @@ const getCoinImage = (coin = "bitcoin") => {
 				return require(`../assets/ecoins/bitcoin.png`);
 			case "litecoin":
 				return require(`../assets/ecoins/litecoin.png`);
-			case "canadaecoin":
-				return require(`../assets/ecoins/canadaecoin.png`);
-			case "auroracoin":
-				return require(`../assets/ecoins/auroracoin.png`);
-			case "egulden":
-				return require(`../assets/ecoins/egulden.png`);
+			case "baricoin":
+				return require(`../assets/ecoins/baricoin.png`);
 			default:
-				return require(`../assets/ecoins/canadaecoin.png`);
+				return require(`../assets/ecoins/baricoin.png`);
 		}
 	} catch (e) {
-		return require(`../assets/ecoins/canadaecoin.png`);
+		return require(`../assets/ecoins/baricoin.png`);
 	}
 };
 
-const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => {
+const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 	try {
-		let acronym = "CDN";
+		let acronym = "BARI";
 		let satoshi = "bit";
 		let oshi = "bits";
 		let blockTime = 5; //min
@@ -195,38 +153,24 @@ const getCoinData = ({ selectedCrypto = "canadaecoin", cryptoUnit = "CDN" }) => 
 				blockTime = 2.5;
 				color = "#444444";
 				return { acronym, label: "Litecoin", crypto: "LTC", satoshi, oshi, blockTime, color };
-			case "canadaecoin":
+			case "baricoin":
 				return {
-					acronym: cryptoUnit === "satoshi" ? "bits" : "CDN",
-					label: "Canada eCoin",
-					crypto: "CDN",
+					acronym: cryptoUnit === "satoshi" ? "bits" : "BARI",
+					label: "Bari Coin",
+					crypto: "BARI",
 					satoshi: "bit",
 					oshi: "bits",
-					blockTime: 5,
+					blockTime: 1,
 					color: "#90191c"
 				};
-			case "auroracoin":
-				satoshi = "satoshi";
-				oshi = "sats";
-				acronym = cryptoUnit === "satoshi" ? "sats" : "AUR";
-				blockTime = 300;
-				color = "#0A6C5E";
-				return { acronym, label: "Auroracoin", crypto: "AUR", satoshi, oshi, blockTime, color };
-			case "egulden":
-				satoshi = "satoshi";
-				oshi = "sats";
-				acronym = cryptoUnit === "satoshi" ? "sats" : "EFL";
-				blockTime = 120;
-				color = "#FF940B";
-				return { acronym, label: "eGulden", crypto: "EFL", satoshi, oshi, blockTime, color };
 			default:
 				return {
-					acronym: cryptoUnit === "satoshi" ? "bits" : "CDN",
-					label: "Canada eCoin",
-					crypto: "CDN",
+					acronym: cryptoUnit === "satoshi" ? "bits" : "BARI",
+					label: "Bari Coin",
+					crypto: "BARI",
 					satoshi: "bit",
 					oshi: "bits",
-					blockTime: 5,
+					blockTime: 1,
 					color: "#90191c"
 				};
 		}

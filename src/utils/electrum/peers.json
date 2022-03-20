@@ -31,23 +31,8 @@
     {"host": "ltc.rentonisk.com", "ssl": 50002, "tcp": 50001},
     // {"host": "ltc.litepay.ch", "ssl": 50002, "tcp": 50001}
   ],
-  "canadaecoin": [
-    {"host": "woolloomooloo.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "miami.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "holland.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "tokyo.ecoincore.com", "ssl": 50002, "tcp": 34332 },
-    {"host": "mumbai.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-    {"host": "lenoir.ecoincore.com", "ssl": 34333, "tcp": 34332 },
-  ],
-  "auroracoin": [
-    {"host": "lenoir.ecoincore.com", "ssl": 12343, "tcp": 12342 },
-    {"host": "electrumx.aur.ewmcx.info", "ssl": 50002, "tcp": 12342 },
-    {"host": "failover.aur.ewmcx.biz", "ssl": 50002, "tcp": 12342 },
-  ],
-  "egulden": [
-    {"host": "holland.ecoincore.com", "ssl": 11017, "tcp": 11016 },
-    {"host": "lenoir.ecoincore.com", "ssl": 11017, "tcp": 11016 },
-    {"host": "46.101.220.249", "ssl": 11017, "tcp": 11016 },
-    {"host": "136.144.210.129", "ssl": 50002, "tcp": 50001 },
+  "baricoin": [
+    {"host": "baricoin.clear-net.jp", "ssl": 50001, "tcp": 50002 },
+    {"host": "baripool.f5.si", "ssl": 50001, "tcp": 50002}
   ]
 }

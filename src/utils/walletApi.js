@@ -387,12 +387,7 @@ const fallbackBroadcastTransaction = async ({ rawTx = "", selectedCrypto = "bitc
 				response = await fetch(`https://chain.so/api/v2/send_tx/ltc`, fetchData("POST", { tx_hex: rawTx }));
 				response = await response.json();
 				response = response.status === "success" ? response.data.txid : "";
-				break;
-			case "canadaecoin":
-				response = await fetch(`https://explorer.canadaecoin.ca/api/sendrawtransaction`, fetchData("POST", { tx_hex: rawTx }));
-				response = await response.json();
-				response = response.status === "success" ? response.data.txid : "";
-				break;				
+				break;			
 			case "litecoinTestnet":
 				response = await fetch(`https://chain.so/api/v2/send_tx/ltctest`, fetchData("POST", { tx_hex: rawTx }));
 				response = await response.json();

@@ -1100,7 +1100,7 @@ class Settings extends PureComponent {
 							/>
 
 							<SettingGeneral
-								value={'The Canada eCoin Project\ncanadaecoin.site'}
+								value={'The Bari Coin Project\ngithub.com/asuka431'}
 								col1Image={<MaterialCommunityIcons name="web" size={32} />}
 								onPress={this.visitWebsite}
 								valueStyle={{ fontSize: 14, textAlign: "center", fontWeight: "bold" }}

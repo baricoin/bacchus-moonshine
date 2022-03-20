@@ -32,7 +32,7 @@ const _Welcome = ({ onClose = () => null, children = <View /> } = {}) => {
 	if (Platform.OS === "ios") useEffect(() => LayoutAnimation.easeInEaseOut());
 	return (
 		<View style={styles.container}>
-			<Text style={styles.header}>Canada eCoin Mobile</Text>
+			<Text style={styles.header}>moonshine Coin Mobile</Text>
 			<Image
 				style={styles.icon}
 				source={require("../assets/logo/main_icon.png")}

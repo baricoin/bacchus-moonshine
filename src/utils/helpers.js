@@ -678,9 +678,7 @@ const openTxId = (txid = "", selectedCrypto = ""): void => {
 	if (selectedCrypto === "bitcoinTestnet") url = `https://blockstream.info/testnet/tx/${txid}`;
 	if (selectedCrypto === "litecoin") url = `https://chain.so/tx/LTC/${txid}`;
 	if (selectedCrypto === "litecoinTestnet") url = `https://chain.so/tx/LTCTEST/${txid}`;
-	if (selectedCrypto === "canadaecoin") url = `https://chainz.cryptoid.info/cdn/tx.dws?${txid}.htm`;
-	if (selectedCrypto === "auroracoin") url = `https://chainz.cryptoid.info/aur/tx.dws?${txid}.htm`;
-	if (selectedCrypto === "egulden") url = `https://chainz.cryptoid.info/efl/tx.dws?${txid}.htm`;
+	if (selectedCrypto === "baricoin") url = `https://chainz.cryptoid.info/bari/tx.dws?${txid}.htm`;
 	openUrl(url);
 };
 
@@ -931,8 +929,8 @@ const sortArrOfObjByKey = (arr = [], key = "", ascending = true) => {
 
 const getFiatBalance = ({ balance = 0, exchangeRate = 0 } = {}) => {
 	try {
-		bitcoinUnits.setFiat("cad", exchangeRate);
-		const fiatBalance = bitcoinUnits(balance, "satoshi").to("cad").value().toFixed(2);
+		bitcoinUnits.setFiat("jpy", exchangeRate);
+		const fiatBalance = bitcoinUnits(balance, "satoshi").to("jpy").value().toFixed(2);
 		if (isNaN(fiatBalance)) return 0;
 		return Number(fiatBalance);
 	} catch (e) {
@@ -943,8 +941,8 @@ const getFiatBalance = ({ balance = 0, exchangeRate = 0 } = {}) => {
 const cryptoToFiat = ({ amount = 0, exchangeRate = 0 } = {}) => {
 	try {
 		amount = Number(amount);
-		bitcoinUnits.setFiat("cad", exchangeRate);
-		return bitcoinUnits(amount, "satoshi").to("cad").value().toFixed(2);
+		bitcoinUnits.setFiat("jpy", exchangeRate);
+		return bitcoinUnits(amount, "satoshi").to("jpy").value().toFixed(2);
 	} catch(e) {
 		console.log(e);
 	}
@@ -960,8 +958,8 @@ const satsToBtc = ({amount = 0 } = {}) => {
 const fiatToCrypto = ({ amount = 0, exchangeRate = 0 } = {}) => {
 	try {
 		amount = Number(amount);
-		bitcoinUnits.setFiat("cad", exchangeRate);
-		return bitcoinUnits(amount, "cad").to("satoshi").value().toFixed(0);
+		bitcoinUnits.setFiat("jpy", exchangeRate);
+		return bitcoinUnits(amount, "jpy").to("satoshi").value().toFixed(0);
 	} catch (e) {
 		console.log(e);
 	}
