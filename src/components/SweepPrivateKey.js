@@ -849,7 +849,7 @@ class SendTransaction extends PureComponent {
 			const utxos = wallet.utxos[selectedCrypto] || [];
 			const confirmedBalance = wallet.confirmedBalance[selectedCrypto];
 			const changeAddressIndex = wallet.changeAddressIndex[selectedCrypto];
-			const transactionFee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
+			const transactionFee = Number(this.props.transaction.recommendedFee);
 			const amount = Number(this.props.transaction.amount);
 			const message = this.props.transaction.message;
 			const addressType = wallet.addressType[selectedCrypto];
