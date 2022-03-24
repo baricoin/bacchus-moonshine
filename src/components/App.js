@@ -575,7 +575,7 @@ export default class App extends Component {
 
 			//Update the recommended fee for the selected coin.
 			const transactionSize = getByteCount({ [addressType]: utxoLength }, { [addressType]: 2 });
-			this.props.getRecommendedFee({ coin: this.props.wallet.selectedCrypto, transactionSize });
+			this.props.getRecommendedFeeRate({ coin: this.props.wallet.selectedCrypto, transactionSize });
 
 			//Update status of the user-facing loading message and progress bar
 			if (ignoreLoading === false) this.setState({

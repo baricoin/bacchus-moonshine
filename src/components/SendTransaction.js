@@ -527,7 +527,7 @@ class SendTransaction extends Component {
 			if (!this.props.transaction.feeTimestamp || difference > 10) {
 				const { selectedCrypto } = this.props.wallet;
 				const transactionSize = this.getTransactionByteCount();
-				const result = await this.props.getRecommendedFee({coin: selectedCrypto, transactionSize});
+				const result = await this.props.getRecommendedFeeRate({coin: selectedCrypto, transactionSize});
 
 				//Ensure we have a valid recommendedFee
 				if (result.data.recommendedFee && !isNaN(Number(result.data.recommendedFee))) {

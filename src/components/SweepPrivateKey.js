@@ -194,7 +194,7 @@ class SendTransaction extends PureComponent {
 			utxos = utxos.concat(this.state.privateKeyData.p2shUtxos);
 			utxos = utxos.concat(this.state.privateKeyData.p2pkhUtxos);
 			const transactionSize = getByteCount({[addressType]:utxos.length},{[addressType]:1});
-			const result = await this.props.getRecommendedFee({ coin: selectedCrypto, transactionSize });
+			const result = await this.props.getRecommendedFeeRate({ coin: selectedCrypto, transactionSize });
 
 			//Ensure we have a valid recommendedFee
 			if (result.data.recommendedFee && !isNaN(Number(result.data.recommendedFee))) {

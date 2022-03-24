@@ -19,15 +19,12 @@ export const resetTransaction = (payload) => ({
 /*
 TODO:
 Recommended fees are always grossly overestimated.
-Until this is resolved, getRecommendedFee divides that estimation by 4.
+Until this is resolved, getRecommendedFeeRate divides that estimation by 4.
  */
-export const getRecommendedFee = ({ coin = "bitcoin", transactionSize = 256 } = {}) => (dispatch) => {
+export const getRecommendedFeeRate = ({ coin = "bitcoin", transactionSize = 256 } = {}) => (dispatch) => {
     return new Promise(async (resolve) => {
-        let minFeerate = 10000;
-        let recommendedFee = transactionSize * minFeerate;
-        
-        let maxFeerate = 100000;
-        let maximumFee = transactionSize * maxFeerate;
+        let recommendedFee = 10000;
+        let maximumFee = recommendedFee * 10;
 
         const feeTimestamp = moment().format();
         const data = {
