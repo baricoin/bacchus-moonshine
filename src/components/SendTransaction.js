@@ -232,7 +232,7 @@ class SendTransaction extends Component {
 	getTotalFee = (fee = 0, transactionSize = 0) => {
 		try {
 			if (!fee || isNaN(fee)) {
-				fee = this.props.transaction.recommendedFee;
+				fee = this.props.transaction.fee;
 			}
 			if (!transactionSize || isNaN(transactionSize)) {
 				transactionSize = this.props.transaction.transactionSize;
@@ -257,7 +257,7 @@ class SendTransaction extends Component {
 			if (exchangeRate === 0 || !this.state.cryptoBalance) return { crypto, fiat };
 
 			//Calculate crypto & fiat fees.
-			const fee = Number(this.props.transaction.recommendedFee);
+			const fee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
 			crypto = this.getTotalFee(fee);
 			fiat = cryptoToFiat({ amount: crypto, exchangeRate: this.fiatRate() });
 
@@ -314,7 +314,7 @@ class SendTransaction extends Component {
 			const { selectedWallet, selectedCrypto } = this.props.wallet;
 			const walletBalance = this.props.wallet.wallets[selectedWallet].confirmedBalance[selectedCrypto];
 			const amount = this.props.transaction.amount;
-			const fee = this.props.transaction.recommendedFee;
+			const fee = this.props.transaction.fee || this.props.transaction.recommendedFee;
 			const totalFee = this.getTotalFee(fee);
 			const total = Number(amount) + Number(totalFee);
 			return Number(walletBalance) >= total;
@@ -345,7 +345,7 @@ class SendTransaction extends Component {
 		try {
 
 			//"spendMaxAmount" will not send funds back to a changeAddress and thus have one less output so we need to update the transactionSize accordingly.
-			const recommendedFee = this.props.transaction.recommendedFee;
+			const recommendedFee = this.props.transaction.fee || this.props.transaction.recommendedFee;
 			const walletBalance = this.state.cryptoBalance;
 			if (!walletBalance) return; //No need to continue if there's no balance
 			const { selectedCrypto, selectedWallet } = this.props.wallet;
@@ -453,7 +453,7 @@ class SendTransaction extends Component {
 			satoshiAmount = fiatToCrypto({ amount: Number(amount), exchangeRate: this.fiatRate() });
 		}
 
-		const fee = Number(this.props.transaction.recommendedFee);
+		const fee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
 		const totalFee = this.getTotalFee(fee);
 		const walletBalance = Number(this.state.cryptoBalance);
 
@@ -579,7 +579,7 @@ class SendTransaction extends Component {
 		}
 
 		//Ensure the user has enough funds.
-		const fee = Number(this.props.transaction.recommendedFee);
+		const fee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
 		const amount = Number(this.props.transaction.amount);
 		const { selectedWallet, selectedCrypto } = this.props.wallet;
 		const balance = this.props.wallet.wallets[selectedWallet].confirmedBalance[selectedCrypto];
@@ -622,7 +622,7 @@ class SendTransaction extends Component {
 			let blacklistedUtxos = wallet.blacklistedUtxos[selectedCrypto];
 			let confirmedBalance = wallet.confirmedBalance[selectedCrypto];
 			const changeAddressIndex = wallet.changeAddressIndex[selectedCrypto];
-			const transactionFee = Number(this.props.transaction.recommendedFee);
+			const transactionFee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
 			const amount = Number(this.props.transaction.amount);
 			const message = this.props.transaction.message;
 			const addressType = wallet.addressType[selectedCrypto];
@@ -892,7 +892,7 @@ class SendTransaction extends Component {
 		try {
 			//If the coin control modal is being toggled off.
 			if (this.state.displayCoinControlModal) {
-				const fee = Number(this.props.transaction.recommendedFee);
+				const fee = Number(this.props.transaction.fee) || Number(this.props.transaction.recommendedFee);
 				const cryptoUnitAmount = Number(this.state.cryptoUnitAmount); //Amount entered via the "Amount" TextInput
 				const whiteListedUtxosBalance = this.state.whiteListedUtxosBalance;
 				const spendMaxAmount = this.state.spendMaxAmount; //Determines if the "Max" button is enabled.
