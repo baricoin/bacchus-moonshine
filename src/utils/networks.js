@@ -48,7 +48,7 @@ const availableCoins = Object.keys(networks).map(coin => coin);
 const supportsRbf = {
 	bitcoin: true,
 	litecoin: false,
-	baricoin: false
+	baricoin: true
 };
 
 const zeroValueItems = {
@@ -93,7 +93,7 @@ const defaultWalletShape = {
 		bitcoinTestnet: "84",
 		litecoin: "44",
 		litecoinTestnet: "44",
-		baricoin: "84",
+		baricoin: "44",
 	},
 	coinTypePath: {
 		bitcoin: "0",
