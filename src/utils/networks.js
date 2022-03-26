@@ -1,7 +1,7 @@
 // https://en.bitcoin.it/wiki/List_of_address_prefixes
 const networks = {
 	baricoin: {
-		messagePrefix: '\Bari Coin Signed Message:\n',
+		messagePrefix: '\x19Baricoin Signed Message:\n',
 		bech32: 'bari',
 		bip32: {
 			public: 0x0488b21e,
