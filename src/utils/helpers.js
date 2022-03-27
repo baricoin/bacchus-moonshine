@@ -417,6 +417,7 @@ const createTransaction = ({ address = "", transactionFee = 2, amount = 0, confi
 			const seed = bip39.mnemonicToSeedSync(mnemonic, bip39Passphrase);
 			const root = bip32.fromSeed(seed, network);
 			const psbt = new bitcoin.Psbt({ network });
+			psbt.setMaximumFeeRate(1000000);
 
 			//Add Inputs
 			const utxosLength = utxos.length;
