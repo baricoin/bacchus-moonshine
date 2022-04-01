@@ -398,6 +398,11 @@ const fallbackBroadcastTransaction = async ({ rawTx = "", selectedCrypto = "bitc
 				response = await response.text();
 				if (response.includes("error")) response = "";
 				break;
+			case "monacoin":
+				response = await fetch(`https://blockbook.electrum-mona.org/tx/`, config);
+				response = await response.text();
+				if (response.includes("error")) response = "";
+				break;
 		}
 		if (response !== "") return { error: false, data: response };
 		return { error: true, data: "" };

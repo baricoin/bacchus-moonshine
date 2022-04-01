@@ -32,7 +32,7 @@ const networks = {
 		pubKeyHash: 0x30,
 		scriptHash: 0x32,
 		wif: 0xb0
-	}
+	},
 	fujicoin: {
 		messagePrefix: '\x19Fujicoin Signed Message:\n',
 		bech32: 'fc',
@@ -43,15 +43,27 @@ const networks = {
 		pubKeyHash: 0x24,
 		scriptHash: 0x10,
 		wif: 0xa4
-	}
+	},
+	monacoin: {
+		messagePrefix: '\x19Monacoin Signed Message:\n',
+		bech32: 'mona',
+		bip32: {
+			public: 0x019da462,
+			private: 0x019d9cfe
+		},
+		pubKeyHash: 0x32,
+		scriptHash: 0x37,
+		wif: 0xB0
+	},
 };
 
-//Max amount of BTC/LTC.
+//Max amount of BTC/LTC. often be total amount +00000000
 const maxCoins = {
 	baricoin: 1000000000000000000,
 	bitcoin: 2100000000000000,
 	litecoin: 8400000000000000,
 	fujiicoin: 1000000000000000000,
+	monacoin: 10512000000000000,
 };
 
 //Returns an array of all available coins from the networks object.
@@ -60,8 +72,9 @@ const availableCoins = Object.keys(networks).map(coin => coin);
 const supportsRbf = {
 	bitcoin: true,
 	litecoin: false,
-	baricoin: true
-	fujicoin: true
+	baricoin: true,
+	fujicoin: true,
+	monacoin: true,
 };
 
 const zeroValueItems = {
@@ -69,6 +82,7 @@ const zeroValueItems = {
 	litecoin: 0,
 	baricoin: 0,
 	fujicoin: 0,
+	monacoin: 0,
 	timestamp: null
 };
 
@@ -77,6 +91,7 @@ const arrayTypeItems = {
 	litecoin: [],
 	baricoin: [],
 	fujicoin: [],
+	monacoin: [],
 	timestamp: null
 };
 
@@ -85,6 +100,7 @@ const objectTypeItems = {
 	litecoin: {},
 	baricoin: {},
 	fujicoin: {},
+	monacoin: {},
 	timestamp: null
 };
 
@@ -111,6 +127,7 @@ const defaultWalletShape = {
 		litecoinTestnet: "44",
 		baricoin: "44",
 		fujicoin: "84",
+		monacoin: "44"
 	},
 	coinTypePath: {
 		bitcoin: "0",
@@ -119,6 +136,7 @@ const defaultWalletShape = {
 		litecoinTestnet: "1",
 		baricoin: "810",
 		fujicoin: "75",
+		monacoin: "22",
 	},
 	addressType: { //Accepts bech32, segwit, legacy
 		bitcoin: "bech32",
@@ -127,6 +145,7 @@ const defaultWalletShape = {
 		litecoinTestnet: "legacy",
 		baricoin: "legacy",
 		fujicoin: "legacy",
+		monacoin: "legacy"
 	},
 	rbfData: objectTypeItems
 };
@@ -146,6 +165,9 @@ const getCoinImage = (coin = "bitcoin") => {
 			case "fujicoin":
 			default:
 				return require(`../assets/ecoins/fujicoin.png`);
+			case "monacoin":
+			default:
+				return require(`../assets/ecoins/monacoin.png`);
 		}
 	} catch (e) {
 		return require(`../assets/ecoins/baricoin.png`);
@@ -192,6 +214,16 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 					oshi: "bits",
 					blockTime: 1,
 					color: "#3399ff"
+				};
+			case "monacoin":
+				return {
+					acronym: cryptoUnit === "watanabe" ? "bits" : "MONA",
+					label: "Mona Coin",
+					crypto: "Mona",
+					satoshi: "bit",
+					oshi: "bits",
+					blockTime: 1.5,
+					color: "#f7931a"
 				};
 			default:
 				return {
