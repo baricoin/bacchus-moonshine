@@ -6,6 +6,7 @@ class Clients {
 			bitcoin: false,
 			litecoin: false,
 			litecoin: false,
+			fujicoin: false,
 
 		};
 		this.peer = {
