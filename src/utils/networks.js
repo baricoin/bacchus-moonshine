@@ -161,7 +161,7 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 					satoshi: "bit",
 					oshi: "bits",
 					blockTime: 1,
-					color: "#90191c"
+					color: "#99ff33"
 				};
 			default:
 				return {
@@ -171,7 +171,7 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 					satoshi: "bit",
 					oshi: "bits",
 					blockTime: 1,
-					color: "#90191c"
+					color: "#99ff33"
 				};
 		}
 	} catch (e) {
