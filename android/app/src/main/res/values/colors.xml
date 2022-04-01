@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="status_bar_color">#90191c</color>
-    <color name="purple">#90191c</color>
-    <color name="darkPurple">#90191c</color>
-    <color name="primary_dark">#90191c</color>
-    <color name="secondary_dark">#90191c</color>
-    <color name="bootsplash_background">#90191c</color>
-
+    <color name="status_bar_color">#99ff33</color>
+    <color name="purple">#99ff33</color>
+    <color name="darkPurple">#99ff33</color>
+    <color name="primary_dark">#99ff33</color>
+    <color name="secondary_dark">#99ff33</color>
+    <color name="bootsplash_background">#99ff33</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>
