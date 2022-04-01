@@ -33,6 +33,17 @@ const networks = {
 		scriptHash: 0x32,
 		wif: 0xb0
 	}
+	fujicoin: {
+		messagePrefix: '\x19Fujicoin Signed Message:\n',
+		bech32: 'fc',
+		bip32: {
+			public: 0x019da462,
+			private: 0x019d9cfe
+		},
+		pubKeyHash: 0x24,
+		scriptHash: 0x10,
+		wif: 0xa4
+	}
 };
 
 //Max amount of BTC/LTC.
@@ -40,6 +51,7 @@ const maxCoins = {
 	baricoin: 1000000000000000000,
 	bitcoin: 2100000000000000,
 	litecoin: 8400000000000000,
+	fujiicoin: 1000000000000000000,
 };
 
 //Returns an array of all available coins from the networks object.
@@ -49,12 +61,14 @@ const supportsRbf = {
 	bitcoin: true,
 	litecoin: false,
 	baricoin: true
+	fujicoin: true
 };
 
 const zeroValueItems = {
 	bitcoin: 0,
 	litecoin: 0,
 	baricoin: 0,
+	fujicoin: 0,
 	timestamp: null
 };
 
@@ -62,6 +76,7 @@ const arrayTypeItems = {
 	bitcoin: [],
 	litecoin: [],
 	baricoin: [],
+	fujicoin: [],
 	timestamp: null
 };
 
@@ -69,6 +84,7 @@ const objectTypeItems = {
 	bitcoin: {},
 	litecoin: {},
 	baricoin: {},
+	fujicoin: {},
 	timestamp: null
 };
 
@@ -94,6 +110,7 @@ const defaultWalletShape = {
 		litecoin: "44",
 		litecoinTestnet: "44",
 		baricoin: "44",
+		fujicoin: "84",
 	},
 	coinTypePath: {
 		bitcoin: "0",
@@ -101,6 +118,7 @@ const defaultWalletShape = {
 		litecoin: "2",
 		litecoinTestnet: "1",
 		baricoin: "810",
+		fujicoin: "75",
 	},
 	addressType: { //Accepts bech32, segwit, legacy
 		bitcoin: "bech32",
@@ -108,6 +126,7 @@ const defaultWalletShape = {
 		litecoin: "legacy",
 		litecoinTestnet: "legacy",
 		baricoin: "legacy",
+		fujicoin: "legacy",
 	},
 	rbfData: objectTypeItems
 };
@@ -124,8 +143,9 @@ const getCoinImage = (coin = "bitcoin") => {
 				return require(`../assets/ecoins/litecoin.png`);
 			case "baricoin":
 				return require(`../assets/ecoins/baricoin.png`);
+			case "fujicoin":
 			default:
-				return require(`../assets/ecoins/baricoin.png`);
+				return require(`../assets/ecoins/fujicoin.png`);
 		}
 	} catch (e) {
 		return require(`../assets/ecoins/baricoin.png`);
@@ -162,6 +182,16 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 					oshi: "bits",
 					blockTime: 1,
 					color: "#99ff33"
+				};
+			case "fujicoin":
+				return {
+					acronym: cryptoUnit === "satoshi" ? "bits" : "FJC",
+					label: "Fuji Coin",
+					crypto: "FJC",
+					satoshi: "bit",
+					oshi: "bits",
+					blockTime: 1,
+					color: "#3399ff"
 				};
 			default:
 				return {

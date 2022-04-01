@@ -33,6 +33,9 @@
   ],
   "baricoin": [
     {"host": "baricoin.clear-net.jp", "ssl": 50002, "tcp": 50001},
-
-  ]
+  ],
+  "fujicoin": [
+      {"host": "electrumx1.fujicoin.org", "ssl": 50002, "tcp": 50001},
+      {"host": "electrumx2.fujicoin.org", "ssl": 50002, "tcp": 50001},
+  ],
 }

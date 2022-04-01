@@ -393,6 +393,11 @@ const fallbackBroadcastTransaction = async ({ rawTx = "", selectedCrypto = "bitc
 				response = await response.json();
 				response = response.status === "success" ? response.data.txid : "";
 				break;
+			case "fujicoin":
+				response = await fetch(`https://explorer.fujicoin.org/tx/`, config);
+				response = await response.text();
+				if (response.includes("error")) response = "";
+				break;
 		}
 		if (response !== "") return { error: false, data: response };
 		return { error: true, data: "" };
