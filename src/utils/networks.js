@@ -163,11 +163,11 @@ const getCoinImage = (coin = "bitcoin") => {
 			case "baricoin":
 				return require(`../assets/ecoins/baricoin.png`);
 			case "fujicoin":
-			default:
 				return require(`../assets/ecoins/fujicoin.png`);
 			case "monacoin":
-			default:
 				return require(`../assets/ecoins/monacoin.png`);
+			default:
+				return require(`../assets/ecoins/baricoin.png`);
 		}
 	} catch (e) {
 		return require(`../assets/ecoins/baricoin.png`);
