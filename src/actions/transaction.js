@@ -17,13 +17,22 @@ export const resetTransaction = (payload) => ({
 });
 
 /*
-TODO:
-Recommended fees are always grossly overestimated.
-Until this is resolved, getRecommendedFeeRate divides that estimation by 4.
+TODO
+estimate each coin's fee separately
  */
 export const getRecommendedFeeRate = ({ coin = "bitcoin", transactionSize = 256 } = {}) => (dispatch) => {
     return new Promise(async (resolve) => {
-        let recommendedFee = 10000;
+        let recommendedFee = 1; //add each coins fee. if same as bitcoin(or lightning), doesn't have to.
+        switch (coin) {
+            case "fujicoin":
+                recommendedFee = 10000;
+                break;
+            case "baricoin":
+                recommendedFee = 10000;
+                break;
+            default:
+                break;
+        }
         let maximumFee = recommendedFee * 10;
 
         const feeTimestamp = moment().format();
