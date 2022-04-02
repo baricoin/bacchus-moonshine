@@ -34,7 +34,7 @@ const networks = {
 		wif: 0xb0
 	},
 	fujicoin: {
-		messagePrefix: '\x19Fujicoin Signed Message:\n',
+		messagePrefix: '\x19FujiCoin Signed Message:\n',
 		bech32: 'fc',
 		bip32: {
 			public: 0x019da462,
@@ -62,7 +62,7 @@ const maxCoins = {
 	baricoin: 1000000000000000000,
 	bitcoin: 2100000000000000,
 	litecoin: 8400000000000000,
-	fujiicoin: 1000000000000000000,
+	fujicoin: 1000000000000000000,
 	monacoin: 10512000000000000,
 };
 
@@ -126,7 +126,7 @@ const defaultWalletShape = {
 		litecoin: "44",
 		litecoinTestnet: "44",
 		baricoin: "44",
-		fujicoin: "84",
+		fujicoin: "44",
 		monacoin: "44"
 	},
 	coinTypePath: {
