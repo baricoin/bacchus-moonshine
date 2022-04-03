@@ -54,7 +54,7 @@ const networks = {
 		pubKeyHash: 0x32,
 		scriptHash: 0x37,
 		wif: 0xB0
-	},
+	}
 };
 
 //Max amount of BTC/LTC. often be total amount +00000000
@@ -145,7 +145,7 @@ const defaultWalletShape = {
 		litecoinTestnet: "legacy",
 		baricoin: "legacy",
 		fujicoin: "legacy",
-		monacoin: "legacy"
+		monacoin: "legacy",
 	},
 	rbfData: objectTypeItems
 };
@@ -179,7 +179,7 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 		let acronym = "BARI";
 		let satoshi = "bit";
 		let oshi = "bits";
-		let blockTime = 5; //min
+		let blockTime = 1; //min
 		switch (selectedCrypto) {
 			case "bitcoin":
 				satoshi = "satoshi";
