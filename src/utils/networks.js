@@ -26,8 +26,8 @@ const networks = {
 		messagePrefix: '\x19Litecoin Signed Message:\n',
 		bech32: 'ltc',
 		bip32: {
-			public: 0x019da462,
-			private: 0x019d9cfe
+			public: 0x0488b21e,
+			private: 0x0488ade4
 		},
 		pubKeyHash: 0x30,
 		scriptHash: 0x32,
@@ -37,8 +37,8 @@ const networks = {
 		messagePrefix: '\x19FujiCoin Signed Message:\n',
 		bech32: 'fc',
 		bip32: {
-			public: 0x019da462,
-			private: 0x019d9cfe
+			public: 0x0488b21e,
+			private: 0x0488ade4
 		},
 		pubKeyHash: 0x24,
 		scriptHash: 0x10,
@@ -48,8 +48,8 @@ const networks = {
 		messagePrefix: '\x19Monacoin Signed Message:\n',
 		bech32: 'mona',
 		bip32: {
-			public: 0x019da462,
-			private: 0x019d9cfe
+			public: 0x0488b21e,
+			private: 0x0488ade4
 		},
 		pubKeyHash: 0x32,
 		scriptHash: 0x37,
