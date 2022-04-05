@@ -37,8 +37,8 @@ const networks = {
 		messagePrefix: '\x19FujiCoin Signed Message:\n',
 		bech32: 'fc',
 		bip32: {
-			public: 0x019da462,
-			private: 0x019d9cfe
+			public: 0x0488b21e,
+			private: 0x0488ade4
 		},
 		pubKeyHash: 0x24,
 		scriptHash: 0x10,
@@ -48,8 +48,8 @@ const networks = {
 		messagePrefix: '\x19Monacoin Signed Message:\n',
 		bech32: 'mona',
 		bip32: {
-			public: 0x019da462,
-			private: 0x019d9cfe
+			public: 0x0488b21e,
+			private: 0x0488ade4
 		},
 		pubKeyHash: 0x32,
 		scriptHash: 0x37,
@@ -177,8 +177,8 @@ const getCoinImage = (coin = "bitcoin") => {
 const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 	try {
 		let acronym = "BARI";
-		let satoshi = "bit";
-		let oshi = "bits";
+		let satoshi = "satoshi";
+		let oshi = "sats";
 		let blockTime = 1; //min
 		switch (selectedCrypto) {
 			case "bitcoin":
@@ -197,41 +197,41 @@ const getCoinData = ({ selectedCrypto = "baricoin", cryptoUnit = "BARI" }) => {
 				return { acronym, label: "Litecoin", crypto: "LTC", satoshi, oshi, blockTime, color };
 			case "baricoin":
 				return {
-					acronym: cryptoUnit === "satoshi" ? "bits" : "BARI",
+					acronym: cryptoUnit === "satoshi" ? "sats" : "BARI",
 					label: "Bari Coin",
 					crypto: "BARI",
-					satoshi: "bit",
-					oshi: "bits",
+					satoshi: "satoshi",
+					oshi: "sats",
 					blockTime: 1,
 					color: "#99ff33"
 				};
 			case "fujicoin":
 				return {
-					acronym: cryptoUnit === "satoshi" ? "bits" : "FJC",
+					acronym: cryptoUnit === "satoshi" ? "sats" : "FJC",
 					label: "Fuji Coin",
 					crypto: "FJC",
-					satoshi: "bit",
-					oshi: "bits",
+					satoshi: "satoshi",
+					oshi: "sats",
 					blockTime: 1,
 					color: "#3399ff"
 				};
 			case "monacoin":
 				return {
-					acronym: cryptoUnit === "watanabe" ? "bits" : "MONA",
+					acronym: cryptoUnit === "watanabe" ? "sats" : "MONA",
 					label: "Mona Coin",
 					crypto: "Mona",
-					satoshi: "bit",
-					oshi: "bits",
+					satoshi: "satoshi",
+					oshi: "sats",
 					blockTime: 1.5,
 					color: "#f7931a"
 				};
 			default:
 				return {
-					acronym: cryptoUnit === "satoshi" ? "bits" : "BARI",
+					acronym: cryptoUnit === "satoshi" ? "sats" : "BARI",
 					label: "Bari Coin",
 					crypto: "BARI",
-					satoshi: "bit",
-					oshi: "bits",
+					satoshi: "satoshi",
+					oshi: "sats",
 					blockTime: 1,
 					color: "#99ff33"
 				};

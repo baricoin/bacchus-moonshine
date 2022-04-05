@@ -172,7 +172,7 @@ class TransactionDetail extends PureComponent {
 		if (selectedCrypto === "litecoin") url = `https://chain.so/address/LTC/${address}`;
 		if (selectedCrypto === "litecoinTestnet") url = `https://chain.so/address/LTCTEST/${address}`;
 		if (selectedCrypto === "fujicoin") url = `https://explorer.fujicoin.org/address/${address}`;
-		if (selectedCrypto === "fujicoin") url = `https://explorer.fujicoin.org/address/${address}`;
+		if (selectedCrypto === "monacoin") url = `https://blockbook.electrum-mona.org/address/${address}`;
 		openUrl(url);
 	};
 	
